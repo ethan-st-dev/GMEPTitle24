@@ -15,6 +15,11 @@ using System;
 using System.Collections.Generic;
 using SeleniumExtras.WaitHelpers;
 using OpenQA.Selenium.Interactions;
+using System.Diagnostics;
+using OfficeOpenXml;
+using System.IO;
+using Path = System.IO.Path;
+
 
 namespace GMEPTitle24;
 
@@ -33,6 +38,7 @@ public partial class MainWindow : Window
     }
     public async Task ActivateSelenium()
     {
+        Debug.WriteLine(Environment.CurrentDirectory);
         StatusText.Text = "Navigating to Site";
         await Task.Run(() =>
         {
@@ -40,6 +46,9 @@ public partial class MainWindow : Window
             driver.Navigate().GoToUrl("https://energycodeace.com/");
         });
         await Login();
+
+        //Quitting Program
+        //driver.Quit();
     }
 
     public async Task Login()
@@ -122,6 +131,28 @@ public partial class MainWindow : Window
         {
             IWebElement luminaires = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Luminaires']")));
             luminaires.Click();
+
+            //Reading xlsx file
+            string filePath = Path.Combine(Environment.CurrentDirectory, "lti.xlsx");
+            ExcelPackage.License.SetNonCommercialPersonal("<GMEP>");
+            using (var package = new ExcelPackage(new FileInfo(filePath)))
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+        
+                int rowCount = worksheet.Dimension.Rows;
+                 for (int row = 2; row <= rowCount; row++)
+                 {
+                     string tag = worksheet.Cells[row, 1].Text;
+                     string description = worksheet.Cells[row, 2].Text;
+                     string type = worksheet.Cells[row, 3].Text;
+                     bool decoration = worksheet.Cells[row, 4].Text == "X";
+                     string watts = worksheet.Cells[row, 5].Text;
+                     string specsheet = worksheet.Cells[row, 6].Text;
+                     string count = worksheet.Cells[row, 7].Text;
+                     bool excluded = worksheet.Cells[row, 8].Text == "X";
+                }  
+            }
+
         });
     }
 }
