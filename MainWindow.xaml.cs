@@ -28,7 +28,8 @@ namespace GMEPTitle24;
 /// </summary>
 public partial class MainWindow : Window
 {
-    IWebDriver driver = new ChromeDriver();
+    ChromeOptions options;
+    IWebDriver driver;
     WebDriverWait wait;
 
     public MainWindow()
@@ -38,7 +39,10 @@ public partial class MainWindow : Window
     }
     public async Task ActivateSelenium()
     {
-        Debug.WriteLine(Environment.CurrentDirectory);
+        options = new ChromeOptions();
+        //options.AddArgument("headless");
+        driver = new ChromeDriver(options);
+
         StatusText.Text = "Navigating to Site";
         await Task.Run(() =>
         {
@@ -76,7 +80,7 @@ public partial class MainWindow : Window
                 signInButton2.Click();
             }
         });
-        await GoToProject("CONICO OIL");
+        await GoToProject("24-303");
     }
     public async Task GoToProject(string projectNo)
     {
@@ -132,15 +136,31 @@ public partial class MainWindow : Window
             IWebElement luminaires = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Luminaires']")));
             luminaires.Click();
 
+            //Grabbing Container For All Lighting Entries
+            IWebElement AddLuminaireButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Add Luminaire']")));
+            IWebElement lightingContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[class='molecule_children']")));
+            var Lightings =  lightingContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
+                 
+
             //Reading xlsx file
             string filePath = Path.Combine(Environment.CurrentDirectory, "lti.xlsx");
             ExcelPackage.License.SetNonCommercialPersonal("<GMEP>");
+
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {
                 ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
-        
                 int rowCount = worksheet.Dimension.Rows;
-                 for (int row = 2; row <= rowCount; row++)
+
+                int lightingCount = Lightings.Count;
+                //Adjusting Amount of Boxes
+                while (lightingCount != rowCount)
+                {
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AddLuminaireButton);
+                    lightingCount++;
+                }
+
+                //Editing Boxes
+                for (int row = 2; row <= rowCount; row++)
                  {
                      string tag = worksheet.Cells[row, 1].Text;
                      string description = worksheet.Cells[row, 2].Text;
