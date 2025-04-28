@@ -46,7 +46,7 @@ public partial class MainWindow : Window
         StatusText.Text = "Navigating to Site";
         await Task.Run(() =>
         {
-            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
             driver.Navigate().GoToUrl("https://energycodeace.com/");
         });
         await Login();
@@ -212,33 +212,79 @@ public partial class MainWindow : Window
                         }
                     }
                     //Iterating Through dropdown entries
-                    /*var dropdownElements = lighting.FindElements(By.CssSelector("div[class='selectWrapper']"));
+                    var dropdownElements = lighting.FindElements(By.CssSelector("div[class='selectWrapper']"));
                     foreach(var element in dropdownElements)
                     {
-                        element.Click();
                         var textbox = element.FindElement(By.CssSelector("input"));
                         string placeholderValue = textbox.GetAttribute("placeholder");
                         if (placeholderValue != null && placeholderValue.Contains("luminaire type.", StringComparison.OrdinalIgnoreCase))
                         {
-                            //fill out
+                            switch (worksheet.Cells[row, 3].Text.ToLower()) {
+                                case "individual luminaire":
+                                    var individualLuminaire = element.FindElement(By.CssSelector("li[data-value='TypicalLuminaire'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", individualLuminaire);
+                                    break;
+                                case "track lighting":
+                                    var trackLighting = element.FindElement(By.CssSelector("li[data-value='TrackLighting'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", trackLighting);
+                                    break;
+                                case "small aperature and color changing":
+                                    var smallAperatureColor = element.FindElement(By.CssSelector("li[data-value='SmallAperatureColor'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", smallAperatureColor);
+                                    break;
+                            }
                         }
                         if (placeholderValue != null && placeholderValue.Contains("general lighting", StringComparison.OrdinalIgnoreCase))
                         {
-                            //fill out
+                            switch (worksheet.Cells[row, 4].Text.ToLower())
+                            {
+                                case "x":
+                                    var AccentDecorativeLighting = element.FindElement(By.CssSelector("li[data-value='AccentDecorativeLighting'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AccentDecorativeLighting);
+                                    break;
+                                default:  
+                                    var GeneralLighting = element.FindElement(By.CssSelector("li[data-value='GeneralLighting'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", GeneralLighting);
+                                    break;
+                            }
                         }
                         if (placeholderValue != null && placeholderValue.Contains("Wattage Determined", StringComparison.OrdinalIgnoreCase))
                         {
-                            //fill out
+                            switch (worksheet.Cells[row, 6].Text.ToLower())
+                            {
+                                case "manufacturer spec sheet":
+                                    var ManufacturerSpec = element.FindElement(By.CssSelector("li[data-value='ManufacturerSpec'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", ManufacturerSpec);
+                                    break;
+                                case "default":
+                                    var Default = element.FindElement(By.CssSelector("li[data-value='CEC_Default'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", Default);
+                                    break;
+                                case "other":
+                                    var Other = element.FindElement(By.CssSelector("li[data-value='Other'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", Other);
+                                    break;
+                            }
                         }
-                        if (placeholderValue != null && placeholderValue.Contains("Conditioned", StringComparison.OrdinalIgnoreCase))
+                        /*if (placeholderValue != null && placeholderValue.Contains("Conditioned", StringComparison.OrdinalIgnoreCase))
                         {
                             //fill out
-                        }
+                        }*/
                         if (placeholderValue != null && placeholderValue.Contains("excluded from total", StringComparison.OrdinalIgnoreCase))
                         {
-                            //fill out
+                            switch (worksheet.Cells[row, 8].Text.ToLower())
+                            {
+                                case "x":
+                                    var Yes = element.FindElement(By.CssSelector("li[data-value='Yes'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", Yes);
+                                    break;
+                                default:
+                                    var No = element.FindElement(By.CssSelector("li[data-value='No'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", No);
+                                    break;
+                            }
                         }
-                    }*/
+                    }
                     row++;
                 }  
             }
