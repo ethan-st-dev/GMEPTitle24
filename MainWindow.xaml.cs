@@ -291,4 +291,9 @@ public partial class MainWindow : Window
 
         });
     }
+
+    private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+
+    }
 }
