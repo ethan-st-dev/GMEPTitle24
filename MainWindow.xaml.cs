@@ -178,6 +178,7 @@ public partial class MainWindow : Window
                 }
                 Lightings = lightingContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
                 //Editing Boxes
+                int row = 2;
                 foreach (var lighting in Lightings)
                 {
                     //iterating through text entries
@@ -187,19 +188,31 @@ public partial class MainWindow : Window
                         string attributeValue = element.GetAttribute("placeholder");
                         if (attributeValue != null && attributeValue.Contains("tag name", StringComparison.OrdinalIgnoreCase))
                         {
-                            //fill out
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                                arguments[0].value = arguments[1];
+                                arguments[0].dispatchEvent(new Event('input'));
+                                arguments[0].dispatchEvent(new Event('change'));
+                            ", element, worksheet.Cells[row, 1].Text);
                         }
                         if (attributeValue != null && attributeValue.Contains("luminaire description", StringComparison.OrdinalIgnoreCase))
                         {
-                            //fill out
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                                arguments[0].value = arguments[1];
+                                arguments[0].dispatchEvent(new Event('input'));
+                                arguments[0].dispatchEvent(new Event('change'));
+                            ", element, worksheet.Cells[row, 2].Text);
                         }
                         if (attributeValue != null && attributeValue.Contains("Watts per Luminaire", StringComparison.OrdinalIgnoreCase))
                         {
-                            //fill out
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                                arguments[0].value = arguments[1];
+                                arguments[0].dispatchEvent(new Event('input'));
+                                arguments[0].dispatchEvent(new Event('change'));
+                            ", element, worksheet.Cells[row, 5].Text);
                         }
                     }
                     //Iterating Through dropdown entries
-                    var dropdownElements = lighting.FindElements(By.CssSelector("div[class='selectWrapper']"));
+                    /*var dropdownElements = lighting.FindElements(By.CssSelector("div[class='selectWrapper']"));
                     foreach(var element in dropdownElements)
                     {
                         element.Click();
@@ -225,19 +238,8 @@ public partial class MainWindow : Window
                         {
                             //fill out
                         }
-                    }
-                }
-
-                for (int row = 2; row <= rowCount; row++)
-                 {
-                     string tag = worksheet.Cells[row, 1].Text;
-                     string description = worksheet.Cells[row, 2].Text;
-                     string type = worksheet.Cells[row, 3].Text;
-                     bool decoration = worksheet.Cells[row, 4].Text == "X";
-                     string watts = worksheet.Cells[row, 5].Text;
-                     string specsheet = worksheet.Cells[row, 6].Text;
-                     string count = worksheet.Cells[row, 7].Text;
-                     bool excluded = worksheet.Cells[row, 8].Text == "X";
+                    }*/
+                    row++;
                 }  
             }
 
