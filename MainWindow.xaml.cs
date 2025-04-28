@@ -35,7 +35,6 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        ActivateSelenium();
     }
     public async Task ActivateSelenium()
     {
@@ -292,8 +291,8 @@ public partial class MainWindow : Window
         });
     }
 
-    private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void Export_Click(object sender, RoutedEventArgs e)
     {
-
+        ActivateSelenium();
     }
 }
