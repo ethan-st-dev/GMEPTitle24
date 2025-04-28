@@ -152,7 +152,6 @@ public partial class MainWindow : Window
                 int rowCount = worksheet.Dimension.Rows;
 
                 int lightingCount = Lightings.Count;
-                Debug.WriteLine("Lighting Count: " + lightingCount);
 
                 //Adjusting Box Count
                 if (lightingCount < rowCount - 1)
@@ -177,8 +176,58 @@ public partial class MainWindow : Window
                         }
                     }
                 }
-
+                Lightings = lightingContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
                 //Editing Boxes
+                foreach (var lighting in Lightings)
+                {
+                    //iterating through text entries
+                    var elements = lighting.FindElements(By.CssSelector("input[type='text']"));
+                    foreach (var element in elements)
+                    {
+                        string attributeValue = element.GetAttribute("placeholder");
+                        if (attributeValue != null && attributeValue.Contains("tag name", StringComparison.OrdinalIgnoreCase))
+                        {
+                            //fill out
+                        }
+                        if (attributeValue != null && attributeValue.Contains("luminaire description", StringComparison.OrdinalIgnoreCase))
+                        {
+                            //fill out
+                        }
+                        if (attributeValue != null && attributeValue.Contains("Watts per Luminaire", StringComparison.OrdinalIgnoreCase))
+                        {
+                            //fill out
+                        }
+                    }
+                    //Iterating Through dropdown entries
+                    var dropdownElements = lighting.FindElements(By.CssSelector("div[class='selectWrapper']"));
+                    foreach(var element in dropdownElements)
+                    {
+                        element.Click();
+                        var textbox = element.FindElement(By.CssSelector("input"));
+                        string placeholderValue = textbox.GetAttribute("placeholder");
+                        if (placeholderValue != null && placeholderValue.Contains("luminaire type.", StringComparison.OrdinalIgnoreCase))
+                        {
+                            //fill out
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("general lighting", StringComparison.OrdinalIgnoreCase))
+                        {
+                            //fill out
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("Wattage Determined", StringComparison.OrdinalIgnoreCase))
+                        {
+                            //fill out
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("Conditioned", StringComparison.OrdinalIgnoreCase))
+                        {
+                            //fill out
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("excluded from total", StringComparison.OrdinalIgnoreCase))
+                        {
+                            //fill out
+                        }
+                    }
+                }
+
                 for (int row = 2; row <= rowCount; row++)
                  {
                      string tag = worksheet.Cells[row, 1].Text;
