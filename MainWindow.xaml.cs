@@ -138,9 +138,9 @@ public partial class MainWindow : Window
 
             //Grabbing Container For All Lighting Entries
             IWebElement AddLuminaireButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Add Luminaire']")));
-            IWebElement lightingContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[class='molecule_children']")));
+
+            IWebElement lightingContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[name='organism_Table2_Row']")));
             var Lightings =  lightingContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
-                 
 
             //Reading xlsx file
             string filePath = Path.Combine(Environment.CurrentDirectory, "lti.xlsx");
@@ -152,11 +152,30 @@ public partial class MainWindow : Window
                 int rowCount = worksheet.Dimension.Rows;
 
                 int lightingCount = Lightings.Count;
-                //Adjusting Amount of Boxes
-                while (lightingCount != rowCount)
+                Debug.WriteLine("Lighting Count: " + lightingCount);
+
+                //Adjusting Box Count
+                if (lightingCount < rowCount - 1)
+                {    //Adding Boxes
+                    while (lightingCount < rowCount - 1)
+                    {
+                        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AddLuminaireButton);
+                        lightingCount++;
+                    }
+                }
+                else if (lightingCount > rowCount - 1)
                 {
-                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AddLuminaireButton);
-                    lightingCount++;
+                    //Removing Boxes
+                    foreach (var lighting in Lightings)
+                    {
+                        if (lightingCount > rowCount - 1)
+                        {
+                            var delete = lighting.FindElement(By.CssSelector("div[class='mod_supportControl']"));
+                            var deleteIcon = delete.FindElement(By.CssSelector("i"));
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", deleteIcon);
+                            lightingCount--;
+                        }
+                    }
                 }
 
                 //Editing Boxes
