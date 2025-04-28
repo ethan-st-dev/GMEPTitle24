@@ -41,7 +41,7 @@ public partial class MainWindow : Window
         options = new ChromeOptions();
         //options.AddArgument("headless");
         driver = new ChromeDriver(options);
-
+        Loading.Visibility = Visibility.Visible;
         StatusText.Text = "Navigating to Site";
         await Task.Run(() =>
         {
@@ -52,6 +52,7 @@ public partial class MainWindow : Window
 
         //Quitting Program
         //driver.Quit();
+        Loading.Visibility = Visibility.Collapsed;
     }
 
     public async Task Login()
