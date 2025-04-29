@@ -354,6 +354,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     private async void Download_Click(object sender, RoutedEventArgs e)
     {
         ProjectIds = await db.GetProjectIds(ProjectNo);
+        VersionComboBox.SelectedValue = ProjectIds.Keys.First();
     }
     private async void Version_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
