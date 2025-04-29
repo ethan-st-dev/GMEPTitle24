@@ -69,7 +69,20 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         }
     }
     public int ProjectVersion { get; set; }
-    public ObservableCollection<Lighting> LightingList { get; set; } = new ObservableCollection<Lighting>();
+
+    public ObservableCollection<Lighting> lightingList = new ObservableCollection<Lighting>();
+    public ObservableCollection<Lighting> LightingList
+    {
+        get { return lightingList; }
+        set
+        {
+            if (lightingList != value)
+            {
+                lightingList = value;
+                OnPropertyChanged(nameof(LightingList));
+            }
+        }
+    }
 
     public MainWindow()
     {
