@@ -17,6 +17,17 @@
                         </Style>
                     </TabControl.Resources>
                     <TabItem Header="Fixtures">
+                        <DataGrid ItemsSource="{Binding LightingList}" AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" Width="*" />
+                                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*" />
+                                <DataGridCheckBoxColumn Header="Decorative" Binding="{Binding IsDecorative}" Width="*" />
+                                <DataGridTextColumn Header="Watts" Binding="{Binding Wattage}" Width="*" />
+                                <DataGridTextColumn Header="Wattage Info Source" Binding="{Binding InfoSource}" Width="*" />
+                                <DataGridTextColumn Header="Count" Binding="{Binding Count}" Width="*" />
+                                <DataGridCheckBoxColumn Header="Excluded" Binding="{Binding IsExcluded}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </TabItem>
                     <TabItem Header="Controls"></TabItem>
                 </TabControl>

@@ -19,6 +19,7 @@ using System.Diagnostics;
 using OfficeOpenXml;
 using System.IO;
 using Path = System.IO.Path;
+using System.Collections.ObjectModel;
 
 
 namespace GMEPTitle24;
@@ -31,10 +32,22 @@ public partial class MainWindow : Window
     ChromeOptions options;
     IWebDriver driver;
     WebDriverWait wait;
+    public ObservableCollection<Lighting> LightingList { get; set; } = new ObservableCollection<Lighting>();
 
     public MainWindow()
     {
         InitializeComponent();
+        DataContext = this;
+        Lighting lighting1 = new Lighting("", "", "A", "YOUR LIGHT", false, 10, 1, 1, 1, false);
+        Lighting lighting2 = new Lighting("", "", "B", "MY LIGHT", false, 10, 1, 1, 1, false);
+        Lighting lighting3 = new Lighting("", "", "C", "OUR LIGHT", false, 10, 1, 1, 1, true);
+        Lighting lighting4 = new Lighting("", "", "D", "THE PEOPLES LIGHT", true, 10, 1, 1, 1, false);
+        LightingList.Add(lighting1);
+        LightingList.Add(lighting2);
+        LightingList.Add(lighting3);
+        LightingList.Add(lighting4);
+
+
     }
     public async Task ActivateSelenium()
     {
