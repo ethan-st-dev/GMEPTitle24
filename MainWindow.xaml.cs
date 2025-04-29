@@ -32,6 +32,9 @@ public partial class MainWindow : Window
     ChromeOptions options;
     IWebDriver driver;
     WebDriverWait wait;
+    public string ProjectId { get; set; }
+    public string ProjectNo { get; set; }
+    public int ProjectVersion { get; set; }
     public ObservableCollection<Lighting> LightingList { get; set; } = new ObservableCollection<Lighting>();
 
     public MainWindow()
