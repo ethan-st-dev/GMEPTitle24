@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
@@ -71,33 +72,97 @@ namespace GMEPTitle24
             string projectId
         )
         {
+            // Get the lighting data from the database
             ObservableCollection<Lighting> lightings =
                 new ObservableCollection<Lighting>();
-            string query = "SELECT * FROM `electrical_lighting` LEFT JOIN electrical_lighting_locations on electrical_lighting_locations.id = electrical_lighting.location_id where electrical_lighting.project_id = 'b3b6260b-416e-4449-bfb3-6e0e98f774d2' and electrical_lighting_locations.outdoor = 0";
+            string query = @"SELECT 
+                            el.id AS lighting_id,
+                            el.project_id,
+                            el.tag,
+                            el.description,
+                            el.wattage,
+                            el.qty,
+                            ell.outdoor,
+                            ellum.id AS luminaire_id,
+                            ellum.fixture_id,
+                            ellum.type_id,
+                            ellum.is_decorative,
+                            ellum.wattage_source_id,
+                            ellum.is_excluded
+                            FROM 
+                                electrical_lighting el
+                            LEFT JOIN 
+                                electrical_lighting_locations ell 
+                            ON 
+                                ell.id = el.location_id
+                            LEFT JOIN 
+                                electrical_lighting_lti_luminaires ellum 
+                            ON 
+                                ellum.fixture_id = el.id
+                            WHERE 
+                                el.project_id = @projectId 
+                                AND ell.outdoor = 0;";
             await OpenConnectionAsync();
             MySqlCommand command = new MySqlCommand(query, Connection);
             command.Parameters.AddWithValue("@projectId", projectId);
             MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync();
 
+            List<string> newLuminaireIds = new List<string>();
+
             while (await reader.ReadAsync())
             {
                 lightings.Add(
                     new Lighting(
-                        reader.GetString("id"),
+                        reader.GetString("lighting_id"),
                         reader.GetString("project_id"),
                         reader.GetString("tag"),
                         reader.GetString("description"),
-                        false,
+                        !reader.IsDBNull(reader.GetOrdinal("is_decorative")) ? reader.GetBoolean("is_decorative") : false,
                         reader.GetFloat("wattage"),
-                        1,
-                        1,
+                        !reader.IsDBNull(reader.GetOrdinal("wattage_source_id")) ? reader.GetInt32("wattage_source_id") : 1,
+                        !reader.IsDBNull(reader.GetOrdinal("type_id")) ? reader.GetInt32("type_id") : 1,
                         reader.GetInt32("qty"),
-                        false
+                        !reader.IsDBNull(reader.GetOrdinal("is_excluded")) && reader.GetBoolean("is_excluded")
                     )
                 );
+                if (reader.IsDBNull(reader.GetOrdinal("luminaire_id")))
+                {
+                    newLuminaireIds.Add(reader.GetString("lighting_id"));
+                }
+            }
+            await reader.CloseAsync();
+
+            //Adding Luminaires for lighting that doesnt have one
+            query = @"INSERT INTO electrical_lighting_lti_luminaires 
+                     (id, fixture_id, type_id, is_decorative, wattage_source_id, is_excluded, project_id) 
+                     VALUES 
+                     (@id, @fixtureId, @typeId, @isDecorative, @wattageSourceId, @isExcluded, @projectId)";
+
+
+            foreach (var luminaireId in newLuminaireIds)
+            {
+                command = new MySqlCommand(query, Connection);
+                command.Parameters.AddWithValue("@id", Guid.NewGuid().ToString());
+                command.Parameters.AddWithValue("@fixtureId", luminaireId);
+                command.Parameters.AddWithValue("@typeId", 1); // Default or placeholder value
+                command.Parameters.AddWithValue("@isDecorative", false); // Default or placeholder value
+                command.Parameters.AddWithValue("@wattageSourceId", 1); // Default or placeholder value
+                command.Parameters.AddWithValue("@isExcluded", false); // Default or placeholder value
+                command.Parameters.AddWithValue("@projectId", projectId); // Default or placeholder value
+                await command.ExecuteNonQueryAsync();
             }
 
-            await reader.CloseAsync();
+            //Deleting Luminaires whose lightingfixture ids are not in the lighting table
+            query = @" DELETE FROM electrical_lighting_lti_luminaires
+                        WHERE project_id = @projectId
+                        AND fixture_id NOT IN (
+                            SELECT id FROM electrical_lighting WHERE project_id = @projectId
+                        )";
+            command = new MySqlCommand(query, Connection);
+            command.Parameters.AddWithValue("@projectId", projectId);
+            await command.ExecuteNonQueryAsync();
+
+
             await CloseConnectionAsync();
             return lightings;
         }
