@@ -88,16 +88,6 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     {
         InitializeComponent();
         DataContext = this;
-        Lighting lighting1 = new Lighting("", "", "A", "YOUR LIGHT", false, 10, 1, 1, 1, false);
-        Lighting lighting2 = new Lighting("", "", "B", "MY LIGHT", false, 10, 1, 1, 1, false);
-        Lighting lighting3 = new Lighting("", "", "C", "OUR LIGHT", false, 10, 1, 1, 1, true);
-        Lighting lighting4 = new Lighting("", "", "D", "THE PEOPLES LIGHT", true, 10, 1, 1, 1, false);
-        LightingList.Add(lighting1);
-        LightingList.Add(lighting2);
-        LightingList.Add(lighting3);
-        LightingList.Add(lighting4);
-
-
     }
     public async Task ActivateSelenium()
     {
@@ -349,12 +339,17 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private async void Export_Click(object sender, RoutedEventArgs e)
     {
+        await db.UpdateLuminaires(LightingList);
         await ActivateSelenium();
     }
     private async void Download_Click(object sender, RoutedEventArgs e)
     {
         ProjectIds = await db.GetProjectIds(ProjectNo);
         VersionComboBox.SelectedValue = ProjectIds.Keys.First();
+    }
+    private async void Save_Click(object sender, RoutedEventArgs e)
+    {
+        await db.UpdateLuminaires(LightingList);
     }
     private async void Version_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {

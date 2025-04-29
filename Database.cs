@@ -166,5 +166,23 @@ namespace GMEPTitle24
             await CloseConnectionAsync();
             return lightings;
         }
+        public async Task UpdateLuminaires(
+            ObservableCollection<Lighting> lightings
+        )
+        {
+            await OpenConnectionAsync();
+            foreach (var lighting in lightings)
+            {
+                string query = "UPDATE electrical_lighting_lti_luminaires SET is_decorative = @isDecorative, type_id = @typeId, wattage_source_id = @wattageSourceId, is_excluded = @isExcluded WHERE fixture_id = @id";
+                MySqlCommand command = new MySqlCommand(query, Connection);
+                command.Parameters.AddWithValue("@isDecorative", lighting.IsDecorative);
+                command.Parameters.AddWithValue("@typeId", lighting.TypeId);
+                command.Parameters.AddWithValue("@wattageSourceId", lighting.WattageSourceId);
+                command.Parameters.AddWithValue("@isExcluded", lighting.IsExcluded);
+                command.Parameters.AddWithValue("@id", lighting.Id);
+                await command.ExecuteNonQueryAsync();
+            }
+            await CloseConnectionAsync();
+        }
     }
 }
