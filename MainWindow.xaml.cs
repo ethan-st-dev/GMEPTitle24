@@ -20,6 +20,7 @@ using OfficeOpenXml;
 using System.IO;
 using Path = System.IO.Path;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 
 namespace GMEPTitle24;
@@ -27,13 +28,46 @@ namespace GMEPTitle24;
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class MainWindow : Window
+public partial class MainWindow : Window, INotifyPropertyChanged
 {
     ChromeOptions options;
     IWebDriver driver;
     WebDriverWait wait;
-    public string ProjectId { get; set; }
-    public string ProjectNo { get; set; }
+    public Dictionary<int, string> projectIds;
+
+    public Database db = new Database();
+    public Dictionary<int, string> ProjectIds
+    {
+        get { return projectIds; }
+        set
+        {
+            if (projectIds != value)
+            {
+                projectIds = value;
+                OnPropertyChanged(nameof(ProjectIds));
+            }
+        }
+    }
+    public string selectedProjectId;
+    public string SelectedProjectId
+    {
+        get { return selectedProjectId; }
+        set
+        {
+            selectedProjectId = value;
+            OnPropertyChanged(nameof(SelectedProjectId));
+        }
+    }
+    public string projectNo;
+    public string ProjectNo
+    {
+        get { return projectNo; }
+        set
+        {
+            projectNo = value;
+            OnPropertyChanged(nameof(ProjectNo));
+        }
+    }
     public int ProjectVersion { get; set; }
     public ObservableCollection<Lighting> LightingList { get; set; } = new ObservableCollection<Lighting>();
 
@@ -300,8 +334,28 @@ public partial class MainWindow : Window
         });
     }
 
-    private void Export_Click(object sender, RoutedEventArgs e)
+    private async void Export_Click(object sender, RoutedEventArgs e)
     {
-        ActivateSelenium();
+        await ActivateSelenium();
+    }
+    private async void Download_Click(object sender, RoutedEventArgs e)
+    {
+        ProjectIds = await db.GetProjectIds(ProjectNo);
+    }
+    private async void Version_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (VersionComboBox.SelectedItem is KeyValuePair<int, string> selectedPair)
+        {
+            //Electrical Tab
+            string newprojectId = selectedPair.Value;
+            
+        }
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    protected virtual void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

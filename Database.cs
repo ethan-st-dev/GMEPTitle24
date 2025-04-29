@@ -12,9 +12,9 @@ namespace GMEPTitle24
         public string ConnectionString { get; set; }
         public MySqlConnection Connection { get; set; }
 
-        public Database(string sqlConnectionString)
+        public Database()
         {
-            ConnectionString = sqlConnectionString;
+            ConnectionString = Properties.Settings.Default.ConnectionString;
             Connection = new MySqlConnection(ConnectionString);
         }
 
