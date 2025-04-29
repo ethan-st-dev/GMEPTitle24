@@ -11,6 +11,8 @@
   <ItemGroup>
 	<None Include="Loading.gif" />
 	<None Include="Download.png" />
+	<None Include="Upload.png" />
+	<None Include="Save.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetSeleniumExtras.WaitHelpers" Version="3.11.0" />
@@ -25,6 +27,8 @@
   <ItemGroup>
 	<Resource Include="Loading.gif" />
 	<Resource Include="Download.png" />
+	<Resource Include="Upload.png" />
+	<Resource Include="Save.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Settings.Designer.cs">
