@@ -94,7 +94,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         options = new ChromeOptions();
         //options.AddArgument("headless");
         driver = new ChromeDriver(options);
-        Loading.Visibility = Visibility.Visible;
+
         StatusText.Text = "Navigating to Site";
         await Task.Run(() =>
         {
@@ -105,7 +105,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
         //Quitting Program
         //driver.Quit();
-        Loading.Visibility = Visibility.Collapsed;
+
     }
 
     public async Task Login()
@@ -339,17 +339,29 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private async void Export_Click(object sender, RoutedEventArgs e)
     {
+        Loading.Visibility = Visibility.Visible;
+        StatusText.Text = "Saving";
         await db.UpdateLuminaires(LightingList);
         await ActivateSelenium();
+        StatusText.Text = String.Empty;
+        Loading.Visibility = Visibility.Collapsed;
     }
     private async void Download_Click(object sender, RoutedEventArgs e)
     {
+        Loading.Visibility = Visibility.Visible;
+        StatusText.Text = "Downloading";
         ProjectIds = await db.GetProjectIds(ProjectNo);
         VersionComboBox.SelectedValue = ProjectIds.Keys.First();
+        StatusText.Text = String.Empty;
+        Loading.Visibility = Visibility.Collapsed;
     }
     private async void Save_Click(object sender, RoutedEventArgs e)
     {
+        Loading.Visibility = Visibility.Visible;
+        StatusText.Text = "Saving";
         await db.UpdateLuminaires(LightingList);
+        StatusText.Text = String.Empty;
+        Loading.Visibility = Visibility.Collapsed;
     }
     private async void Version_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
