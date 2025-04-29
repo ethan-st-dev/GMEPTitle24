@@ -347,8 +347,9 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         if (VersionComboBox.SelectedItem is KeyValuePair<int, string> selectedPair)
         {
             //Electrical Tab
-            string newprojectId = selectedPair.Value;
-            
+            string newProjectId = selectedPair.Value;
+            LightingList = await db.GetLighting(newProjectId);
+
         }
     }
 

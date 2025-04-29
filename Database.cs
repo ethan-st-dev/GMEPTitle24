@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -65,6 +66,40 @@ namespace GMEPTitle24
             await CloseConnectionAsync();
             projectIds = projectIds.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
             return projectIds;
+        }
+        public async Task<ObservableCollection<Lighting>> GetLighting(
+            string projectId
+        )
+        {
+            ObservableCollection<Lighting> lightings =
+                new ObservableCollection<Lighting>();
+            string query = "SELECT * FROM `electrical_lighting` LEFT JOIN electrical_lighting_locations on electrical_lighting_locations.id = electrical_lighting.location_id where electrical_lighting.project_id = 'b3b6260b-416e-4449-bfb3-6e0e98f774d2' and electrical_lighting_locations.outdoor = 0";
+            await OpenConnectionAsync();
+            MySqlCommand command = new MySqlCommand(query, Connection);
+            command.Parameters.AddWithValue("@projectId", projectId);
+            MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                lightings.Add(
+                    new Lighting(
+                        reader.GetString("id"),
+                        reader.GetString("project_id"),
+                        reader.GetString("tag"),
+                        reader.GetString("description"),
+                        false,
+                        reader.GetFloat("wattage"),
+                        1,
+                        1,
+                        reader.GetInt32("qty"),
+                        false
+                    )
+                );
+            }
+
+            await reader.CloseAsync();
+            await CloseConnectionAsync();
+            return lightings;
         }
     }
 }
