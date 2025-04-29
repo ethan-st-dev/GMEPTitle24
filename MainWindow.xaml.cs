@@ -58,7 +58,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             OnPropertyChanged(nameof(SelectedProjectId));
         }
     }
-    public string projectNo;
+    public string projectNo = string.Empty;
     public string ProjectNo
     {
         get { return projectNo; }
@@ -339,29 +339,42 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private async void Export_Click(object sender, RoutedEventArgs e)
     {
-        Loading.Visibility = Visibility.Visible;
-        StatusText.Text = "Saving";
-        await db.UpdateLuminaires(LightingList);
-        await ActivateSelenium();
-        StatusText.Text = String.Empty;
-        Loading.Visibility = Visibility.Collapsed;
+        if (LightingList.Count > 0)
+        {
+            Loading.Visibility = Visibility.Visible;
+            StatusText.Text = "Saving";
+            await db.UpdateLuminaires(LightingList);
+            await ActivateSelenium();
+            StatusText.Text = String.Empty;
+            Loading.Visibility = Visibility.Collapsed;
+        }
     }
     private async void Download_Click(object sender, RoutedEventArgs e)
     {
+        LightingList.Clear();
         Loading.Visibility = Visibility.Visible;
         StatusText.Text = "Downloading";
         ProjectIds = await db.GetProjectIds(ProjectNo);
+        if (ProjectIds.Count == 0)
+        {
+            StatusText.Text = "Project Not Found";
+            Loading.Visibility = Visibility.Collapsed;
+            return;
+        }
         VersionComboBox.SelectedValue = ProjectIds.Keys.First();
         StatusText.Text = String.Empty;
         Loading.Visibility = Visibility.Collapsed;
     }
     private async void Save_Click(object sender, RoutedEventArgs e)
     {
-        Loading.Visibility = Visibility.Visible;
-        StatusText.Text = "Saving";
-        await db.UpdateLuminaires(LightingList);
-        StatusText.Text = String.Empty;
-        Loading.Visibility = Visibility.Collapsed;
+        if (LightingList.Count > 0)
+        {
+            Loading.Visibility = Visibility.Visible;
+            StatusText.Text = "Saving";
+            await db.UpdateLuminaires(LightingList);
+            StatusText.Text = String.Empty;
+            Loading.Visibility = Visibility.Collapsed;
+        }
     }
     private async void Version_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {

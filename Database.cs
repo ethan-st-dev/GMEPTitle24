@@ -38,6 +38,10 @@ namespace GMEPTitle24
 
         public async Task<Dictionary<int, string>> GetProjectIds(string projectNo)
         {
+            if (projectNo == null || projectNo == string.Empty)
+            {
+                return new Dictionary<int, string>();
+            }
             string query = "SELECT id, version FROM projects WHERE gmep_project_no = @projectNo";
             await OpenConnectionAsync();
             MySqlCommand command = new MySqlCommand(query, Connection);
@@ -50,19 +54,6 @@ namespace GMEPTitle24
                 projectIds.Add(reader.GetInt32("version"), reader.GetString("id"));
             }
             await reader.CloseAsync();
-
-            if (!projectIds.Any())
-            {
-                // Project name does not exist, insert a new entry with a generated ID
-                var id = Guid.NewGuid().ToString();
-                string insertQuery =
-                    "INSERT INTO projects (id, gmep_project_no) VALUES (@id, @projectNo)";
-                MySqlCommand insertCommand = new MySqlCommand(insertQuery, Connection);
-                insertCommand.Parameters.AddWithValue("@id", id);
-                insertCommand.Parameters.AddWithValue("@projectNo", projectNo);
-                await insertCommand.ExecuteNonQueryAsync();
-                projectIds.Add(1, id);
-            }
 
             await CloseConnectionAsync();
             projectIds = projectIds.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
