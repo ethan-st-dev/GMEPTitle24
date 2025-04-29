@@ -13,6 +13,7 @@
 	<None Include="Download.png" />
 	<None Include="Upload.png" />
 	<None Include="Save.png" />
+	<None Include="gmep.ico" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetSeleniumExtras.WaitHelpers" Version="3.11.0" />
@@ -29,6 +30,7 @@
 	<Resource Include="Download.png" />
 	<Resource Include="Upload.png" />
 	<Resource Include="Save.png" />
+	<Resource Include="gmep.ico" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Settings.Designer.cs">
