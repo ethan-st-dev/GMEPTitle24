@@ -86,8 +86,62 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     public MainWindow()
     {
+        string[] args = Environment.GetCommandLineArgs();
+        string projectNo = string.Empty;
+        string projectVersion = string.Empty;
         InitializeComponent();
         DataContext = this;
+        if (args.Length > 1)
+        {
+            ProjectNo = args[1];
+            Task.Run(async () =>
+            {
+                ProjectIds = await db.GetProjectIds(ProjectNo);
+                if (ProjectIds.Count == 0)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        StatusText.Text = "Project Not Found";
+                    });
+                    
+                }
+                else if (args.Length == 2)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        VersionComboBox.SelectedValue = ProjectIds.Keys.First();
+                    });
+                }
+                else if (args.Length > 2)
+                {
+                    if (int.TryParse(args[2], out int versionKey))
+                    {
+                        if (ProjectIds.ContainsKey(versionKey))
+                        {
+                            Dispatcher.Invoke(() =>
+                            {
+                                VersionComboBox.SelectedValue = versionKey;
+                            });
+                        }
+                        else
+                        {
+                            Dispatcher.Invoke(() =>
+                            {
+                                StatusText.Text = "Version Not Found";
+                            });
+                        }
+                    }
+                    else
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            StatusText.Text = "Invalid Version Argument";
+                        });
+                    }
+                }
+            }
+            );
+        }
     }
     public async Task ActivateSelenium()
     {
