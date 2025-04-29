@@ -57,7 +57,7 @@
                         <Image Source="Download.png" Width="20" Height="20" VerticalAlignment="Center" Margin="0 0 5 0"/>
                     </Button>
                     <ComboBox x:Name="VersionComboBox" SelectionChanged="Version_SelectionChanged" Width="60" Margin="0 5 0 0" ItemsSource="{Binding ProjectIds}" DisplayMemberPath="Key" SelectedValuePath="Key" SelectedValue="{Binding SelectedVersion}"/>
-                    <Button Width="25" VerticalAlignment="Top" Height="20" HorizontalAlignment="Right" Margin="10 5 0 0" Click="Download_Click">
+                    <Button Width="25" VerticalAlignment="Top" Height="20" HorizontalAlignment="Right" Margin="10 5 0 0">
                         <Image Source="Save.png" Width="15" HorizontalAlignment="Center" Height="15" VerticalAlignment="Center" />
                     </Button>
                     <Button Content="Generate" FontWeight="DemiBold" Width="80" VerticalAlignment="Top"  Height="20" HorizontalAlignment="Right" Margin="0 5 10 0" Click="Export_Click" />

@@ -143,7 +143,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 signInButton2.Click();
             }
         });
-        await GoToProject("24-303");
+        await GoToProject(ProjectNo);
     }
     public async Task GoToProject(string projectNo)
     {
