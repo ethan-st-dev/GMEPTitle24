@@ -68,6 +68,16 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             OnPropertyChanged(nameof(ProjectNo));
         }
     }
+    public string saveProjectNo = string.Empty;
+    public string SaveProjectNo
+    {
+        get { return saveProjectNo; }
+        set
+        {
+            saveProjectNo = value;
+            OnPropertyChanged(nameof(SaveProjectNo));
+        }
+    }
     public int ProjectVersion { get; set; }
 
     public ObservableCollection<Lighting> lightingList = new ObservableCollection<Lighting>();
@@ -94,6 +104,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         if (args.Length > 1)
         {
             ProjectNo = args[1];
+            SaveProjectNo = args[1];
             Task.Run(async () =>
             {
                 ProjectIds = await db.GetProjectIds(ProjectNo);
@@ -187,7 +198,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 signInButton2.Click();
             }
         });
-        await GoToProject(ProjectNo);
+        await GoToProject(SaveProjectNo);
     }
     public async Task GoToProject(string projectNo)
     {
@@ -408,6 +419,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         LightingList.Clear();
         Loading.Visibility = Visibility.Visible;
         StatusText.Text = "Downloading";
+        VersionComboBox.SelectedValue = 0;
         ProjectIds = await db.GetProjectIds(ProjectNo);
         if (ProjectIds.Count == 0)
         {
@@ -418,6 +430,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         VersionComboBox.SelectedValue = ProjectIds.Keys.First();
         StatusText.Text = String.Empty;
         Loading.Visibility = Visibility.Collapsed;
+        SaveProjectNo = ProjectNo;
     }
     private async void Save_Click(object sender, RoutedEventArgs e)
     {
