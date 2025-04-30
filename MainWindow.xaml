@@ -61,7 +61,7 @@
                     <Button Width="25" VerticalAlignment="Top" Height="20" HorizontalAlignment="Right" Margin="10 5 0 0" Click="Save_Click">
                         <Image Source="Save.png" Width="15" HorizontalAlignment="Center" Height="15" VerticalAlignment="Center" />
                     </Button>
-                    <Button Content="Generate" FontWeight="DemiBold" Width="80" VerticalAlignment="Top"  Height="20" HorizontalAlignment="Right" Margin="0 5 10 0" Click="Export_Click" />
+                    <Button Content="Export" FontWeight="DemiBold" Width="80" VerticalAlignment="Top"  Height="20" HorizontalAlignment="Right" Margin="0 5 10 0" Click="Export_Click" />
                 </StackPanel>
             </Grid>
         </Border>
