@@ -161,11 +161,43 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         driver = new ChromeDriver(options);
 
         StatusText.Text = "Navigating to Site";
-        await Task.Run(() =>
+      
+        int result = await Task.Run(int() =>
         {
-            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
-            driver.Navigate().GoToUrl("https://energycodeace.com/");
+            try
+            {
+                wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
+                driver.Navigate().GoToUrl("https://energycodeace.com/");
+            }
+            catch (WebDriverTimeoutException ex)
+            {
+                // Handle timeout exceptions
+                Dispatcher.Invoke(() =>
+                {
+                    StatusText.Text = "Navigation timed out. Please try again.";
+                    Loading.Visibility = Visibility.Collapsed;
+                });
+                Debug.WriteLine($"Timeout Exception: {ex.Message}");
+                return 0;
+            }
+            catch (WebDriverException ex)
+            {
+                // Handle general WebDriver exceptions
+                Dispatcher.Invoke(() =>
+                {
+                    StatusText.Text = "An error occurred while navigating to the site.";
+                    Loading.Visibility = Visibility.Collapsed;
+
+                });
+                Debug.WriteLine($"WebDriver Exception: {ex.Message}");
+                return 0;
+            }
+            return 1;
         });
+        if (result == 0)
+        {
+            return;
+        }
         await Login();
 
         //Quitting Program
@@ -176,230 +208,352 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     public async Task Login()
     {
         StatusText.Text = "Logging In";
-        await Task.Run(() =>
+        int result =  await Task.Run(int() =>
         {
-            IWebElement signInButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("a[data-action='signIn']")));
-            if (signInButton.GetAttribute("data-name") == "Sign In")
+            try
             {
-                signInButton.Click();
+                IWebElement signInButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("a[data-action='signIn']")));
+                if (signInButton.GetAttribute("data-name") == "Sign In")
+                {
+                    signInButton.Click();
 
-                // Wait for the email field to be visible
-                IWebElement emailBox = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='email']")));
+                    // Wait for the email field to be visible
+                    IWebElement emailBox = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='email']")));
 
-                // Wait for the password field to be visible
-                IWebElement passwordBox = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='password']")));
+                    // Wait for the password field to be visible
+                    IWebElement passwordBox = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='password']")));
 
-                // Wait for the second "Sign In" button to be clickable
-                IWebElement signInButton2 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("input[value='Sign In']")));
+                    // Wait for the second "Sign In" button to be clickable
+                    IWebElement signInButton2 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("input[value='Sign In']")));
 
-                // Enter credentials and click the second "Sign In" button
-                emailBox.SendKeys("stevengr@gmepe.com");
-                passwordBox.SendKeys("eeacf@stSea49");
-                signInButton2.Click();
+                    // Enter credentials and click the second "Sign In" button
+                    emailBox.SendKeys("stevengr@gmepe.com");
+                    passwordBox.SendKeys("eeacf@stSea49");
+                    signInButton2.Click();
+                }
             }
+            catch (WebDriverTimeoutException ex)
+            {
+                // Handle timeout exceptions
+                Dispatcher.Invoke(() =>
+                {
+                    StatusText.Text = "Navigation timed out. Please try again.";
+                    Loading.Visibility = Visibility.Collapsed;
+                });
+                Debug.WriteLine($"Timeout Exception: {ex.Message}");
+                return 0;
+            }
+            catch (WebDriverException ex)
+            {
+                // Handle general WebDriver exceptions
+                Dispatcher.Invoke(() =>
+                {
+                    StatusText.Text = "An error occurred while logging in.";
+                    Loading.Visibility = Visibility.Collapsed;
+                });
+                Debug.WriteLine($"WebDriver Exception: {ex.Message}");
+                return 0;
+            }
+            return 1;
         });
+        if (result == 0)
+        {
+            return;
+        }
         await GoToProject(SaveProjectNo);
     }
     public async Task GoToProject(string projectNo)
     {
         StatusText.Text = "Navigating To Project";
 
-        await Task.Run(() =>
+        int result = await Task.Run(int() =>
         {
-            IWebElement hoverElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("a[data-live_click_handler='toggleProfileMenu'")));
-
-            // Perform the hover action
-            Actions actions = new Actions(driver);
-            actions.MoveToElement(hoverElement).Perform();
-
-            IWebElement projectButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("a[data-name='My Account | My Projects']")));
-            projectButton.Click();
-
-            IWebElement projectElement = wait.Until(driver =>
+            try
             {
-                var elements = driver.FindElements(By.CssSelector("div[data-filterable-data]"));
-                foreach (var element in elements)
+                IWebElement hoverElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("a[data-live_click_handler='toggleProfileMenu'")));
+
+                // Perform the hover action
+                Actions actions = new Actions(driver);
+                actions.MoveToElement(hoverElement).Perform();
+
+                IWebElement projectButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("a[data-name='My Account | My Projects']")));
+                projectButton.Click();
+
+                IWebElement projectElement = wait.Until(driver =>
                 {
-                    string attributeValue = element.GetAttribute("data-filterable-data");
-                    if (attributeValue != null && attributeValue.Contains(projectNo, StringComparison.OrdinalIgnoreCase))
+                    var elements = driver.FindElements(By.CssSelector("div[data-filterable-data]"));
+                    foreach (var element in elements)
                     {
-                        return element; // Return the matching element
+                        string attributeValue = element.GetAttribute("data-filterable-data");
+                        if (attributeValue != null && attributeValue.Contains(projectNo, StringComparison.OrdinalIgnoreCase))
+                        {
+                            return element; // Return the matching element
+                        }
                     }
+                    return null; // Return null if no matching element is found
+                });
+                if (projectElement != null)
+                {
+                    projectElement.Click();
                 }
-                return null; // Return null if no matching element is found
-            });
-            if (projectElement != null)
-            {
-                projectElement.Click();
             }
+            catch (WebDriverTimeoutException ex)
+            {
+                // Handle timeout exceptions
+                Dispatcher.Invoke(() =>
+                {
+                    StatusText.Text = "Project not loaded or found. Please try again.";
+                    Loading.Visibility = Visibility.Collapsed;
+                });
+                Debug.WriteLine($"Timeout Exception: {ex.Message}");
+                return 0;
+            }
+            catch (WebDriverException ex)
+            {
+                // Handle general WebDriver exceptions
+                Dispatcher.Invoke(() =>
+                {
+                    StatusText.Text = "An error occurred while navigating to project.";
+                    Loading.Visibility = Visibility.Collapsed;
+                });
+                Debug.WriteLine($"WebDriver Exception: {ex.Message}");
+                return 0;
+            }
+            return 1;
         });
+        if (result == 0)
+        {
+            return;
+        }
         await IndoorLighting();
 
     }
     public async Task IndoorLighting()
     {
         StatusText.Text = "Navigating to Indoor Lighting";
-        await Task.Run(() =>
+        int result = await Task.Run(int() =>
         {
-            IWebElement indoorLighting = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//a[text()='NRCC-LTI-E Indoor Lighting']")));
-            indoorLighting.Click();
+            try
+            {
+                IWebElement indoorLighting = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//a[text()='NRCC-LTI-E Indoor Lighting']")));
+                indoorLighting.Click();
+            }
+            catch (WebDriverTimeoutException ex)
+            {
+                // Handle timeout exceptions
+                Dispatcher.Invoke(() =>
+                {
+                    StatusText.Text = "Indoor Lighting Section not found. Please try again.";
+                    Loading.Visibility = Visibility.Collapsed;
+                });
+                Debug.WriteLine($"Timeout Exception: {ex.Message}");
+                return 0;
+            }
+            catch (WebDriverException ex)
+            {
+                // Handle general WebDriver exceptions
+                Dispatcher.Invoke(() =>
+                {
+                    StatusText.Text = "An error occurred while logging in.";
+                    Loading.Visibility = Visibility.Collapsed;
+                });
+                Debug.WriteLine($"WebDriver Exception: {ex.Message}");
+                return 0;
+            }
+            return 1;
         });
+        if (result == 0)
+        {
+            return;
+        }
         await FillOutLuminaires();
     }
     public async Task FillOutLuminaires()
     {
         StatusText.Text = "Filling Out Luminaires Section";
-        await Task.Run(() =>
+        int result =  await Task.Run(int() =>
         {
-            IWebElement luminaires = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Luminaires']")));
-            luminaires.Click();
-
-            //Grabbing Container For All Lighting Entries
-            IWebElement AddLuminaireButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Add Luminaire']")));
-
-            IWebElement lightingContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[name='organism_Table2_Row']")));
-            var Lightings =  lightingContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
-
-            int rowCount = LightingList.Count;
-
-            int lightingCount = Lightings.Count;
-
-            //Adjusting Box Count
-            if (lightingCount < rowCount)
-            {    //Adding Boxes
-                while (lightingCount < rowCount)
-                {
-                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AddLuminaireButton);
-                    lightingCount++;
-                }
-            }
-            else if (lightingCount > rowCount)
+            try
             {
-                //Removing Boxes
-                foreach (var lighting in Lightings)
-                {
-                    if (lightingCount > rowCount)
+                IWebElement luminaires = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Luminaires']")));
+                luminaires.Click();
+
+                //Grabbing Container For All Lighting Entries
+                IWebElement AddLuminaireButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Add Luminaire']")));
+
+                IWebElement lightingContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[name='organism_Table2_Row']")));
+                var Lightings = lightingContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
+
+                int rowCount = LightingList.Count;
+
+                int lightingCount = Lightings.Count;
+
+                //Adjusting Box Count
+                if (lightingCount < rowCount)
+                {    //Adding Boxes
+                    while (lightingCount < rowCount)
                     {
-                        var delete = lighting.FindElement(By.CssSelector("div[class='mod_supportControl']"));
-                        var deleteIcon = delete.FindElement(By.CssSelector("i"));
-                        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", deleteIcon);
-                        lightingCount--;
+                        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AddLuminaireButton);
+                        lightingCount++;
                     }
                 }
-            }
-            Lightings = lightingContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
-            //Editing Boxes
-            int row = 0;
-            foreach (var lighting in Lightings)
-            {
-                //iterating through text entries
-                var elements = lighting.FindElements(By.CssSelector("input[type='text']"));
-                foreach (var element in elements)
+                else if (lightingCount > rowCount)
                 {
-                    string attributeValue = element.GetAttribute("placeholder");
-                    if (attributeValue != null && attributeValue.Contains("tag name", StringComparison.OrdinalIgnoreCase))
+                    //Removing Boxes
+                    foreach (var lighting in Lightings)
                     {
-                        ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                        if (lightingCount > rowCount)
+                        {
+                            var delete = lighting.FindElement(By.CssSelector("div[class='mod_supportControl']"));
+                            var deleteIcon = delete.FindElement(By.CssSelector("i"));
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", deleteIcon);
+                            lightingCount--;
+                        }
+                    }
+                }
+                Lightings = lightingContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
+                //Editing Boxes
+                int row = 0;
+                foreach (var lighting in Lightings)
+                {
+                    //iterating through text entries
+                    var elements = lighting.FindElements(By.CssSelector("input[type='text']"));
+                    foreach (var element in elements)
+                    {
+                        string attributeValue = element.GetAttribute("placeholder");
+                        if (attributeValue != null && attributeValue.Contains("tag name", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
                             arguments[0].value = arguments[1];
                             arguments[0].dispatchEvent(new Event('input'));
                             arguments[0].dispatchEvent(new Event('change'));
                         ", element, LightingList[row].Tag);
-                    }
-                    if (attributeValue != null && attributeValue.Contains("luminaire description", StringComparison.OrdinalIgnoreCase))
-                    {
-                        ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                        }
+                        if (attributeValue != null && attributeValue.Contains("luminaire description", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
                             arguments[0].value = arguments[1];
                             arguments[0].dispatchEvent(new Event('input'));
                             arguments[0].dispatchEvent(new Event('change'));
                         ", element, LightingList[row].Description);
-                    }
-                    if (attributeValue != null && attributeValue.Contains("Watts per Luminaire", StringComparison.OrdinalIgnoreCase))
-                    {
-                        ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                        }
+                        if (attributeValue != null && attributeValue.Contains("Watts per Luminaire", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
                             arguments[0].value = arguments[1];
                             arguments[0].dispatchEvent(new Event('input'));
                             arguments[0].dispatchEvent(new Event('change'));
                         ", element, LightingList[row].Wattage);
+                        }
                     }
+                    //Iterating Through dropdown entries
+                    var dropdownElements = lighting.FindElements(By.CssSelector("div[class='selectWrapper']"));
+                    foreach (var element in dropdownElements)
+                    {
+                        var textbox = element.FindElement(By.CssSelector("input"));
+                        string placeholderValue = textbox.GetAttribute("placeholder");
+                        if (placeholderValue != null && placeholderValue.Contains("luminaire type.", StringComparison.OrdinalIgnoreCase))
+                        {
+                            switch (LightingList[row].TypeId)
+                            {
+                                case 1:
+                                    var individualLuminaire = element.FindElement(By.CssSelector("li[data-value='TypicalLuminaire'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", individualLuminaire);
+                                    break;
+                                case 2:
+                                    var trackLighting = element.FindElement(By.CssSelector("li[data-value='TrackLighting'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", trackLighting);
+                                    break;
+                                case 3:
+                                    var smallAperatureColor = element.FindElement(By.CssSelector("li[data-value='SmallAperatureColor'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", smallAperatureColor);
+                                    break;
+                            }
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("general lighting", StringComparison.OrdinalIgnoreCase))
+                        {
+                            switch (LightingList[row].IsDecorative)
+                            {
+                                case true:
+                                    var AccentDecorativeLighting = element.FindElement(By.CssSelector("li[data-value='AccentDecorativeLighting'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AccentDecorativeLighting);
+                                    break;
+                                default:
+                                    var GeneralLighting = element.FindElement(By.CssSelector("li[data-value='GeneralLighting'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", GeneralLighting);
+                                    break;
+                            }
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("Wattage Determined", StringComparison.OrdinalIgnoreCase))
+                        {
+                            switch (LightingList[row].WattageSourceId)
+                            {
+                                case 1:
+                                    var ManufacturerSpec = element.FindElement(By.CssSelector("li[data-value='ManufacturerSpec'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", ManufacturerSpec);
+                                    break;
+                                case 2:
+                                    var Default = element.FindElement(By.CssSelector("li[data-value='CEC_Default'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", Default);
+                                    break;
+                                case 3:
+                                    var Other = element.FindElement(By.CssSelector("li[data-value='Other'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", Other);
+                                    break;
+                            }
+                        }
+                        /*if (placeholderValue != null && placeholderValue.Contains("Conditioned", StringComparison.OrdinalIgnoreCase))
+                        {
+                            //fill out
+                        }*/
+                        if (placeholderValue != null && placeholderValue.Contains("excluded from total", StringComparison.OrdinalIgnoreCase))
+                        {
+                            switch (LightingList[row].IsExcluded)
+                            {
+                                case true:
+                                    var Yes = element.FindElement(By.CssSelector("li[data-value='Yes'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", Yes);
+                                    break;
+                                default:
+                                    var No = element.FindElement(By.CssSelector("li[data-value='No'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", No);
+                                    break;
+                            }
+                        }
+                    }
+                    row++;
                 }
-                //Iterating Through dropdown entries
-                var dropdownElements = lighting.FindElements(By.CssSelector("div[class='selectWrapper']"));
-                foreach(var element in dropdownElements)
-                {
-                    var textbox = element.FindElement(By.CssSelector("input"));
-                    string placeholderValue = textbox.GetAttribute("placeholder");
-                    if (placeholderValue != null && placeholderValue.Contains("luminaire type.", StringComparison.OrdinalIgnoreCase))
-                    {
-                        switch (LightingList[row].TypeId) {
-                            case 1:
-                                var individualLuminaire = element.FindElement(By.CssSelector("li[data-value='TypicalLuminaire'"));
-                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", individualLuminaire);
-                                break;
-                            case 2:
-                                var trackLighting = element.FindElement(By.CssSelector("li[data-value='TrackLighting'"));
-                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", trackLighting);
-                                break;
-                            case 3:
-                                var smallAperatureColor = element.FindElement(By.CssSelector("li[data-value='SmallAperatureColor'"));
-                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", smallAperatureColor);
-                                break;
-                        }
-                    }
-                    if (placeholderValue != null && placeholderValue.Contains("general lighting", StringComparison.OrdinalIgnoreCase))
-                    {
-                        switch (LightingList[row].IsDecorative)
-                        {
-                            case true:
-                                var AccentDecorativeLighting = element.FindElement(By.CssSelector("li[data-value='AccentDecorativeLighting'"));
-                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AccentDecorativeLighting);
-                                break;
-                            default:  
-                                var GeneralLighting = element.FindElement(By.CssSelector("li[data-value='GeneralLighting'"));
-                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", GeneralLighting);
-                                break;
-                        }
-                    }
-                    if (placeholderValue != null && placeholderValue.Contains("Wattage Determined", StringComparison.OrdinalIgnoreCase))
-                    {
-                        switch (LightingList[row].WattageSourceId)
-                        {
-                            case 1:
-                                var ManufacturerSpec = element.FindElement(By.CssSelector("li[data-value='ManufacturerSpec'"));
-                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", ManufacturerSpec);
-                                break;
-                            case 2:
-                                var Default = element.FindElement(By.CssSelector("li[data-value='CEC_Default'"));
-                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", Default);
-                                break;
-                            case 3:
-                                var Other = element.FindElement(By.CssSelector("li[data-value='Other'"));
-                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", Other);
-                                break;
-                        }
-                    }
-                    /*if (placeholderValue != null && placeholderValue.Contains("Conditioned", StringComparison.OrdinalIgnoreCase))
-                    {
-                        //fill out
-                    }*/
-                    if (placeholderValue != null && placeholderValue.Contains("excluded from total", StringComparison.OrdinalIgnoreCase))
-                    {
-                        switch (LightingList[row].IsExcluded)
-                        {
-                            case true:
-                                var Yes = element.FindElement(By.CssSelector("li[data-value='Yes'"));
-                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", Yes);
-                                break;
-                            default:
-                                var No = element.FindElement(By.CssSelector("li[data-value='No'"));
-                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", No);
-                                break;
-                        }
-                    }
-                }
-                row++;
             }
-
+            catch (WebDriverTimeoutException ex)
+            {
+                // Handle timeout exceptions
+                Dispatcher.Invoke(() =>
+                {
+                    StatusText.Text = "Navigation timed out. Please try again.";
+                    Loading.Visibility = Visibility.Collapsed;
+                });
+                Debug.WriteLine($"Timeout Exception: {ex.Message}");
+                return 0;
+            }
+            catch (WebDriverException ex)
+            {
+                // Handle general WebDriver exceptions
+                Dispatcher.Invoke(() =>
+                {
+                    StatusText.Text = "An error occurred while navigation to luminaires.";
+                    Loading.Visibility = Visibility.Collapsed;
+                });
+                Debug.WriteLine($"WebDriver Exception: {ex.Message}");
+                return 0;
+            }
+            return 1;
         });
+        if (result == 0)
+        {
+            return;
+        }
+        StatusText.Text = "";
+        Loading.Visibility = Visibility.Collapsed;
     }
 
     private async void Export_Click(object sender, RoutedEventArgs e)
@@ -410,8 +564,6 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             StatusText.Text = "Saving";
             await db.UpdateLuminaires(LightingList);
             await ActivateSelenium();
-            StatusText.Text = String.Empty;
-            Loading.Visibility = Visibility.Collapsed;
         }
     }
     private async void Download_Click(object sender, RoutedEventArgs e)
