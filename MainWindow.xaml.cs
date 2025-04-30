@@ -302,7 +302,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 // Handle timeout exceptions
                 Dispatcher.Invoke(() =>
                 {
-                    StatusText.Text = "Navigation timed out. Please try again.";
+                    StatusText.Text = "Project not loaded or found. Please try again.";
                     Loading.Visibility = Visibility.Collapsed;
                 });
                 Debug.WriteLine($"Timeout Exception: {ex.Message}");
