@@ -157,7 +157,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     public async Task ActivateSelenium()
     {
         options = new ChromeOptions();
-        options.AddArgument("headless");
+        //options.AddArgument("headless");
         driver = new ChromeDriver(options);
 
         StatusText.Text = "Navigating to Site";
