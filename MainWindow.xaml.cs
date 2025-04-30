@@ -502,10 +502,12 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                                     break;
                             }
                         }
-                        /*if (placeholderValue != null && placeholderValue.Contains("Conditioned", StringComparison.OrdinalIgnoreCase))
+                        if (placeholderValue != null && placeholderValue.Contains("Conditioned", StringComparison.OrdinalIgnoreCase))
                         {
-                            //fill out
-                        }*/
+                            var ConditionedBox = element.FindElement(By.CssSelector("div[data-name='Conditioned'"));
+                            var ConditionedBoxLabel = ConditionedBox.FindElement(By.CssSelector("label"));
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", ConditionedBoxLabel);
+                        }
                         if (placeholderValue != null && placeholderValue.Contains("excluded from total", StringComparison.OrdinalIgnoreCase))
                         {
                             switch (LightingList[row].IsExcluded)
