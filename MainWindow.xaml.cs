@@ -343,7 +343,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 // Handle timeout exceptions
                 Dispatcher.Invoke(() =>
                 {
-                    StatusText.Text = "Navigation timed out. Please try again.";
+                    StatusText.Text = "Indoor Lighting Section not found. Please try again.";
                     Loading.Visibility = Visibility.Collapsed;
                 });
                 Debug.WriteLine($"Timeout Exception: {ex.Message}");
