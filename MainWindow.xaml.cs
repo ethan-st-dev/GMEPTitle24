@@ -156,9 +156,12 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     }
     public async Task ActivateSelenium()
     {
+        var service = ChromeDriverService.CreateDefaultService();
+        service.HideCommandPromptWindow = true;
+
         options = new ChromeOptions();
         options.AddArgument("headless");
-        driver = new ChromeDriver(options);
+        driver = new ChromeDriver(service, options);
 
         StatusText.Text = "Navigating to Site";
       
@@ -206,13 +209,18 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         driver.Quit();
 
         options = new ChromeOptions();
-        driver = new ChromeDriver(options);
-        driver.Navigate().GoToUrl(url);
-        foreach (var cookie in cookies)
+        driver = new ChromeDriver(service, options);
+        StatusText.Text = "Launching Window.";
+    
+        await Task.Run(() =>
         {
-            driver.Manage().Cookies.AddCookie(cookie);
-        }
-        driver.Navigate().Refresh();
+            driver.Navigate().GoToUrl(url);
+            foreach (var cookie in cookies)
+            {
+                driver.Manage().Cookies.AddCookie(cookie);
+            }
+            driver.Navigate().Refresh();
+        });
     }
 
     public async Task Login()
