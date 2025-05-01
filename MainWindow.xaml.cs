@@ -405,33 +405,20 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 IWebElement lightingContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[name='organism_Table2_Row']")));
                 var Lightings = lightingContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
 
-                int rowCount = LightingList.Count;
-
-                int lightingCount = Lightings.Count;
-
-                //Adjusting Box Count
-                if (lightingCount < rowCount)
-                {    //Adding Boxes
-                    while (lightingCount < rowCount)
-                    {
-                        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AddLuminaireButton);
-                        lightingCount++;
-                    }
-                }
-                else if (lightingCount > rowCount)
+                //Removing all entries and adding new ones
+                foreach (var lighting in Lightings)
                 {
-                    //Removing Boxes
-                    foreach (var lighting in Lightings)
-                    {
-                        if (lightingCount > rowCount)
-                        {
-                            var delete = lighting.FindElement(By.CssSelector("div[class='mod_supportControl']"));
-                            var deleteIcon = delete.FindElement(By.CssSelector("i"));
-                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", deleteIcon);
-                            lightingCount--;
-                        }
-                    }
+                    var delete = lighting.FindElement(By.CssSelector("div[class='mod_supportControl']"));
+                    var deleteIcon = delete.FindElement(By.CssSelector("i"));
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", deleteIcon);
                 }
+
+                foreach(var lighting in LightingList)
+                {
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AddLuminaireButton);
+                }
+                
+                   
                 Lightings = lightingContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
                 //Editing Boxes
                 int row = 0;
