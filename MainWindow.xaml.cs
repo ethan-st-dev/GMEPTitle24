@@ -157,7 +157,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     public async Task ActivateSelenium()
     {
         options = new ChromeOptions();
-        //options.AddArgument("headless");
+        options.AddArgument("headless");
         driver = new ChromeDriver(options);
 
         StatusText.Text = "Navigating to Site";
@@ -200,8 +200,22 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         }
         await Login();
 
+        //Quitting and launching new window
+        var cookies = driver.Manage().Cookies.AllCookies;
+        var url = driver.Url;
+        driver.Quit();
+
+        options = new ChromeOptions();
+        driver = new ChromeDriver(options);
+        driver.Navigate().GoToUrl(url);
+        foreach (var cookie in cookies)
+        {
+            driver.Manage().Cookies.AddCookie(cookie);
+        }
+        driver.Navigate().Refresh();
+
         //Quitting Program
-        //driver.Quit();
+        //
 
     }
 
@@ -302,7 +316,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 // Handle timeout exceptions
                 Dispatcher.Invoke(() =>
                 {
-                    StatusText.Text = "Project not loaded or found. Please try again.";
+                    StatusText.Text = "Project not loaded or found. Please create a project starting with the project number " + projectNo.ToString() + ".";
                     Loading.Visibility = Visibility.Collapsed;
                 });
                 Debug.WriteLine($"Timeout Exception: {ex.Message}");
