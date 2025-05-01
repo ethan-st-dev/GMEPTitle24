@@ -180,9 +180,9 @@ namespace GMEPTitle24
                 command.Parameters.AddWithValue("@wattageSourceId", lighting.WattageSourceId);
                 command.Parameters.AddWithValue("@isExcluded", lighting.IsExcluded);
                 command.Parameters.AddWithValue("@id", lighting.Id);
-                command.Parameters.AddWithValue("@complianceMethodId", 1); // Default or placeholder value
-                command.Parameters.AddWithValue("@occupancyTypeId", 1); // Default or placeholder value
-                command.Parameters.AddWithValue("@conditionedTypeId", 1); // Default or placeholder value
+                command.Parameters.AddWithValue("@complianceMethodId", lighting.ComplianceMethodId); // Default or placeholder value
+                command.Parameters.AddWithValue("@occupancyTypeId", lighting.OccupancyTypeId); // Default or placeholder value
+                command.Parameters.AddWithValue("@conditionedTypeId", lighting.ConditionedTypeId); // Default or placeholder value
                 await command.ExecuteNonQueryAsync();
             }
             await CloseConnectionAsync();
