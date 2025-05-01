@@ -79,6 +79,9 @@ namespace GMEPTitle24
                             ellum.type_id,
                             ellum.is_decorative,
                             ellum.wattage_source_id,
+                            ellum.occupancy_type_id,
+                            ellum.conditioned_type_id,
+                            ellum.compliance_method_id,
                             ellum.is_excluded
                             FROM 
                                 electrical_lighting el
@@ -113,7 +116,10 @@ namespace GMEPTitle24
                         !reader.IsDBNull(reader.GetOrdinal("wattage_source_id")) ? reader.GetInt32("wattage_source_id") : 1,
                         !reader.IsDBNull(reader.GetOrdinal("type_id")) ? reader.GetInt32("type_id") : 1,
                         reader.GetInt32("qty"),
-                        !reader.IsDBNull(reader.GetOrdinal("is_excluded")) && reader.GetBoolean("is_excluded")
+                        !reader.IsDBNull(reader.GetOrdinal("is_excluded")) && reader.GetBoolean("is_excluded"),
+                        !reader.IsDBNull(reader.GetOrdinal("compliance_method_id")) ? reader.GetInt32("compliance_method_id") : 1,
+                        !reader.IsDBNull(reader.GetOrdinal("occupancy_type_id")) ? reader.GetInt32("occupancy_type_id") : 1,
+                        !reader.IsDBNull(reader.GetOrdinal("conditioned_type_id")) ? reader.GetInt32("conditioned_type_id") : 1
                     )
                 );
                 if (reader.IsDBNull(reader.GetOrdinal("luminaire_id")))
@@ -125,9 +131,9 @@ namespace GMEPTitle24
 
             //Adding Luminaires for lighting that doesnt have one
             query = @"INSERT INTO electrical_lighting_lti_luminaires 
-                     (id, fixture_id, type_id, is_decorative, wattage_source_id, is_excluded, project_id) 
+                     (id, fixture_id, type_id, is_decorative, wattage_source_id, is_excluded, project_id, compliance_method_id, occupancy_type_id, conditioned_type_id) 
                      VALUES 
-                     (@id, @fixtureId, @typeId, @isDecorative, @wattageSourceId, @isExcluded, @projectId)";
+                     (@id, @fixtureId, @typeId, @isDecorative, @wattageSourceId, @isExcluded, @projectId, @complianceMethodId, @occupancyTypeId, @conditionedTypeId)";
 
 
             foreach (var luminaireId in newLuminaireIds)
@@ -140,6 +146,9 @@ namespace GMEPTitle24
                 command.Parameters.AddWithValue("@wattageSourceId", 1); // Default or placeholder value
                 command.Parameters.AddWithValue("@isExcluded", false); // Default or placeholder value
                 command.Parameters.AddWithValue("@projectId", projectId); // Default or placeholder value
+                command.Parameters.AddWithValue("@complianceMethodId", 1); // Default or placeholder value
+                command.Parameters.AddWithValue("@occupancyTypeId", 1); // Default or placeholder value
+                command.Parameters.AddWithValue("@conditionedTypeId", 1); // Default or placeholder value
                 await command.ExecuteNonQueryAsync();
             }
 
@@ -164,13 +173,16 @@ namespace GMEPTitle24
             await OpenConnectionAsync();
             foreach (var lighting in lightings)
             {
-                string query = "UPDATE electrical_lighting_lti_luminaires SET is_decorative = @isDecorative, type_id = @typeId, wattage_source_id = @wattageSourceId, is_excluded = @isExcluded WHERE fixture_id = @id";
+                string query = "UPDATE electrical_lighting_lti_luminaires SET is_decorative = @isDecorative, type_id = @typeId, wattage_source_id = @wattageSourceId, is_excluded = @isExcluded, compliance_method_id = @complianceMethodId, occupancy_type_id = @occupancyTypeId, conditioned_type_id = @conditionedTypeId WHERE fixture_id = @id";
                 MySqlCommand command = new MySqlCommand(query, Connection);
                 command.Parameters.AddWithValue("@isDecorative", lighting.IsDecorative);
                 command.Parameters.AddWithValue("@typeId", lighting.TypeId);
                 command.Parameters.AddWithValue("@wattageSourceId", lighting.WattageSourceId);
                 command.Parameters.AddWithValue("@isExcluded", lighting.IsExcluded);
                 command.Parameters.AddWithValue("@id", lighting.Id);
+                command.Parameters.AddWithValue("@complianceMethodId", 1); // Default or placeholder value
+                command.Parameters.AddWithValue("@occupancyTypeId", 1); // Default or placeholder value
+                command.Parameters.AddWithValue("@conditionedTypeId", 1); // Default or placeholder value
                 await command.ExecuteNonQueryAsync();
             }
             await CloseConnectionAsync();

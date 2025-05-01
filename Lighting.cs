@@ -19,6 +19,9 @@ namespace GMEPTitle24
         private int wattageSourceId = 1;
         private int count = 0;
         private bool isExcluded = false;
+        private int complianceMethodId = 1;
+        private int occupancyTypeId = 1;
+        private int conditionedTypeId = 1;
         public event PropertyChangedEventHandler PropertyChanged;
         public Lighting(
            string id,
@@ -30,7 +33,10 @@ namespace GMEPTitle24
            int wattageSourceId,
            int typeId,
            int count,
-           bool isExcluded
+           bool isExcluded,
+           int complianceMethodId,
+           int occupancyTypeId,
+           int conditionedTypeId
         )
         {
             this.id = id;
@@ -43,6 +49,9 @@ namespace GMEPTitle24
             this.typeId = typeId;
             this.count = count;
             this.isExcluded = isExcluded;
+            this.complianceMethodId = complianceMethodId;
+            this.occupancyTypeId = occupancyTypeId;
+            this.conditionedTypeId = conditionedTypeId;
         }
         public string Id
         {
@@ -162,6 +171,42 @@ namespace GMEPTitle24
                 {
                     isExcluded = value;
                     OnPropertyChanged(nameof(IsExcluded));
+                }
+            }
+        }
+        public int ComplianceMethodId
+        {
+            get => complianceMethodId;
+            set
+            {
+                if (complianceMethodId != value)
+                {
+                    complianceMethodId = value;
+                    OnPropertyChanged(nameof(ComplianceMethodId));
+                }
+            }
+        }
+        public int OccupancyTypeId
+        {
+            get => occupancyTypeId;
+            set
+            {
+                if (occupancyTypeId != value)
+                {
+                    occupancyTypeId = value;
+                    OnPropertyChanged(nameof(OccupancyTypeId));
+                }
+            }
+        }
+        public int ConditionedTypeId
+        {
+            get => conditionedTypeId;
+            set
+            {
+                if (conditionedTypeId != value)
+                {
+                    conditionedTypeId = value;
+                    OnPropertyChanged(nameof(ConditionedTypeId));
                 }
             }
         }

@@ -22,7 +22,7 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" Width="*" IsReadOnly="True" />
                                 <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*" IsReadOnly="True" />
-                                <DataGridComboBoxColumn Header="Type" SelectedValueBinding="{Binding TypeId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
+                                <DataGridComboBoxColumn Width="*" Header="Type" SelectedValueBinding="{Binding TypeId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
                                     <DataGridComboBoxColumn.ItemsSource>
                                         <CompositeCollection>
                                             <ComboBoxItem Content="Individual Luminaire" Tag="1" />
@@ -33,7 +33,7 @@
                                 </DataGridComboBoxColumn>
                                 <DataGridCheckBoxColumn Header="Decorative" Binding="{Binding IsDecorative}" Width="*" />
                                 <DataGridTextColumn Header="Watts" Binding="{Binding Wattage}" Width="*" IsReadOnly="True" />
-                                <DataGridComboBoxColumn Header="Wattage Info Source" SelectedValueBinding="{Binding WattageSourceId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
+                                <DataGridComboBoxColumn Header="Wattage Info Source" Width="*" SelectedValueBinding="{Binding WattageSourceId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
                                     <DataGridComboBoxColumn.ItemsSource>
                                         <CompositeCollection>
                                             <ComboBoxItem Content="Manufacturer Specification Sheet" Tag="1" />
@@ -42,8 +42,76 @@
                                         </CompositeCollection>
                                     </DataGridComboBoxColumn.ItemsSource>
                                 </DataGridComboBoxColumn>
+                                <DataGridComboBoxColumn Header="Conditioned Type" Width="*" SelectedValueBinding="{Binding ConditionedTypeId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
+                                    <DataGridComboBoxColumn.ItemsSource>
+                                        <CompositeCollection>
+                                            <ComboBoxItem Content="Conditioned" Tag="1" />
+                                            <ComboBoxItem Content="Unconditioned" Tag="2" />
+                                            <ComboBoxItem Content="Conditioned, Unconditioned" Tag="3" />
+                                        </CompositeCollection>
+                                    </DataGridComboBoxColumn.ItemsSource>
+                                </DataGridComboBoxColumn>
                                 <DataGridTextColumn Header="Count" Binding="{Binding Count}" Width="*" IsReadOnly="True" />
                                 <DataGridCheckBoxColumn Header="Excluded" Binding="{Binding IsExcluded}" Width="*"/>
+                                <DataGridComboBoxColumn Header="Compliance Method" Width="*" SelectedValueBinding="{Binding ComplianceMethodId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
+                                    <DataGridComboBoxColumn.ItemsSource>
+                                        <CompositeCollection>
+                                            <ComboBoxItem Content="Current Limiter" Tag="1" />
+                                            <ComboBoxItem Content="Installed Luminaires vs Defaults 20 W/ft" Tag="2" />
+                                            <ComboBoxItem Content="Overcurrent Protection Panel" Tag="3" />
+                                            <ComboBoxItem Content="Power supplied by driver, power supply or transformer" Tag="4" />
+                                        </CompositeCollection>
+                                    </DataGridComboBoxColumn.ItemsSource>
+                                    <DataGridComboBoxColumn.EditingElementStyle>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding TypeId}" Value="2">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGridComboBoxColumn.EditingElementStyle>
+                                    <DataGridComboBoxColumn.ElementStyle>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding TypeId}" Value="2">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGridComboBoxColumn.ElementStyle>
+                                </DataGridComboBoxColumn>
+                                <DataGridComboBoxColumn Header="Occupancy Type" Width="*" SelectedValueBinding="{Binding OccupancyTypeId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
+                                    <DataGridComboBoxColumn.ItemsSource>
+                                        <CompositeCollection>
+                                            <ComboBoxItem Content="Used in multifamily occupancy" Tag="1" />
+                                            <ComboBoxItem Content="Used in Nonres occupancy" Tag="2" />
+                                            <ComboBoxItem Content="NA" Tag="3" />
+                                        </CompositeCollection>
+                                    </DataGridComboBoxColumn.ItemsSource>
+                                    <DataGridComboBoxColumn.EditingElementStyle>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding TypeId}" Value="3">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGridComboBoxColumn.EditingElementStyle>
+                                    <DataGridComboBoxColumn.ElementStyle>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding TypeId}" Value="3">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGridComboBoxColumn.ElementStyle>
+                                </DataGridComboBoxColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </TabItem>
