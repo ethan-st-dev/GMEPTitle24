@@ -211,6 +211,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         options = new ChromeOptions();
         driver = new ChromeDriver(service, options);
         StatusText.Text = "Launching Window.";
+        Loading.Visibility = Visibility.Visible;
     
         await Task.Run(() =>
         {
@@ -221,6 +222,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             }
             driver.Navigate().Refresh();
         });
+        StatusText.Text = "";
+        Loading.Visibility = Visibility.Collapsed;
     }
 
     public async Task Login()
@@ -543,6 +546,13 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                     }
                     row++;
                 }
+                IWebElement SaveButton = driver.FindElement(By.XPath("//div[text()='Save']"));
+                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", SaveButton);
+
+                IWebElement luminaires2 = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Luminaires']")));
+                luminaires2.Click();
+
+
             }
             catch (WebDriverTimeoutException ex)
             {
