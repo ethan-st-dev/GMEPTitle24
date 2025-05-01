@@ -526,8 +526,21 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                         if (placeholderValue != null && placeholderValue.Contains("Conditioned", StringComparison.OrdinalIgnoreCase))
                         {
                             var ConditionedBox = element.FindElement(By.CssSelector("div[data-name='Conditioned'"));
+                            var UnconditionedBox = element.FindElement(By.CssSelector("div[data-name='Unconditioned'"));
                             var ConditionedBoxLabel = ConditionedBox.FindElement(By.CssSelector("label"));
-                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", ConditionedBoxLabel);
+                            var UnconditionedBoxLabel = UnconditionedBox.FindElement(By.CssSelector("label"));
+                            switch (LightingList[row].ConditionedTypeId) {
+                                case 1:
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", ConditionedBoxLabel);
+                                    break;
+                                case 2:
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", UnconditionedBoxLabel);
+                                    break;
+                                case 3:
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", ConditionedBoxLabel);
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", UnconditionedBoxLabel);
+                                    break;
+                            }
                         }
                         if (placeholderValue != null && placeholderValue.Contains("excluded from total", StringComparison.OrdinalIgnoreCase))
                         {
@@ -540,6 +553,46 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                                 default:
                                     var No = element.FindElement(By.CssSelector("li[data-value='No'"));
                                     ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", No);
+                                    break;
+                            }
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("Occupancy", StringComparison.OrdinalIgnoreCase))
+                        {
+                            switch (LightingList[row].OccupancyTypeId)
+                            {
+                                case 1:
+                                    var mf = element.FindElement(By.CssSelector("li[data-value='OccupancyMF'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", mf);
+                                    break;
+                                case 2:
+                                    var nonRes = element.FindElement(By.CssSelector("li[data-value='OccupancyNonres'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();",nonRes);
+                                    break;
+                                case 3:
+                                    var na = element.FindElement(By.CssSelector("li[data-value='OccupancyNA'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", na);
+                                    break;
+                            }
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("determine compliance", StringComparison.OrdinalIgnoreCase))
+                        {
+                            switch (LightingList[row].ComplianceMethodId)
+                            {
+                                case 1:
+                                    var curr = element.FindElement(By.CssSelector("li[data-value='TrackLightingPowerCalculation2'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", curr);
+                                    break;
+                                case 2:
+                                    var installed = element.FindElement(By.CssSelector("li[data-value='TrackLightingPowerCalculation1'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", installed);
+                                    break;
+                                case 3:
+                                    var overCurr = element.FindElement(By.CssSelector("li[data-value='TrackLightingPowerCalculation3'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", overCurr);
+                                    break;
+                                case 4:
+                                    var supplied = element.FindElement(By.CssSelector("li[data-value='TrackLightingPowerCalculation4'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", supplied);
                                     break;
                             }
                         }
