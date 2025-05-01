@@ -213,10 +213,6 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             driver.Manage().Cookies.AddCookie(cookie);
         }
         driver.Navigate().Refresh();
-
-        //Quitting Program
-        //
-
     }
 
     public async Task Login()
