@@ -466,7 +466,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                             arguments[0].dispatchEvent(new Event('change'));
                         ", element, LightingList[row].Description);
                         }
-                        if (attributeValue != null && attributeValue.Contains("Watts per Luminaire", StringComparison.OrdinalIgnoreCase))
+                        if (attributeValue != null && attributeValue.Contains("atts per Luminaire", StringComparison.OrdinalIgnoreCase))
                         {
                             ((IJavaScriptExecutor)driver).ExecuteScript(@"
                             arguments[0].value = arguments[1];
