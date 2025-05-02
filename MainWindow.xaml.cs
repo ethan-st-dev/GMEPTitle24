@@ -466,13 +466,53 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                             arguments[0].dispatchEvent(new Event('change'));
                         ", element, LightingList[row].Description);
                         }
-                        if (attributeValue != null && attributeValue.Contains("atts per Luminaire", StringComparison.OrdinalIgnoreCase))
+                        if (attributeValue != null && attributeValue.Contains("watts per luminaire", StringComparison.OrdinalIgnoreCase))
                         {
                             ((IJavaScriptExecutor)driver).ExecuteScript(@"
                             arguments[0].value = arguments[1];
                             arguments[0].dispatchEvent(new Event('input'));
                             arguments[0].dispatchEvent(new Event('change'));
                         ", element, LightingList[row].Wattage);
+                        }
+                        if (attributeValue != null && attributeValue.Contains("volt-ampere rating", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, LightingList[row].VoltAmpRating);
+                        }
+                        if (attributeValue != null && attributeValue.Contains("how many luminaires", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, LightingList[row].LuminaireQty);
+                        }
+                        if (attributeValue != null && attributeValue.Contains("branch circuit", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, LightingList[row].BranchCircuitVoltage);
+                        }
+                        if (attributeValue != null && attributeValue.Contains("combined ampacity", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, LightingList[row].CombinedBreakerAmps);
+                        }
+                        if (attributeValue != null && attributeValue.Contains("maximum rated input wattage", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, LightingList[row].MaxInputWattage);
                         }
                     }
                     //Iterating Through dropdown entries
