@@ -204,23 +204,19 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         await Login();
 
         //Quitting and launching new window
-        var cookies = driver.Manage().Cookies.AllCookies;
         var url = driver.Url;
         driver.Quit();
 
-        options = new ChromeOptions();
-        driver = new ChromeDriver(service, options);
         StatusText.Text = "Launching Window.";
         Loading.Visibility = Visibility.Visible;
     
         await Task.Run(() =>
         {
-            driver.Navigate().GoToUrl(url);
-            foreach (var cookie in cookies)
+            Process.Start(new ProcessStartInfo
             {
-                driver.Manage().Cookies.AddCookie(cookie);
-            }
-            driver.Navigate().Refresh();
+                FileName = url,
+                UseShellExecute = true // Ensures the default browser is used
+            });
         });
         StatusText.Text = "";
         Loading.Visibility = Visibility.Collapsed;
