@@ -82,7 +82,14 @@ namespace GMEPTitle24
                             ellum.occupancy_type_id,
                             ellum.conditioned_type_id,
                             ellum.compliance_method_id,
-                            ellum.is_excluded
+                            ellum.is_excluded,
+                            ellum.conditioned_qty,
+                            ellum.luminaire_qty,
+                            ellum.volt_ampere_rating,
+                            ellum.linear_feet,
+                            ellum.branch_circuit_voltage,
+                            ellum.combined_breaker_amps,
+                            ellum.max_input_wattage
                             FROM 
                                 electrical_lighting el
                             LEFT JOIN 
@@ -119,7 +126,15 @@ namespace GMEPTitle24
                         !reader.IsDBNull(reader.GetOrdinal("is_excluded")) && reader.GetBoolean("is_excluded"),
                         !reader.IsDBNull(reader.GetOrdinal("compliance_method_id")) ? reader.GetInt32("compliance_method_id") : 1,
                         !reader.IsDBNull(reader.GetOrdinal("occupancy_type_id")) ? reader.GetInt32("occupancy_type_id") : 1,
-                        !reader.IsDBNull(reader.GetOrdinal("conditioned_type_id")) ? reader.GetInt32("conditioned_type_id") : 1
+                        !reader.IsDBNull(reader.GetOrdinal("conditioned_type_id")) ? reader.GetInt32("conditioned_type_id") : 1,
+                        !reader.IsDBNull(reader.GetOrdinal("conditioned_qty"))?  reader.GetInt32("conditioned_qty") : 0,
+                        !reader.IsDBNull(reader.GetOrdinal("luminaire_qty")) ? reader.GetInt32("luminaire_qty") : 0,
+                        !reader.IsDBNull(reader.GetOrdinal("volt_ampere_rating")) ? reader.GetFloat("volt_ampere_rating") : 0,
+                        !reader.IsDBNull(reader.GetOrdinal("linear_feet")) ? reader.GetFloat("linear_feet") : 0,
+                        !reader.IsDBNull(reader.GetOrdinal("branch_circuit_voltage")) ? reader.GetFloat("branch_circuit_voltage") : 0,
+                        !reader.IsDBNull(reader.GetOrdinal("combined_breaker_amps")) ? reader.GetFloat("combined_breaker_amps") : 0,
+                        !reader.IsDBNull(reader.GetOrdinal("max_input_wattage")) ? reader.GetFloat("max_input_wattage") : 0
+
                     )
                 );
                 if (reader.IsDBNull(reader.GetOrdinal("luminaire_id")))
@@ -131,9 +146,9 @@ namespace GMEPTitle24
 
             //Adding Luminaires for lighting that doesnt have one
             query = @"INSERT INTO electrical_lighting_lti_luminaires 
-                     (id, fixture_id, type_id, is_decorative, wattage_source_id, is_excluded, project_id, compliance_method_id, occupancy_type_id, conditioned_type_id) 
+                     (id, fixture_id, type_id, is_decorative, wattage_source_id, is_excluded, project_id, compliance_method_id, occupancy_type_id, conditioned_type_id, conditioned_qty, luminaire_qty, volt_ampere_rating, linear_feet, branch_circuit_voltage, combined_breaker_amps, max_input_wattage) 
                      VALUES 
-                     (@id, @fixtureId, @typeId, @isDecorative, @wattageSourceId, @isExcluded, @projectId, @complianceMethodId, @occupancyTypeId, @conditionedTypeId)";
+                     (@id, @fixtureId, @typeId, @isDecorative, @wattageSourceId, @isExcluded, @projectId, @complianceMethodId, @occupancyTypeId, @conditionedTypeId, @conditionedQty, @luminaireQty, @voltAmpereRating, @linearFeet, @branchCircuitVoltage, @combinedBreakerAmps, @maxInputWattage)";
 
 
             foreach (var luminaireId in newLuminaireIds)
@@ -149,6 +164,13 @@ namespace GMEPTitle24
                 command.Parameters.AddWithValue("@complianceMethodId", 1); // Default or placeholder value
                 command.Parameters.AddWithValue("@occupancyTypeId", 1); // Default or placeholder value
                 command.Parameters.AddWithValue("@conditionedTypeId", 1); // Default or placeholder value
+                command.Parameters.AddWithValue("@conditionedQty", 0); // Default or placeholder value
+                command.Parameters.AddWithValue("@luminaireQty", 1); // Default or placeholder value
+                command.Parameters.AddWithValue("@voltAmpereRating", 0); // Default or placeholder value
+                command.Parameters.AddWithValue("@linearFeet", 0); // Default or placeholder value
+                command.Parameters.AddWithValue("@branchCircuitVoltage", 0); // Default or placeholder value
+                command.Parameters.AddWithValue("@combinedBreakerAmps", 0); // Default or placeholder value
+                command.Parameters.AddWithValue("@maxInputWattage", 0); // Default or placeholder value
                 await command.ExecuteNonQueryAsync();
             }
 
@@ -173,7 +195,7 @@ namespace GMEPTitle24
             await OpenConnectionAsync();
             foreach (var lighting in lightings)
             {
-                string query = "UPDATE electrical_lighting_lti_luminaires SET is_decorative = @isDecorative, type_id = @typeId, wattage_source_id = @wattageSourceId, is_excluded = @isExcluded, compliance_method_id = @complianceMethodId, occupancy_type_id = @occupancyTypeId, conditioned_type_id = @conditionedTypeId WHERE fixture_id = @id";
+                string query = "UPDATE electrical_lighting_lti_luminaires SET is_decorative = @isDecorative, type_id = @typeId, wattage_source_id = @wattageSourceId, is_excluded = @isExcluded, compliance_method_id = @complianceMethodId, occupancy_type_id = @occupancyTypeId, conditioned_type_id = @conditionedTypeId, conditioned_qty = @conditionedQty, luminaire_qty = @luminaireQty, volt_ampere_rating = @voltAmpereRating, linear_feet = @linearFeet, branch_circuit_voltage = @branchCircuitVoltage, combined_breaker_amps = @combinedBreakerAmps, max_input_wattage = @maxInputWattage WHERE fixture_id = @id";
                 MySqlCommand command = new MySqlCommand(query, Connection);
                 command.Parameters.AddWithValue("@isDecorative", lighting.IsDecorative);
                 command.Parameters.AddWithValue("@typeId", lighting.TypeId);
@@ -183,6 +205,13 @@ namespace GMEPTitle24
                 command.Parameters.AddWithValue("@complianceMethodId", lighting.ComplianceMethodId); // Default or placeholder value
                 command.Parameters.AddWithValue("@occupancyTypeId", lighting.OccupancyTypeId); // Default or placeholder value
                 command.Parameters.AddWithValue("@conditionedTypeId", lighting.ConditionedTypeId); // Default or placeholder value
+                command.Parameters.AddWithValue("@conditionedQty", lighting.ConditionedQty); // Default or placeholder value
+                command.Parameters.AddWithValue("@luminaireQty", lighting.LuminaireQty); // Default or placeholder value
+                command.Parameters.AddWithValue("@voltAmpereRating", lighting.VoltAmpRating); // Default or placeholder value
+                command.Parameters.AddWithValue("@linearFeet", lighting.LinearFeet); // Default or placeholder value
+                command.Parameters.AddWithValue("@branchCircuitVoltage", lighting.BranchCircuitVoltage); // Default or placeholder value
+                command.Parameters.AddWithValue("@combinedBreakerAmps", lighting.CombinedBreakerAmps); // Default or placeholder value
+                command.Parameters.AddWithValue("@maxInputWattage", lighting.MaxInputWattage); // Default or placeholder value
                 await command.ExecuteNonQueryAsync();
             }
             await CloseConnectionAsync();
