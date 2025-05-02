@@ -514,6 +514,22 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                             arguments[0].dispatchEvent(new Event('change'));
                         ", element, LightingList[row].MaxInputWattage);
                         }
+                        if (attributeValue != null && attributeValue.Contains("are in conditioned space", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, LightingList[row].ConditionedQty);
+                        }
+                        if (attributeValue != null && attributeValue.Contains("linear feet", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, LightingList[row].LinearFeet);
+                        }
                     }
                     //Iterating Through dropdown entries
                     var dropdownElements = lighting.FindElements(By.CssSelector("div[class='selectWrapper']"));
