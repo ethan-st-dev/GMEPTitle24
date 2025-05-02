@@ -394,6 +394,31 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             {
                 IWebElement luminaires = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Luminaires']")));
                 luminaires.Click();
+                try
+                {
+                    WebDriverWait continueWait = new WebDriverWait(driver, TimeSpan.FromSeconds(2));
+                    IWebElement continueAnyway = continueWait.Until(driver =>
+                    {
+                        try
+                        {
+                            return driver.FindElement(By.XPath("//div[text()='Continue Anyway']"));
+                        }
+                        catch (NoSuchElementException)
+                        {
+                            return null;
+                        }
+                    });
+
+                    if (continueAnyway != null)
+                    {
+                        continueAnyway.Click();
+                    }
+                }
+                catch (WebDriverTimeoutException)
+                {
+                    // If the "continue anyway" div is not found within the timeout, proceed
+                    Debug.WriteLine("The 'continue anyway' div was not found. Proceeding...");
+                }
 
                 //Grabbing Container For All Lighting Entries
                 IWebElement AddLuminaireButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Add Luminaire']")));
