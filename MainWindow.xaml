@@ -24,326 +24,330 @@
                                 <RowDefinition Height="5"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <DataGrid Grid.Row="0" ItemsSource="{Binding LightingList}" AutoGenerateColumns="False">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" Width="*" IsReadOnly="True" />
-                                    <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*" IsReadOnly="True" />
-                                    <DataGridComboBoxColumn Width="*" Header="Type" SelectedValueBinding="{Binding TypeId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
-                                        <DataGridComboBoxColumn.ItemsSource>
-                                            <CompositeCollection>
-                                                <ComboBoxItem Content="Individual Luminaire" Tag="1" />
-                                                <ComboBoxItem Content="Track Lighting" Tag="2" />
-                                                <ComboBoxItem Content="Small Aperture and Color Changing" Tag="3" />
-                                            </CompositeCollection>
-                                        </DataGridComboBoxColumn.ItemsSource>
-                                    </DataGridComboBoxColumn>
-                                    <DataGridCheckBoxColumn Header="Decorative" Binding="{Binding IsDecorative}" Width="*" />
-                                    <DataGridTextColumn Header="Watts" Binding="{Binding Wattage}" Width="*" IsReadOnly="True" />
-                                    <DataGridComboBoxColumn Header="Wattage Info Source" Width="*" SelectedValueBinding="{Binding WattageSourceId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
-                                        <DataGridComboBoxColumn.ItemsSource>
-                                            <CompositeCollection>
-                                                <ComboBoxItem Content="Manufacturer Specification Sheet" Tag="1" />
-                                                <ComboBoxItem Content="Default from Nonresidential Appendix 8" Tag="2" />
-                                                <ComboBoxItem Content="Other" Tag="3" />
-                                            </CompositeCollection>
-                                        </DataGridComboBoxColumn.ItemsSource>
-                                    </DataGridComboBoxColumn>
-                                    <DataGridComboBoxColumn Header="Conditioned Type" Width="*" SelectedValueBinding="{Binding ConditionedTypeId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
-                                        <DataGridComboBoxColumn.ItemsSource>
-                                            <CompositeCollection>
-                                                <ComboBoxItem Content="Conditioned" Tag="1" />
-                                                <ComboBoxItem Content="Unconditioned" Tag="2" />
-                                                <ComboBoxItem Content="Conditioned, Unconditioned" Tag="3" />
-                                            </CompositeCollection>
-                                        </DataGridComboBoxColumn.ItemsSource>
-                                    </DataGridComboBoxColumn>
-                                    <DataGridTextColumn Header="Count" Binding="{Binding Count}" Width="*" IsReadOnly="True" />
-                                    <DataGridTextColumn Header="Conditioned Count" Width="*" Binding="{Binding ConditionedQty,UpdateSourceTrigger=LostFocus}" >
-                                        <DataGridTextColumn.EditingElementStyle>
-                                            <Style TargetType="TextBox">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding ConditionedTypeId}" Value="3">
-                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding ConditionedTypeId}" Value="1">
-                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </DataGridTextColumn.EditingElementStyle>
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding ConditionedTypeId}" Value="3">
-                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding ConditionedTypeId}" Value="1">
-                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-                                    <DataGridCheckBoxColumn Header="Excluded" Binding="{Binding IsExcluded}" Width="*"/>
-                                </DataGrid.Columns>
-                            </DataGrid>
+                            <GroupBox Header="Options" Grid.Row="0">
+                                <DataGrid ItemsSource="{Binding LightingList}" AutoGenerateColumns="False">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" Width="*" IsReadOnly="True" />
+                                        <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*" IsReadOnly="True" />
+                                        <DataGridComboBoxColumn Width="*" Header="Type" SelectedValueBinding="{Binding TypeId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
+                                            <DataGridComboBoxColumn.ItemsSource>
+                                                <CompositeCollection>
+                                                    <ComboBoxItem Content="Individual Luminaire" Tag="1" />
+                                                    <ComboBoxItem Content="Track Lighting" Tag="2" />
+                                                    <ComboBoxItem Content="Small Aperture and Color Changing" Tag="3" />
+                                                </CompositeCollection>
+                                            </DataGridComboBoxColumn.ItemsSource>
+                                        </DataGridComboBoxColumn>
+                                        <DataGridCheckBoxColumn Header="Decorative" Binding="{Binding IsDecorative}" Width="*" />
+                                        <DataGridTextColumn Header="Watts" Binding="{Binding Wattage}" Width="*" IsReadOnly="True" />
+                                        <DataGridComboBoxColumn Header="Wattage Info Source" Width="*" SelectedValueBinding="{Binding WattageSourceId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
+                                            <DataGridComboBoxColumn.ItemsSource>
+                                                <CompositeCollection>
+                                                    <ComboBoxItem Content="Manufacturer Specification Sheet" Tag="1" />
+                                                    <ComboBoxItem Content="Default from Nonresidential Appendix 8" Tag="2" />
+                                                    <ComboBoxItem Content="Other" Tag="3" />
+                                                </CompositeCollection>
+                                            </DataGridComboBoxColumn.ItemsSource>
+                                        </DataGridComboBoxColumn>
+                                        <DataGridComboBoxColumn Header="Conditioned Type" Width="*" SelectedValueBinding="{Binding ConditionedTypeId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
+                                            <DataGridComboBoxColumn.ItemsSource>
+                                                <CompositeCollection>
+                                                    <ComboBoxItem Content="Conditioned" Tag="1" />
+                                                    <ComboBoxItem Content="Unconditioned" Tag="2" />
+                                                    <ComboBoxItem Content="Conditioned, Unconditioned" Tag="3" />
+                                                </CompositeCollection>
+                                            </DataGridComboBoxColumn.ItemsSource>
+                                        </DataGridComboBoxColumn>
+                                        <DataGridTextColumn Header="Count" Binding="{Binding Count}" Width="*" IsReadOnly="True" />
+                                        <DataGridTextColumn Header="Conditioned Count" Width="*" Binding="{Binding ConditionedQty,UpdateSourceTrigger=LostFocus}" >
+                                            <DataGridTextColumn.EditingElementStyle>
+                                                <Style TargetType="TextBox">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ConditionedTypeId}" Value="3">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ConditionedTypeId}" Value="1">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.EditingElementStyle>
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ConditionedTypeId}" Value="3">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ConditionedTypeId}" Value="1">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridCheckBoxColumn Header="Excluded" Binding="{Binding IsExcluded}" Width="*"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </GroupBox>
                             <GridSplitter Grid.Row="1" Background="LightGray" HorizontalAlignment="Stretch"/>
-                            <DataGrid Grid.Row="2" ItemsSource="{Binding LightingList}" AutoGenerateColumns="False">
-                                <DataGrid.RowStyle>
-                                    <Style TargetType="DataGridRow">
-                                        <Setter Property="Visibility" Value="Visible" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding TypeId}" Value="1">
-                                                <Setter Property="Visibility" Value="Collapsed" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </DataGrid.RowStyle>
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" Width="*" IsReadOnly="True" />
-                                    <DataGridComboBoxColumn Header="Occupancy Type" Width="*" SelectedValueBinding="{Binding OccupancyTypeId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
-                                        <DataGridComboBoxColumn.ItemsSource>
-                                            <CompositeCollection>
-                                                <ComboBoxItem Content="Used in multifamily occupancy" Tag="1" />
-                                                <ComboBoxItem Content="Used in Nonres occupancy" Tag="2" />
-                                                <ComboBoxItem Content="NA" Tag="3" />
-                                            </CompositeCollection>
-                                        </DataGridComboBoxColumn.ItemsSource>
-                                        <DataGridComboBoxColumn.EditingElementStyle>
-                                            <Style TargetType="ComboBox">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding TypeId}" Value="3">
-                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </DataGridComboBoxColumn.EditingElementStyle>
-                                        <DataGridComboBoxColumn.ElementStyle>
-                                            <Style TargetType="ComboBox">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding TypeId}" Value="3">
-                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </DataGridComboBoxColumn.ElementStyle>
-                                    </DataGridComboBoxColumn>
-                                    <DataGridComboBoxColumn Header="Compliance Method" Width="*" SelectedValueBinding="{Binding ComplianceMethodId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
-                                        <DataGridComboBoxColumn.ItemsSource>
-                                            <CompositeCollection>
-                                                <ComboBoxItem Content="Current Limiter" Tag="1" />
-                                                <ComboBoxItem Content="Installed Luminaires vs Defaults 20 W/ft" Tag="2" />
-                                                <ComboBoxItem Content="Overcurrent Protection Panel" Tag="3" />
-                                                <ComboBoxItem Content="Power supplied by driver, power supply or transformer" Tag="4" />
-                                            </CompositeCollection>
-                                        </DataGridComboBoxColumn.ItemsSource>
-                                        <DataGridComboBoxColumn.EditingElementStyle>
-                                            <Style TargetType="ComboBox">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding TypeId}" Value="2">
-                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </DataGridComboBoxColumn.EditingElementStyle>
-                                        <DataGridComboBoxColumn.ElementStyle>
-                                            <Style TargetType="ComboBox">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding TypeId}" Value="2">
-                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </DataGridComboBoxColumn.ElementStyle>
-                                    </DataGridComboBoxColumn>
-                                    <DataGridTextColumn Header="Volt Ampere Rating" Width="*" Binding="{Binding VoltAmpRating,UpdateSourceTrigger=LostFocus}" >
-                                        <DataGridTextColumn.EditingElementStyle>
-                                            <Style TargetType="TextBox">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding TypeId}" Value="2" />
-                                                            <Condition Binding="{Binding ComplianceMethodId}" Value="1" />
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </DataGridTextColumn.EditingElementStyle>
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding TypeId}" Value="2" />
-                                                            <Condition Binding="{Binding ComplianceMethodId}" Value="1" />
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-                                    <DataGridTextColumn Header="# Luminaires In System" Width="*" Binding="{Binding LuminaireQty,UpdateSourceTrigger=LostFocus}" >
-                                        <DataGridTextColumn.EditingElementStyle>
-                                            <Style TargetType="TextBox">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding TypeId}" Value="2" />
-                                                            <Condition Binding="{Binding ComplianceMethodId}" Value="2" />
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </DataGridTextColumn.EditingElementStyle>
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding TypeId}" Value="2" />
-                                                            <Condition Binding="{Binding ComplianceMethodId}" Value="2" />
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-                                    <DataGridTextColumn Header="Linear Feet of Track" Width="*" Binding="{Binding LinearFeet,UpdateSourceTrigger=LostFocus}" >
-                                        <DataGridTextColumn.EditingElementStyle>
-                                            <Style TargetType="TextBox">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding TypeId}" Value="2" />
-                                                            <Condition Binding="{Binding ComplianceMethodId}" Value="2" />
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </DataGridTextColumn.EditingElementStyle>
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding TypeId}" Value="2" />
-                                                            <Condition Binding="{Binding ComplianceMethodId}" Value="2" />
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-                                    <DataGridTextColumn Header="Branch Circuit Voltage" Width="*" Binding="{Binding BranchCircuitVoltage,UpdateSourceTrigger=LostFocus}" >
-                                        <DataGridTextColumn.EditingElementStyle>
-                                            <Style TargetType="TextBox">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding TypeId}" Value="2" />
-                                                            <Condition Binding="{Binding ComplianceMethodId}" Value="3" />
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </DataGridTextColumn.EditingElementStyle>
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding TypeId}" Value="2" />
-                                                            <Condition Binding="{Binding ComplianceMethodId}" Value="3" />
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-                                    <DataGridTextColumn Header="Track Panel Breaker Combined Amps" Width="*" Binding="{Binding CombinedBreakerAmps,UpdateSourceTrigger=LostFocus}" >
-                                        <DataGridTextColumn.EditingElementStyle>
-                                            <Style TargetType="TextBox">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding TypeId}" Value="2" />
-                                                            <Condition Binding="{Binding ComplianceMethodId}" Value="3" />
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </DataGridTextColumn.EditingElementStyle>
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding TypeId}" Value="2" />
-                                                            <Condition Binding="{Binding ComplianceMethodId}" Value="3" />
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-                                    <DataGridTextColumn Header="Max Rated Input Wattage" Width="*" Binding="{Binding MaxInputWattage,UpdateSourceTrigger=LostFocus}" >
-                                        <DataGridTextColumn.EditingElementStyle>
-                                            <Style TargetType="TextBox">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding TypeId}" Value="2" />
-                                                            <Condition Binding="{Binding ComplianceMethodId}" Value="4" />
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </DataGridTextColumn.EditingElementStyle>
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding TypeId}" Value="2" />
-                                                            <Condition Binding="{Binding ComplianceMethodId}" Value="4" />
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-                                </DataGrid.Columns>
-                            </DataGrid>
+                            <GroupBox Header="Additional Options"  Grid.Row="2" >
+                                <DataGrid ItemsSource="{Binding LightingList}" AutoGenerateColumns="False">
+                                    <DataGrid.RowStyle>
+                                        <Style TargetType="DataGridRow">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding TypeId}" Value="1">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGrid.RowStyle>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" Width="*" IsReadOnly="True" />
+                                        <DataGridComboBoxColumn Header="Occupancy Type" Width="*" SelectedValueBinding="{Binding OccupancyTypeId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
+                                            <DataGridComboBoxColumn.ItemsSource>
+                                                <CompositeCollection>
+                                                    <ComboBoxItem Content="Used in multifamily occupancy" Tag="1" />
+                                                    <ComboBoxItem Content="Used in Nonres occupancy" Tag="2" />
+                                                    <ComboBoxItem Content="NA" Tag="3" />
+                                                </CompositeCollection>
+                                            </DataGridComboBoxColumn.ItemsSource>
+                                            <DataGridComboBoxColumn.EditingElementStyle>
+                                                <Style TargetType="ComboBox">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding TypeId}" Value="3">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridComboBoxColumn.EditingElementStyle>
+                                            <DataGridComboBoxColumn.ElementStyle>
+                                                <Style TargetType="ComboBox">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding TypeId}" Value="3">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridComboBoxColumn.ElementStyle>
+                                        </DataGridComboBoxColumn>
+                                        <DataGridComboBoxColumn Header="Compliance Method" Width="*" SelectedValueBinding="{Binding ComplianceMethodId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
+                                            <DataGridComboBoxColumn.ItemsSource>
+                                                <CompositeCollection>
+                                                    <ComboBoxItem Content="Current Limiter" Tag="1" />
+                                                    <ComboBoxItem Content="Installed Luminaires vs Defaults 20 W/ft" Tag="2" />
+                                                    <ComboBoxItem Content="Overcurrent Protection Panel" Tag="3" />
+                                                    <ComboBoxItem Content="Power supplied by driver, power supply or transformer" Tag="4" />
+                                                </CompositeCollection>
+                                            </DataGridComboBoxColumn.ItemsSource>
+                                            <DataGridComboBoxColumn.EditingElementStyle>
+                                                <Style TargetType="ComboBox">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding TypeId}" Value="2">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridComboBoxColumn.EditingElementStyle>
+                                            <DataGridComboBoxColumn.ElementStyle>
+                                                <Style TargetType="ComboBox">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding TypeId}" Value="2">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridComboBoxColumn.ElementStyle>
+                                        </DataGridComboBoxColumn>
+                                        <DataGridTextColumn Header="Volt Ampere Rating" Width="*" Binding="{Binding VoltAmpRating,UpdateSourceTrigger=LostFocus}" >
+                                            <DataGridTextColumn.EditingElementStyle>
+                                                <Style TargetType="TextBox">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding TypeId}" Value="2" />
+                                                                <Condition Binding="{Binding ComplianceMethodId}" Value="1" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.EditingElementStyle>
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding TypeId}" Value="2" />
+                                                                <Condition Binding="{Binding ComplianceMethodId}" Value="1" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="# Luminaires In System" Width="*" Binding="{Binding LuminaireQty,UpdateSourceTrigger=LostFocus}" >
+                                            <DataGridTextColumn.EditingElementStyle>
+                                                <Style TargetType="TextBox">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding TypeId}" Value="2" />
+                                                                <Condition Binding="{Binding ComplianceMethodId}" Value="2" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.EditingElementStyle>
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding TypeId}" Value="2" />
+                                                                <Condition Binding="{Binding ComplianceMethodId}" Value="2" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Linear Feet of Track" Width="*" Binding="{Binding LinearFeet,UpdateSourceTrigger=LostFocus}" >
+                                            <DataGridTextColumn.EditingElementStyle>
+                                                <Style TargetType="TextBox">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding TypeId}" Value="2" />
+                                                                <Condition Binding="{Binding ComplianceMethodId}" Value="2" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.EditingElementStyle>
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding TypeId}" Value="2" />
+                                                                <Condition Binding="{Binding ComplianceMethodId}" Value="2" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Branch Circuit Voltage" Width="*" Binding="{Binding BranchCircuitVoltage,UpdateSourceTrigger=LostFocus}" >
+                                            <DataGridTextColumn.EditingElementStyle>
+                                                <Style TargetType="TextBox">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding TypeId}" Value="2" />
+                                                                <Condition Binding="{Binding ComplianceMethodId}" Value="3" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.EditingElementStyle>
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding TypeId}" Value="2" />
+                                                                <Condition Binding="{Binding ComplianceMethodId}" Value="3" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Track Panel Breaker Combined Amps" Width="*" Binding="{Binding CombinedBreakerAmps,UpdateSourceTrigger=LostFocus}" >
+                                            <DataGridTextColumn.EditingElementStyle>
+                                                <Style TargetType="TextBox">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding TypeId}" Value="2" />
+                                                                <Condition Binding="{Binding ComplianceMethodId}" Value="3" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.EditingElementStyle>
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding TypeId}" Value="2" />
+                                                                <Condition Binding="{Binding ComplianceMethodId}" Value="3" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Max Rated Input Wattage" Width="*" Binding="{Binding MaxInputWattage,UpdateSourceTrigger=LostFocus}" >
+                                            <DataGridTextColumn.EditingElementStyle>
+                                                <Style TargetType="TextBox">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding TypeId}" Value="2" />
+                                                                <Condition Binding="{Binding ComplianceMethodId}" Value="4" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.EditingElementStyle>
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding TypeId}" Value="2" />
+                                                                <Condition Binding="{Binding ComplianceMethodId}" Value="4" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </GroupBox>
                         </Grid>
                     </TabItem>
                     <TabItem Header="Controls"></TabItem>
