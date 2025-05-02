@@ -25,7 +25,7 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <GroupBox Header="Options" Grid.Row="0">
-                                <DataGrid ItemsSource="{Binding LightingList}" AutoGenerateColumns="False">
+                                <DataGrid x:Name="OptionsGrid" SelectionChanged="OptionsGrid_SelectionChanged" ItemsSource="{Binding LightingList}" AutoGenerateColumns="False">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" Width="*" IsReadOnly="True" />
                                         <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*" IsReadOnly="True" />
@@ -87,13 +87,41 @@
                                                 </Style>
                                             </DataGridTextColumn.ElementStyle>
                                         </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Unconditioned Count" Width="*" Binding="{Binding UnconditionedQty,UpdateSourceTrigger=LostFocus}" >
+                                            <DataGridTextColumn.EditingElementStyle>
+                                                <Style TargetType="TextBox">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ConditionedTypeId}" Value="3">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ConditionedTypeId}" Value="2">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.EditingElementStyle>
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ConditionedTypeId}" Value="3">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ConditionedTypeId}" Value="2">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
                                         <DataGridCheckBoxColumn Header="Excluded" Binding="{Binding IsExcluded}" Width="*"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </GroupBox>
                             <GridSplitter Grid.Row="1" Background="LightGray" HorizontalAlignment="Stretch"/>
                             <GroupBox Header="Additional Options"  Grid.Row="2" >
-                                <DataGrid ItemsSource="{Binding LightingList}" AutoGenerateColumns="False">
+                                <DataGrid x:Name="AdditionalOptionsGrid" SelectionChanged="AdditionalOptionsGrid_SelectionChanged" ItemsSource="{Binding LightingList}" AutoGenerateColumns="False">
                                     <DataGrid.RowStyle>
                                         <Style TargetType="DataGridRow">
                                             <Setter Property="Visibility" Value="Visible" />

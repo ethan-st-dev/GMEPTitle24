@@ -522,6 +522,14 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                             arguments[0].dispatchEvent(new Event('change'));
                         ", element, LightingList[row].ConditionedQty);
                         }
+                        if (attributeValue != null && attributeValue.Contains("are in unconditioned space", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, LightingList[row].UnconditionedQty);
+                        }
                         if (attributeValue != null && attributeValue.Contains("linear feet", StringComparison.OrdinalIgnoreCase))
                         {
                             ((IJavaScriptExecutor)driver).ExecuteScript(@"
@@ -750,6 +758,23 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             string newProjectId = selectedPair.Value;
             LightingList = await db.GetLighting(newProjectId);
 
+        }
+    }
+    public void OptionsGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (OptionsGrid.SelectedItem is Lighting selectedLighting)
+        {
+            AdditionalOptionsGrid.SelectedItem = selectedLighting;
+            AdditionalOptionsGrid.ScrollIntoView(selectedLighting);
+        }
+    }
+
+    public void AdditionalOptionsGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (AdditionalOptionsGrid.SelectedItem is Lighting selectedLighting)
+        {
+            OptionsGrid.SelectedItem = selectedLighting;
+            OptionsGrid.ScrollIntoView(selectedLighting);
         }
     }
 
