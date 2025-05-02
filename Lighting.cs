@@ -23,6 +23,7 @@ namespace GMEPTitle24
         private int occupancyTypeId = 1;
         private int conditionedTypeId = 1;
         private int conditionedQty = 0;
+        private int unconditionedQty = 0;
         private int luminaireQty = 0;
         private float voltAmpRating = 0;
         private float linearFeet = 0;
@@ -45,6 +46,7 @@ namespace GMEPTitle24
            int occupancyTypeId,
            int conditionedTypeId,
            int conditionedQty,
+           int unconditionedQty,
            int luminaireQty,
            float voltAmpRating,
            float linearFeet,
@@ -67,6 +69,7 @@ namespace GMEPTitle24
             this.occupancyTypeId = occupancyTypeId;
             this.conditionedTypeId = conditionedTypeId;
             this.conditionedQty = conditionedQty;
+            this.unconditionedQty = unconditionedQty;
             this.luminaireQty = luminaireQty;
             this.voltAmpRating = voltAmpRating;
             this.linearFeet = linearFeet;
@@ -240,6 +243,18 @@ namespace GMEPTitle24
                 {
                     conditionedQty = value;
                     OnPropertyChanged(nameof(ConditionedQty));
+                }
+            }
+        }
+        public int UnconditionedQty
+        {
+            get => unconditionedQty;
+            set
+            {
+                if (unconditionedQty != value)
+                {
+                    unconditionedQty = value;
+                    OnPropertyChanged(nameof(UnconditionedQty));
                 }
             }
         }
