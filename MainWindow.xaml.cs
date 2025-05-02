@@ -156,9 +156,12 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     }
     public async Task ActivateSelenium()
     {
+        var service = ChromeDriverService.CreateDefaultService();
+        service.HideCommandPromptWindow = true;
+
         options = new ChromeOptions();
-        //options.AddArgument("headless");
-        driver = new ChromeDriver(options);
+        options.AddArgument("headless");
+        driver = new ChromeDriver(service, options);
 
         StatusText.Text = "Navigating to Site";
       
@@ -200,9 +203,23 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         }
         await Login();
 
-        //Quitting Program
-        //driver.Quit();
+        //Quitting and launching new window
+        var url = driver.Url;
+        driver.Quit();
 
+        StatusText.Text = "Launching Window.";
+        Loading.Visibility = Visibility.Visible;
+    
+        await Task.Run(() =>
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = url,
+                UseShellExecute = true // Ensures the default browser is used
+            });
+        });
+        StatusText.Text = "";
+        Loading.Visibility = Visibility.Collapsed;
     }
 
     public async Task Login()
@@ -302,7 +319,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 // Handle timeout exceptions
                 Dispatcher.Invoke(() =>
                 {
-                    StatusText.Text = "Project not loaded or found. Please try again.";
+                    StatusText.Text = "Project not loaded or found. Please create a project starting with the project number " + projectNo.ToString() + ".";
                     Loading.Visibility = Visibility.Collapsed;
                 });
                 Debug.WriteLine($"Timeout Exception: {ex.Message}");
@@ -384,33 +401,20 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 IWebElement lightingContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[name='organism_Table2_Row']")));
                 var Lightings = lightingContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
 
-                int rowCount = LightingList.Count;
-
-                int lightingCount = Lightings.Count;
-
-                //Adjusting Box Count
-                if (lightingCount < rowCount)
-                {    //Adding Boxes
-                    while (lightingCount < rowCount)
-                    {
-                        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AddLuminaireButton);
-                        lightingCount++;
-                    }
-                }
-                else if (lightingCount > rowCount)
+                //Removing all entries and adding new ones
+                foreach (var lighting in Lightings)
                 {
-                    //Removing Boxes
-                    foreach (var lighting in Lightings)
-                    {
-                        if (lightingCount > rowCount)
-                        {
-                            var delete = lighting.FindElement(By.CssSelector("div[class='mod_supportControl']"));
-                            var deleteIcon = delete.FindElement(By.CssSelector("i"));
-                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", deleteIcon);
-                            lightingCount--;
-                        }
-                    }
+                    var delete = lighting.FindElement(By.CssSelector("div[class='mod_supportControl']"));
+                    var deleteIcon = delete.FindElement(By.CssSelector("i"));
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", deleteIcon);
                 }
+
+                foreach(var lighting in LightingList)
+                {
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AddLuminaireButton);
+                }
+                
+                   
                 Lightings = lightingContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
                 //Editing Boxes
                 int row = 0;
@@ -505,8 +509,21 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                         if (placeholderValue != null && placeholderValue.Contains("Conditioned", StringComparison.OrdinalIgnoreCase))
                         {
                             var ConditionedBox = element.FindElement(By.CssSelector("div[data-name='Conditioned'"));
+                            var UnconditionedBox = element.FindElement(By.CssSelector("div[data-name='Unconditioned'"));
                             var ConditionedBoxLabel = ConditionedBox.FindElement(By.CssSelector("label"));
-                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", ConditionedBoxLabel);
+                            var UnconditionedBoxLabel = UnconditionedBox.FindElement(By.CssSelector("label"));
+                            switch (LightingList[row].ConditionedTypeId) {
+                                case 1:
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", ConditionedBoxLabel);
+                                    break;
+                                case 2:
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", UnconditionedBoxLabel);
+                                    break;
+                                case 3:
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", ConditionedBoxLabel);
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", UnconditionedBoxLabel);
+                                    break;
+                            }
                         }
                         if (placeholderValue != null && placeholderValue.Contains("excluded from total", StringComparison.OrdinalIgnoreCase))
                         {
@@ -522,9 +539,56 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                                     break;
                             }
                         }
+                        if (placeholderValue != null && placeholderValue.Contains("Occupancy", StringComparison.OrdinalIgnoreCase))
+                        {
+                            switch (LightingList[row].OccupancyTypeId)
+                            {
+                                case 1:
+                                    var mf = element.FindElement(By.CssSelector("li[data-value='OccupancyMF'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", mf);
+                                    break;
+                                case 2:
+                                    var nonRes = element.FindElement(By.CssSelector("li[data-value='OccupancyNonres'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();",nonRes);
+                                    break;
+                                case 3:
+                                    var na = element.FindElement(By.CssSelector("li[data-value='OccupancyNA'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", na);
+                                    break;
+                            }
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("determine compliance", StringComparison.OrdinalIgnoreCase))
+                        {
+                            switch (LightingList[row].ComplianceMethodId)
+                            {
+                                case 1:
+                                    var curr = element.FindElement(By.CssSelector("li[data-value='TrackLightingPowerCalculation2'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", curr);
+                                    break;
+                                case 2:
+                                    var installed = element.FindElement(By.CssSelector("li[data-value='TrackLightingPowerCalculation1'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", installed);
+                                    break;
+                                case 3:
+                                    var overCurr = element.FindElement(By.CssSelector("li[data-value='TrackLightingPowerCalculation3'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", overCurr);
+                                    break;
+                                case 4:
+                                    var supplied = element.FindElement(By.CssSelector("li[data-value='TrackLightingPowerCalculation4'"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", supplied);
+                                    break;
+                            }
+                        }
                     }
                     row++;
                 }
+                IWebElement SaveButton = driver.FindElement(By.XPath("//div[text()='Save']"));
+                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", SaveButton);
+
+                IWebElement luminaires2 = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Luminaires']")));
+                luminaires2.Click();
+
+
             }
             catch (WebDriverTimeoutException ex)
             {
