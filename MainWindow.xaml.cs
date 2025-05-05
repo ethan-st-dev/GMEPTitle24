@@ -93,6 +93,19 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             }
         }
     }
+    public ObservableCollection<ControlArea> controlAreaList = new ObservableCollection<ControlArea>();
+    public ObservableCollection<ControlArea> ControlAreaList
+    {
+        get { return controlAreaList; }
+        set
+        {
+            if (controlAreaList != value)
+            {
+                controlAreaList = value;
+                OnPropertyChanged(nameof(ControlAreaList));
+            }
+        }
+    }
 
     public MainWindow()
     {
