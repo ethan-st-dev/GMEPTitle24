@@ -147,6 +147,18 @@ namespace GMEPTitle24
                 }
             }
         }
+        public float SquareFootage
+        {
+            get { return squareFootage; }
+            set
+            {
+                if (squareFootage != value)
+                {
+                    squareFootage = value;
+                    OnPropertyChanged(nameof(SquareFootage));
+                }
+            }
+        }
         public ControlArea(
             string id,
             string projectId,
