@@ -466,13 +466,77 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                             arguments[0].dispatchEvent(new Event('change'));
                         ", element, LightingList[row].Description);
                         }
-                        if (attributeValue != null && attributeValue.Contains("Watts per Luminaire", StringComparison.OrdinalIgnoreCase))
+                        if (attributeValue != null && attributeValue.Contains("watts per luminaire", StringComparison.OrdinalIgnoreCase))
                         {
                             ((IJavaScriptExecutor)driver).ExecuteScript(@"
                             arguments[0].value = arguments[1];
                             arguments[0].dispatchEvent(new Event('input'));
                             arguments[0].dispatchEvent(new Event('change'));
                         ", element, LightingList[row].Wattage);
+                        }
+                        if (attributeValue != null && attributeValue.Contains("volt-ampere rating", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, LightingList[row].VoltAmpRating);
+                        }
+                        if (attributeValue != null && attributeValue.Contains("how many luminaires", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, LightingList[row].LuminaireQty);
+                        }
+                        if (attributeValue != null && attributeValue.Contains("branch circuit", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, LightingList[row].BranchCircuitVoltage);
+                        }
+                        if (attributeValue != null && attributeValue.Contains("combined ampacity", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, LightingList[row].CombinedBreakerAmps);
+                        }
+                        if (attributeValue != null && attributeValue.Contains("maximum rated input wattage", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, LightingList[row].MaxInputWattage);
+                        }
+                        if (attributeValue != null && attributeValue.Contains("are in conditioned space", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, LightingList[row].ConditionedQty);
+                        }
+                        if (attributeValue != null && attributeValue.Contains("are in unconditioned space", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, LightingList[row].UnconditionedQty);
+                        }
+                        if (attributeValue != null && attributeValue.Contains("linear feet", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, LightingList[row].LinearFeet);
                         }
                     }
                     //Iterating Through dropdown entries
@@ -694,6 +758,23 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             string newProjectId = selectedPair.Value;
             LightingList = await db.GetLighting(newProjectId);
 
+        }
+    }
+    public void OptionsGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (OptionsGrid.SelectedItem is Lighting selectedLighting)
+        {
+            AdditionalOptionsGrid.SelectedItem = selectedLighting;
+            AdditionalOptionsGrid.ScrollIntoView(selectedLighting);
+        }
+    }
+
+    public void AdditionalOptionsGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (AdditionalOptionsGrid.SelectedItem is Lighting selectedLighting)
+        {
+            OptionsGrid.SelectedItem = selectedLighting;
+            OptionsGrid.ScrollIntoView(selectedLighting);
         }
     }
 

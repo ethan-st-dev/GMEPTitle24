@@ -22,6 +22,14 @@ namespace GMEPTitle24
         private int complianceMethodId = 1;
         private int occupancyTypeId = 1;
         private int conditionedTypeId = 1;
+        private int conditionedQty = 0;
+        private int unconditionedQty = 0;
+        private int luminaireQty = 0;
+        private float voltAmpRating = 0;
+        private float linearFeet = 0;
+        private float branchCircuitVoltage = 0;
+        private float combinedBreakerAmps = 0;
+        private float maxInputWattage = 0;
         public event PropertyChangedEventHandler PropertyChanged;
         public Lighting(
            string id,
@@ -36,7 +44,15 @@ namespace GMEPTitle24
            bool isExcluded,
            int complianceMethodId,
            int occupancyTypeId,
-           int conditionedTypeId
+           int conditionedTypeId,
+           int conditionedQty,
+           int unconditionedQty,
+           int luminaireQty,
+           float voltAmpRating,
+           float linearFeet,
+           float branchCircuitVoltage,
+           float combinedBreakerAmps,
+           float maxInputWattage
         )
         {
             this.id = id;
@@ -52,6 +68,14 @@ namespace GMEPTitle24
             this.complianceMethodId = complianceMethodId;
             this.occupancyTypeId = occupancyTypeId;
             this.conditionedTypeId = conditionedTypeId;
+            this.conditionedQty = conditionedQty;
+            this.unconditionedQty = unconditionedQty;
+            this.luminaireQty = luminaireQty;
+            this.voltAmpRating = voltAmpRating;
+            this.linearFeet = linearFeet;
+            this.branchCircuitVoltage = branchCircuitVoltage;
+            this.combinedBreakerAmps = combinedBreakerAmps;
+            this.maxInputWattage = maxInputWattage;
         }
         public string Id
         {
@@ -207,6 +231,102 @@ namespace GMEPTitle24
                 {
                     conditionedTypeId = value;
                     OnPropertyChanged(nameof(ConditionedTypeId));
+                }
+            }
+        }
+        public int ConditionedQty
+        {
+            get => conditionedQty;
+            set
+            {
+                if (conditionedQty != value)
+                {
+                    conditionedQty = value;
+                    OnPropertyChanged(nameof(ConditionedQty));
+                }
+            }
+        }
+        public int UnconditionedQty
+        {
+            get => unconditionedQty;
+            set
+            {
+                if (unconditionedQty != value)
+                {
+                    unconditionedQty = value;
+                    OnPropertyChanged(nameof(UnconditionedQty));
+                }
+            }
+        }
+        public int LuminaireQty
+        {
+            get => luminaireQty;
+            set
+            {
+                if (luminaireQty != value)
+                {
+                    luminaireQty = value;
+                    OnPropertyChanged(nameof(LuminaireQty));
+                }
+            }
+        }
+        public float VoltAmpRating
+        {
+            get => voltAmpRating;
+            set
+            {
+                if (voltAmpRating != value)
+                {
+                    voltAmpRating = value;
+                    OnPropertyChanged(nameof(VoltAmpRating));
+                }
+            }
+        }
+        public float LinearFeet
+        {
+            get => linearFeet;
+            set
+            {
+                if (linearFeet != value)
+                {
+                    linearFeet = value;
+                    OnPropertyChanged(nameof(LinearFeet));
+                }
+            }
+        }
+        public float BranchCircuitVoltage
+        {
+            get => branchCircuitVoltage;
+            set
+            {
+                if (branchCircuitVoltage != value)
+                {
+                    branchCircuitVoltage = value;
+                    OnPropertyChanged(nameof(BranchCircuitVoltage));
+                }
+            }
+        }
+        public float CombinedBreakerAmps
+        {
+            get => combinedBreakerAmps;
+            set
+            {
+                if (combinedBreakerAmps != value)
+                {
+                    combinedBreakerAmps = value;
+                    OnPropertyChanged(nameof(CombinedBreakerAmps));
+                }
+            }
+        }
+        public float MaxInputWattage
+        {
+            get => maxInputWattage;
+            set
+            {
+                if (maxInputWattage != value)
+                {
+                    maxInputWattage = value;
+                    OnPropertyChanged(nameof(MaxInputWattage));
                 }
             }
         }
