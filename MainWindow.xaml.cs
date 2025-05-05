@@ -397,6 +397,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             return;
         }
         await FillOutLuminaires();
+        await FillOutControls();
     }
     public async Task FillOutLuminaires()
     {
@@ -691,6 +692,95 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 luminaires2.Click();
 
 
+            }
+            catch (WebDriverTimeoutException ex)
+            {
+                // Handle timeout exceptions
+                Dispatcher.Invoke(() =>
+                {
+                    StatusText.Text = "Navigation timed out. Please try again.";
+                    Loading.Visibility = Visibility.Collapsed;
+                });
+                Debug.WriteLine($"Timeout Exception: {ex.Message}");
+                return 0;
+            }
+            catch (WebDriverException ex)
+            {
+                // Handle general WebDriver exceptions
+                Dispatcher.Invoke(() =>
+                {
+                    StatusText.Text = "An error occurred while navigation to luminaires.";
+                    Loading.Visibility = Visibility.Collapsed;
+                });
+                Debug.WriteLine($"WebDriver Exception: {ex.Message}");
+                return 0;
+            }
+            return 1;
+        });
+        if (result == 0)
+        {
+            return;
+        }
+    }
+    public async Task FillOutControls()
+    {
+        StatusText.Text = "Filling Out Controls Section";
+        int result = await Task.Run(int () =>
+        {
+            try
+            {
+                IWebElement controls = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Controls']")));
+                controls.Click();
+                try
+                {
+                    WebDriverWait continueWait = new WebDriverWait(driver, TimeSpan.FromSeconds(2));
+                    IWebElement continueAnyway = continueWait.Until(driver =>
+                    {
+                        try
+                        {
+                            return driver.FindElement(By.XPath("//div[text()='Continue Anyway']"));
+                        }
+                        catch (NoSuchElementException)
+                        {
+                            return null;
+                        }
+                    });
+
+                    if (continueAnyway != null)
+                    {
+                        continueAnyway.Click();
+                    }
+                }
+                catch (WebDriverTimeoutException)
+                {
+                    // If the "continue anyway" div is not found within the timeout, proceed
+                    Debug.WriteLine("The 'continue anyway' div was not found. Proceeding...");
+                }
+
+                //Grabbing Container For All Lighting Entries
+                IWebElement AddAreaButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Add New Area']")));
+
+                IWebElement areaContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[name='organism_Table5_Row']")));
+                var areas = areaContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
+
+                //Removing all entries and adding new ones
+                foreach (var area in areas)
+                {
+                    var delete = area.FindElement(By.CssSelector("div[class='mod_supportControl']"));
+                    var deleteIcon = delete.FindElement(By.CssSelector("i"));
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", deleteIcon);
+                }
+
+                foreach (var area in ControlAreaList)
+                {
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AddAreaButton);
+                }
+
+                IWebElement SaveButton = driver.FindElement(By.XPath("//div[text()='Save']"));
+                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", SaveButton);
+
+                IWebElement controls2 = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Luminaires']")));
+                controls2.Click();
             }
             catch (WebDriverTimeoutException ex)
             {
