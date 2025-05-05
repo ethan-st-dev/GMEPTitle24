@@ -378,7 +378,97 @@
                             </GroupBox>
                         </Grid>
                     </TabItem>
-                    <TabItem Header="Control Areas"></TabItem>
+                    <TabItem Header="Control Areas">
+                        <DataGrid x:Name="ControlAreaGrid" SelectionChanged="OptionsGrid_SelectionChanged" CanUserAddRows="True" CanUserDeleteRows="True" ItemsSource="{Binding ControlAreaList}" AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*"/>
+                                <DataGridTextColumn Header="Square Footage" Binding="{Binding SquareFootage}" Width="*"/>
+                                <DataGridComboBoxColumn Header="Primary Function Area" Width="*" SelectedValueBinding="{Binding PrimaryFunctionId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
+                                    <DataGridComboBoxColumn.ItemsSource>
+                                        <CompositeCollection>
+                                            <ComboBoxItem Content="Assembly Building" Tag="1" />
+                                            <ComboBoxItem Content="Financial Institution Building" Tag="2" />
+                                            <ComboBoxItem Content="Grocery Store Building" Tag="3" />
+                                            <ComboBoxItem Content="Gymnasium Building" Tag="4" />
+                                            <ComboBoxItem Content="Hospital Building" Tag="5" />
+                                            <ComboBoxItem Content="Library Building" Tag="6" />
+                                            <ComboBoxItem Content="Manufacturing Facility Building" Tag="7" />
+                                            <ComboBoxItem Content="Motion Picture Building" Tag="8" />
+                                            <ComboBoxItem Content="Museum Building" Tag="9" />
+                                            <ComboBoxItem Content="Office Building" Tag="10" />
+                                            <ComboBoxItem Content="Parking Garage Building" Tag="11" />
+                                            <ComboBoxItem Content="Performing Arts Theater Building" Tag="12" />
+                                            <ComboBoxItem Content="Religious Facility Building" Tag="13" />
+                                            <ComboBoxItem Content="Restaurant Building" Tag="14" />
+                                            <ComboBoxItem Content="Retail Building" Tag="15" />
+                                            <ComboBoxItem Content="School Building" Tag="16" />
+                                            <ComboBoxItem Content="Sports Arena Building" Tag="17" />
+                                            <ComboBoxItem Content="All Other Buildings" Tag="18" />
+                                        </CompositeCollection>
+                                    </DataGridComboBoxColumn.ItemsSource>
+                                </DataGridComboBoxColumn>
+                                <DataGridComboBoxColumn Header="Area Controls" Width="*" SelectedValueBinding="{Binding AreaControlTypeId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
+                                    <DataGridComboBoxColumn.ItemsSource>
+                                        <CompositeCollection>
+                                            <ComboBoxItem Content="Annunciated" Tag="1" />
+                                            <ComboBoxItem Content="Authorized Personnel" Tag="2" />
+                                            <ComboBoxItem Content="Readily Accessible" Tag="3" />
+                                        </CompositeCollection>
+                                    </DataGridComboBoxColumn.ItemsSource>
+                                </DataGridComboBoxColumn>
+                                <DataGridComboBoxColumn Header="Multi-Level Controls" Width="*" SelectedValueBinding="{Binding MultilevelControlTypeId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
+                                    <DataGridComboBoxColumn.ItemsSource>
+                                        <CompositeCollection>
+                                            <ComboBoxItem Content="Dimmer" Tag="1" />
+                                            <ComboBoxItem Content="Multilevel Switch" Tag="2" />
+                                            <ComboBoxItem Content="NA: ≤80% Lighting Power (alterations only)" Tag="3" />
+                                            <ComboBoxItem Content="NA: Enclosed Area &lt;100sf" Tag="4" />
+                                            <ComboBoxItem Content="NA: Enclosed area w/ 1 inseparable SSL luminaire" Tag="5" />
+                                            <ComboBoxItem Content="NA: Enclosed area 1/ 1 luminaire ≤2 lamps" Tag="6" />
+                                            <ComboBoxItem Content="NA: General Lighting ≤0.5W/SF" Tag="7" />
+                                            <ComboBoxItem Content="NA: Licensed Healthcare" Tag="8" />
+                                            <ComboBoxItem Content="NA: Restrooms" Tag="9" />
+                                        </CompositeCollection>
+                                    </DataGridComboBoxColumn.ItemsSource>
+                                </DataGridComboBoxColumn>
+                                <DataGridComboBoxColumn Header="Primary/Skylight Daylighting Controls" Width="*" SelectedValueBinding="{Binding PrimaryDaylightControlTypeId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
+                                    <DataGridComboBoxColumn.ItemsSource>
+                                        <CompositeCollection>
+                                            <ComboBoxItem Content="Yes" Tag="1" />
+                                            <ComboBoxItem Content="NA: ≤80% Lighting Power (alterations only)" Tag="2" />
+                                            <ComboBoxItem Content="NA: Garage # 36sf2 opening" Tag="3" />
+                                            <ComboBoxItem Content="NA: Garage daylight adaption" Tag="4" />
+                                            <ComboBoxItem Content="NA: General Ltg &lt;120W" Tag="5" />
+                                            <ComboBoxItem Content="NA: Garage General Ltg &lt;60W" Tag="6" />
+                                            <ComboBoxItem Content="NA: Not daylit zone" Tag="7" />
+                                            <ComboBoxItem Content="NA: Overhang" Tag="8" />
+                                            <ComboBoxItem Content="NA: Rm &lt;24sf Glazing" Tag="9" />
+                                            <ComboBoxItem Content="NA: Sidelit retail sales area" Tag="10" />
+                                            <ComboBoxItem Content="NA: Skylight shaded" Tag="11" />
+                                        </CompositeCollection>
+                                    </DataGridComboBoxColumn.ItemsSource>
+                                </DataGridComboBoxColumn>
+                                <DataGridComboBoxColumn Header="Secondary Daylighting Controls" Width="*" SelectedValueBinding="{Binding SecondaryDaylightControlTypeId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
+                                    <DataGridComboBoxColumn.ItemsSource>
+                                        <CompositeCollection>
+                                            <ComboBoxItem Content="Yes" Tag="1" />
+                                            <ComboBoxItem Content="NA: ≤80% Lighting Power (alterations only)" Tag="2" />
+                                            <ComboBoxItem Content="NA: Garage &lt; 36sf opening" Tag="3" />
+                                            <ComboBoxItem Content="NA: Garage daylight adaption" Tag="4" />
+                                            <ComboBoxItem Content="NA: Garage General Ltg &lt;60W" Tag="5" />
+                                            <ComboBoxItem Content="NA: General Ltg &lt;120W" Tag="6" />
+                                            <ComboBoxItem Content="NA: Not daylit zone" Tag="7" />
+                                            <ComboBoxItem Content="NA: Overhang" Tag="8" />
+                                            <ComboBoxItem Content="NA: Rm &lt;24sf Glazing" Tag="9" />
+                                            <ComboBoxItem Content="NA: Sidelit retail sales area" Tag="10" />
+                                            <ComboBoxItem Content="NA: Skylight shaded" Tag="11" />
+                                        </CompositeCollection>
+                                    </DataGridComboBoxColumn.ItemsSource>
+                                </DataGridComboBoxColumn>
+                                <DataGridCheckBoxColumn Header="Two Interlocked Systems" Binding="{Binding InterlockedSystems}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </TabItem>
                 </TabControl>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Height="25" Margin="0 0 0 5" VerticalAlignment="Top">
                     <Image x:Name="Loading" Visibility="Collapsed" VerticalAlignment="Center" gif:ImageBehavior.AnimatedSource="Loading.gif" Width="18" Margin="0 0 5 0"/>

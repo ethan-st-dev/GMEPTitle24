@@ -20,6 +20,7 @@ namespace GMEPTitle24
         private int primaryDaylightControlTypeId = 1;
         private int secondaryDaylightControlTypeId = 1;
         private bool interlockedSystems = false;
+        private float squareFootage = 0;
 
         protected void OnPropertyChanged(string propertyName)
         {
@@ -145,6 +146,36 @@ namespace GMEPTitle24
                     OnPropertyChanged(nameof(InterlockedSystems));
                 }
             }
+        }
+        public ControlArea(
+            string id,
+            string projectId,
+            string description,
+            int primaryFunctionId,
+            int areaControlTypeId,
+            int multilevelControlTypeId,
+            int shutoffControlTypeId,
+            int primaryDaylightControlTypeId,
+            int secondaryDaylightControlTypeId,
+            bool interlockedSystems,
+            float squareFootage
+        )
+        {
+            this.id = id;
+            this.projectId = projectId;
+            this.description = description;
+            this.primaryFunctionId = primaryFunctionId;
+            this.areaControlTypeId = areaControlTypeId;
+            this.multilevelControlTypeId = multilevelControlTypeId;
+            this.shutoffControlTypeId = shutoffControlTypeId;
+            this.primaryDaylightControlTypeId = primaryDaylightControlTypeId;
+            this.secondaryDaylightControlTypeId = secondaryDaylightControlTypeId;
+            this.interlockedSystems = interlockedSystems;
+            this.squareFootage = squareFootage;
+        }
+        public ControlArea()
+        {
+            // Default constructor :3
         }
     }
 }
