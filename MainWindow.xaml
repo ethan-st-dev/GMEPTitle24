@@ -481,7 +481,17 @@
                                         </CompositeCollection>
                                     </DataGridComboBoxColumn.ItemsSource>
                                 </DataGridComboBoxColumn>
+                                <DataGridComboBoxColumn Header="Power Adjustment" Width="*" SelectedValueBinding="{Binding PowerAdjustmentId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
+                                    <DataGridComboBoxColumn.ItemsSource>
+                                        <CompositeCollection>
+                                            <ComboBoxItem Content="Power Adjustment Factor" Tag="1" />
+                                            <ComboBoxItem Content="No Additional Allowances" Tag="2" />
+                                            <ComboBoxItem Content="Power Adjustment Factor, No Additional Allowances " Tag="3" />
+                                        </CompositeCollection>
+                                    </DataGridComboBoxColumn.ItemsSource>
+                                </DataGridComboBoxColumn>
                                 <DataGridCheckBoxColumn Header="Two Interlocked Systems" Binding="{Binding InterlockedSystems}" Width="*"/>
+                                <DataGridCheckBoxColumn Header="Conditioned" Binding="{Binding Conditioned}" Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </TabItem>

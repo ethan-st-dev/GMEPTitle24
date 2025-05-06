@@ -254,7 +254,9 @@ namespace GMEPTitle24
                         reader.GetInt32("primary_daylight_control_type_id"),
                         reader.GetInt32("secondary_daylight_control_type_id"),
                         reader.GetBoolean("interlocked_systems"),
-                        reader.GetFloat("square_footage")
+                        reader.GetFloat("square_footage"),
+                        reader.GetBoolean("conditioned"),
+                        reader.GetInt32("power_adjustment_id")
                     )
                 );
             }
@@ -290,12 +292,12 @@ namespace GMEPTitle24
                     (id, project_id, description, primary_function_id, area_control_type_id, 
                      multilevel_control_type_id, shutoff_control_type_id, 
                      primary_daylight_control_type_id, secondary_daylight_control_type_id, 
-                     interlocked_systems, square_footage) 
+                     interlocked_systems, square_footage, conditioned, power_adjustment_id) 
                     VALUES 
                     (@id, @projectId, @description, @primaryFunctionId, @areaControlTypeId, 
                      @multilevelControlTypeId, @shutoffControlTypeId, 
                      @primaryDaylightControlTypeId, @secondaryDaylightControlTypeId, 
-                     @interlockedSystems, @squareFootage)
+                     @interlockedSystems, @squareFootage, @conditioned, @powerAdjustmentId)
                     ON DUPLICATE KEY UPDATE 
                     description = @description, 
                     primary_function_id = @primaryFunctionId, 
@@ -305,7 +307,9 @@ namespace GMEPTitle24
                     primary_daylight_control_type_id = @primaryDaylightControlTypeId, 
                     secondary_daylight_control_type_id = @secondaryDaylightControlTypeId, 
                     interlocked_systems = @interlockedSystems, 
-                    square_footage = @squareFootage";
+                    square_footage = @squareFootage, 
+                    conditioned = @conditioned,
+                    power_adjustment_id = @powerAdjustmentId";
 
                 MySqlCommand command = new MySqlCommand(query, Connection);
                 command.Parameters.AddWithValue("@id", area.Id);
@@ -319,6 +323,8 @@ namespace GMEPTitle24
                 command.Parameters.AddWithValue("@secondaryDaylightControlTypeId", area.SecondaryDaylightControlTypeId);
                 command.Parameters.AddWithValue("@interlockedSystems", area.InterlockedSystems);
                 command.Parameters.AddWithValue("@squareFootage", area.SquareFootage);
+                command.Parameters.AddWithValue("@conditioned", area.Conditioned);
+                command.Parameters.AddWithValue("@powerAdjustmentId", area.PowerAdjustmentId);
 
                 await command.ExecuteNonQueryAsync();
             }

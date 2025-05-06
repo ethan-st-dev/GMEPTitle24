@@ -21,6 +21,8 @@ namespace GMEPTitle24
         private int secondaryDaylightControlTypeId = 1;
         private bool interlockedSystems = false;
         private float squareFootage = 0;
+        private bool conditioned = true;
+        private int powerAdjustmentId = 2;
 
         protected void OnPropertyChanged(string propertyName)
         {
@@ -159,6 +161,30 @@ namespace GMEPTitle24
                 }
             }
         }
+        public bool Conditioned
+        {
+            get { return conditioned; }
+            set
+            {
+                if (conditioned != value)
+                {
+                    conditioned = value;
+                    OnPropertyChanged(nameof(Conditioned));
+                }
+            }
+        }
+        public int PowerAdjustmentId
+        {
+            get { return powerAdjustmentId; }
+            set
+            {
+                if (powerAdjustmentId != value)
+                {
+                    powerAdjustmentId = value;
+                    OnPropertyChanged(nameof(PowerAdjustmentId));
+                }
+            }
+        }
         public ControlArea(
             string id,
             string projectId,
@@ -170,7 +196,9 @@ namespace GMEPTitle24
             int primaryDaylightControlTypeId,
             int secondaryDaylightControlTypeId,
             bool interlockedSystems,
-            float squareFootage
+            float squareFootage,
+            bool conditioned,
+            int powerAdjustmentId
         )
         {
             this.id = id;
@@ -184,6 +212,8 @@ namespace GMEPTitle24
             this.secondaryDaylightControlTypeId = secondaryDaylightControlTypeId;
             this.interlockedSystems = interlockedSystems;
             this.squareFootage = squareFootage;
+            this.conditioned = conditioned;
+            this.powerAdjustmentId = powerAdjustmentId;
         }
         public ControlArea()
         {
