@@ -173,7 +173,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         service.HideCommandPromptWindow = true;
 
         options = new ChromeOptions();
-        //options.AddArgument("headless");
+        options.AddArgument("headless");
         driver = new ChromeDriver(service, options);
 
         StatusText.Text = "Navigating to Site";
@@ -217,7 +217,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         await Login();
 
         //Quitting and launching new window
-       /* var url = driver.Url;
+        var url = driver.Url;
         driver.Quit();
 
         StatusText.Text = "Launching Window.";
@@ -232,7 +232,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             });
         });
         StatusText.Text = "";
-        Loading.Visibility = Visibility.Collapsed;*/
+        Loading.Visibility = Visibility.Collapsed;
     }
 
     public async Task Login()
@@ -451,6 +451,13 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 foreach(var lighting in LightingList)
                 {
                     ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AddLuminaireButton);
+
+                    // Wait for the DOM to reflect the addition of the new luminaire
+                    wait.Until(driver =>
+                    {
+                        var updatedLightings = lightingContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
+                        return updatedLightings.Count >= LightingList.IndexOf(lighting) + 1;
+                    });
                 }
                 
                    
@@ -787,6 +794,11 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 foreach (var area in ControlAreaList)
                 {
                     ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AddAreaButton);
+                    wait.Until(driver =>
+                    {
+                        var updatedAreas = areaContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
+                        return updatedAreas.Count >= ControlAreaList.IndexOf(area) + 1;
+                    });
                 }
 
                 IWebElement SaveButton = driver.FindElement(By.XPath("//div[text()='Save']"));
