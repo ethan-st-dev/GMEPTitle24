@@ -845,6 +845,12 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                             var choice = choices[controlAreaList[row].MultilevelControlTypeId - 1];
                             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
                         }
+                        if (placeholderValue != null && placeholderValue.Contains("shut-off controls", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[controlAreaList[row].ShutoffControlTypeId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
                         if (placeholderValue != null && placeholderValue.Contains("primary/skylit daylighting controls", StringComparison.OrdinalIgnoreCase))
                         {
                             var choices = element.FindElements(By.CssSelector("li"));

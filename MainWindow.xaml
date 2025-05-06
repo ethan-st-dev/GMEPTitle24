@@ -431,6 +431,22 @@
                                         </CompositeCollection>
                                     </DataGridComboBoxColumn.ItemsSource>
                                 </DataGridComboBoxColumn>
+                                <DataGridComboBoxColumn Header="Shut-Off Controls" Width="*" SelectedValueBinding="{Binding ShutoffControlTypeId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
+                                    <DataGridComboBoxColumn.ItemsSource>
+                                        <CompositeCollection>
+                                            <ComboBoxItem Content="Auto Time Switch" Tag="1" />
+                                            <ComboBoxItem Content="Building Level (Shut-Off control requirements are met at the building level)" Tag="2" />
+                                            <ComboBoxItem Content="COuntdown Timer" Tag="3" />
+                                            <ComboBoxItem Content="Energy Management Control System (EMCS)" Tag="4" />
+                                            <ComboBoxItem Content="Occupancy Sensor" Tag="5" />
+                                            <ComboBoxItem Content="Partial Off 130.1(c)/ 160.5(b)4C" Tag="6" />
+                                            <ComboBoxItem Content="Partial On 130.1(c)/ 160.5(b)4C" Tag="7" />
+                                            <ComboBoxItem Content="NA: 24 hour/365 day" Tag="8" />
+                                            <ComboBoxItem Content="NA: Elec. equip. rm" Tag="9" />
+                                            <ComboBoxItem Content="NA: Licensed Healthcare" Tag="10" />
+                                        </CompositeCollection>
+                                    </DataGridComboBoxColumn.ItemsSource>
+                                </DataGridComboBoxColumn>
                                 <DataGridComboBoxColumn Header="Primary/Skylight Daylighting Controls" Width="*" SelectedValueBinding="{Binding PrimaryDaylightControlTypeId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
                                     <DataGridComboBoxColumn.ItemsSource>
                                         <CompositeCollection>
