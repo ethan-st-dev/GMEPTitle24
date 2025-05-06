@@ -173,7 +173,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         service.HideCommandPromptWindow = true;
 
         options = new ChromeOptions();
-        options.AddArgument("headless");
+        //options.AddArgument("headless");
         driver = new ChromeDriver(service, options);
 
         StatusText.Text = "Navigating to Site";
@@ -217,7 +217,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         await Login();
 
         //Quitting and launching new window
-        var url = driver.Url;
+       /* var url = driver.Url;
         driver.Quit();
 
         StatusText.Text = "Launching Window.";
@@ -232,7 +232,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             });
         });
         StatusText.Text = "";
-        Loading.Visibility = Visibility.Collapsed;
+        Loading.Visibility = Visibility.Collapsed;*/
     }
 
     public async Task Login()
@@ -688,8 +688,20 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 IWebElement SaveButton = driver.FindElement(By.XPath("//div[text()='Save']"));
                 ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", SaveButton);
 
-                IWebElement luminaires2 = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Luminaires']")));
-                luminaires2.Click();
+                WebDriverWait wait2 = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+                wait2.Until(driver =>
+                {
+                    var formElement = driver.FindElement(By.Id("matForm"));
+                    return formElement.GetAttribute("class").Contains("mod_submitting");
+                });
+
+                // Wait for the "mod_submitting" class to be removed
+                wait2.Until(driver =>
+                {
+                    var formElement = driver.FindElement(By.Id("matForm"));
+                    return !formElement.GetAttribute("class").Contains("mod_submitting");
+                });
+
 
 
             }
@@ -719,6 +731,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         });
         if (result == 0)
         {
+            Debug.WriteLine("Meow");
             return;
         }
     }
@@ -779,8 +792,19 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 IWebElement SaveButton = driver.FindElement(By.XPath("//div[text()='Save']"));
                 ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", SaveButton);
 
-                IWebElement controls2 = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Luminaires']")));
-                controls2.Click();
+                WebDriverWait wait2 = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+                wait2.Until(driver =>
+                {
+                    var formElement = driver.FindElement(By.Id("matForm"));
+                    return formElement.GetAttribute("class").Contains("mod_submitting");
+                });
+
+                // Wait for the "mod_submitting" class to be removed
+                wait2.Until(driver =>
+                {
+                    var formElement = driver.FindElement(By.Id("matForm"));
+                    return !formElement.GetAttribute("class").Contains("mod_submitting");
+                });
             }
             catch (WebDriverTimeoutException ex)
             {
