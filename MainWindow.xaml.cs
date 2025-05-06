@@ -801,6 +801,28 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                     });
                 }
 
+                areas = areaContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
+                //Editing Boxes
+                int row = 0;
+                foreach (var area in areas)
+                {
+                    //iterating through text entries
+                    var elements = area.FindElements(By.CssSelector("input[type='text']"));
+                    foreach (var element in elements)
+                    {
+                        string attributeValue = element.GetAttribute("placeholder");
+                        if (attributeValue != null && attributeValue.Contains("area description", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, ControlAreaList[row].Description);
+                        }
+                    }
+                    row++;
+                }
+
                 IWebElement SaveButton = driver.FindElement(By.XPath("//div[text()='Save']"));
                 ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", SaveButton);
 
