@@ -398,6 +398,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         }
         await FillOutLuminaires();
         await FillOutControls();
+        await FillOutAllowances();
     }
     public async Task FillOutLuminaires()
     {
@@ -908,6 +909,154 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 Dispatcher.Invoke(() =>
                 {
                     StatusText.Text = "An error occurred while navigation to luminaires.";
+                    Loading.Visibility = Visibility.Collapsed;
+                });
+                Debug.WriteLine($"WebDriver Exception: {ex.Message}");
+                return 0;
+            }
+            return 1;
+        });
+        if (result == 0)
+        {
+            return;
+        }
+    }
+    public async Task FillOutAllowances()
+    {
+        StatusText.Text = "Filling Out Allowances Section";
+        int result = await Task.Run(int () =>
+        {
+            try
+            {
+                IWebElement allowances = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Allowances']")));
+                allowances.Click();
+                try
+                {
+                    WebDriverWait continueWait = new WebDriverWait(driver, TimeSpan.FromSeconds(2));
+                    IWebElement continueAnyway = continueWait.Until(driver =>
+                    {
+                        try
+                        {
+                            return driver.FindElement(By.XPath("//div[text()='Continue Anyway']"));
+                        }
+                        catch (NoSuchElementException)
+                        {
+                            return null;
+                        }
+                    });
+
+                    if (continueAnyway != null)
+                    {
+                        continueAnyway.Click();
+                    }
+                }
+                catch (WebDriverTimeoutException)
+                {
+                    // If the "continue anyway" div is not found within the timeout, proceed
+                    Debug.WriteLine("The 'continue anyway' div was not found. Proceeding...");
+                }
+
+                //Grabbing Container For All Lighting Entries
+                IWebElement AddAreaButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Add Area']")));
+
+                IWebElement areaContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[name='organism_Table6_Row']")));
+                IWebElement areaChildrenContainer = areaContainer.FindElement(By.CssSelector("div[class='molecule_children']"));
+                var areas = areaChildrenContainer.FindElements(By.CssSelector(":scope > div[class='mod_multiField']"));
+                Debug.WriteLine("Areas count: " + areas.Count);
+
+                //Removing all entries and adding new ones
+                foreach (var area in areas)
+                {
+                    var delete = area.FindElement(By.CssSelector(":scope > div[class='mod_supportControl']"));
+                    var deleteIcon = delete.FindElement(By.CssSelector("i"));
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", deleteIcon);
+                }
+
+                foreach (var area in ControlAreaList)
+                {
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AddAreaButton);
+                    wait.Until(driver =>
+                    {
+                        var updatedAreas = areaChildrenContainer.FindElements(By.CssSelector(":scope > div[class='mod_multiField']"));
+                        return updatedAreas.Count >= ControlAreaList.IndexOf(area) + 1;
+                    });
+                }
+
+                areas = areaChildrenContainer.FindElements(By.CssSelector(":scope > div[class='mod_multiField']"));
+                //Editing Boxes
+                int row = 0;
+                foreach (var area in areas)
+                {
+                    //iterating through text entries
+                    var elements = area.FindElements(By.CssSelector("input[type='text']"));
+                    foreach (var element in elements)
+                    {
+                        string attributeValue = element.GetAttribute("placeholder");
+                        if (attributeValue != null && attributeValue.Contains("square footage", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, ControlAreaList[row].SquareFootage);
+                        }
+                    }
+
+                    var dropdownElements = area.FindElements(By.CssSelector("div[class='selectWrapper']"));
+                    foreach (var element in dropdownElements)
+                    {
+                        var textbox = element.FindElement(By.CssSelector("input"));
+                        string placeholderValue = textbox.GetAttribute("placeholder");
+                        if (placeholderValue != null && placeholderValue.Contains("area entered in the controls section", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[0];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("choose the controls section area", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[row];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                    }
+                    row++;
+                }
+
+                IWebElement SaveButton = driver.FindElement(By.XPath("//div[text()='Save']"));
+                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", SaveButton);
+
+                WebDriverWait wait2 = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+                wait2.Until(driver =>
+                {
+                    var formElement = driver.FindElement(By.Id("matForm"));
+                    return formElement.GetAttribute("class").Contains("mod_submitting");
+                });
+
+                // Wait for the "mod_submitting" class to be removed
+                wait2.Until(driver =>
+                {
+                    var formElement = driver.FindElement(By.Id("matForm"));
+                    return !formElement.GetAttribute("class").Contains("mod_submitting");
+                });
+            }
+            catch (WebDriverTimeoutException ex)
+            {
+                // Handle timeout exceptions
+                Dispatcher.Invoke(() =>
+                {
+                    StatusText.Text = "Navigation timed out. Please try again.";
+                    Loading.Visibility = Visibility.Collapsed;
+                });
+                Debug.WriteLine($"Timeout Exception: {ex.Message}");
+                return 0;
+            }
+            catch (WebDriverException ex)
+            {
+                // Handle general WebDriver exceptions
+                Dispatcher.Invoke(() =>
+                {
+                    StatusText.Text = "An error occurred while navigating to luminaires.";
                     Loading.Visibility = Visibility.Collapsed;
                 });
                 Debug.WriteLine($"WebDriver Exception: {ex.Message}");
