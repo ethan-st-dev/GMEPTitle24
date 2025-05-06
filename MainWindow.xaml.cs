@@ -93,6 +93,19 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             }
         }
     }
+    public ObservableCollection<ControlArea> controlAreaList = new ObservableCollection<ControlArea>();
+    public ObservableCollection<ControlArea> ControlAreaList
+    {
+        get { return controlAreaList; }
+        set
+        {
+            if (controlAreaList != value)
+            {
+                controlAreaList = value;
+                OnPropertyChanged(nameof(ControlAreaList));
+            }
+        }
+    }
 
     public MainWindow()
     {
@@ -384,6 +397,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             return;
         }
         await FillOutLuminaires();
+        await FillOutControls();
+        await FillOutAllowances();
     }
     public async Task FillOutLuminaires()
     {
@@ -437,6 +452,13 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 foreach(var lighting in LightingList)
                 {
                     ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AddLuminaireButton);
+
+                    // Wait for the DOM to reflect the addition of the new luminaire
+                    wait.Until(driver =>
+                    {
+                        var updatedLightings = lightingContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
+                        return updatedLightings.Count >= LightingList.IndexOf(lighting) + 1;
+                    });
                 }
                 
                    
@@ -674,8 +696,20 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 IWebElement SaveButton = driver.FindElement(By.XPath("//div[text()='Save']"));
                 ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", SaveButton);
 
-                IWebElement luminaires2 = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Luminaires']")));
-                luminaires2.Click();
+                WebDriverWait wait2 = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+                wait2.Until(driver =>
+                {
+                    var formElement = driver.FindElement(By.Id("matForm"));
+                    return formElement.GetAttribute("class").Contains("mod_submitting");
+                });
+
+                // Wait for the "mod_submitting" class to be removed
+                wait2.Until(driver =>
+                {
+                    var formElement = driver.FindElement(By.Id("matForm"));
+                    return !formElement.GetAttribute("class").Contains("mod_submitting");
+                });
+
 
 
             }
@@ -705,6 +739,360 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         });
         if (result == 0)
         {
+            Debug.WriteLine("Meow");
+            return;
+        }
+    }
+    public async Task FillOutControls()
+    {
+        StatusText.Text = "Filling Out Controls Section";
+        int result = await Task.Run(int () =>
+        {
+            try
+            {
+                IWebElement controls = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Controls']")));
+                controls.Click();
+                try
+                {
+                    WebDriverWait continueWait = new WebDriverWait(driver, TimeSpan.FromSeconds(2));
+                    IWebElement continueAnyway = continueWait.Until(driver =>
+                    {
+                        try
+                        {
+                            return driver.FindElement(By.XPath("//div[text()='Continue Anyway']"));
+                        }
+                        catch (NoSuchElementException)
+                        {
+                            return null;
+                        }
+                    });
+
+                    if (continueAnyway != null)
+                    {
+                        continueAnyway.Click();
+                    }
+                }
+                catch (WebDriverTimeoutException)
+                {
+                    // If the "continue anyway" div is not found within the timeout, proceed
+                    Debug.WriteLine("The 'continue anyway' div was not found. Proceeding...");
+                }
+
+                //Grabbing Container For All Lighting Entries
+                IWebElement AddAreaButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Add New Area']")));
+
+                IWebElement areaContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[name='organism_Table5_Row']")));
+                var areas = areaContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
+
+                //Removing all entries and adding new ones
+                foreach (var area in areas)
+                {
+                    var delete = area.FindElement(By.CssSelector("div[class='mod_supportControl']"));
+                    var deleteIcon = delete.FindElement(By.CssSelector("i"));
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", deleteIcon);
+                }
+
+                foreach (var area in ControlAreaList)
+                {
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AddAreaButton);
+                    wait.Until(driver =>
+                    {
+                        var updatedAreas = areaContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
+                        return updatedAreas.Count >= ControlAreaList.IndexOf(area) + 1;
+                    });
+                }
+
+                areas = areaContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
+                //Editing Boxes
+                int row = 0;
+                foreach (var area in areas)
+                {
+                    //iterating through text entries
+                    var elements = area.FindElements(By.CssSelector("input[type='text']"));
+                    foreach (var element in elements)
+                    {
+                        string attributeValue = element.GetAttribute("placeholder");
+                        if (attributeValue != null && attributeValue.Contains("area description", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, ControlAreaList[row].Description);
+                        }
+                    }
+
+                    var dropdownElements = area.FindElements(By.CssSelector("div[class='selectWrapper']"));
+                    foreach (var element in dropdownElements)
+                    {
+                        var textbox = element.FindElement(By.CssSelector("input"));
+                        string placeholderValue = textbox.GetAttribute("placeholder");
+                        if (placeholderValue != null && placeholderValue.Contains("primary function area", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li:not(.mod_disabled)"));
+                            Debug.WriteLine("Choices Number: " + choices.Count.ToString());
+                            var choice = choices[controlAreaList[row].PrimaryFunctionId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("area controls", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[controlAreaList[row].AreaControlTypeId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("multi-level controls", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[controlAreaList[row].MultilevelControlTypeId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("shut-off controls", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[controlAreaList[row].ShutoffControlTypeId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("primary/skylit daylighting controls", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[controlAreaList[row].PrimaryDaylightControlTypeId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("secondary daylighting controls", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[controlAreaList[row].SecondaryDaylightControlTypeId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("interlocked lighting systems", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            int result = controlAreaList[row].InterlockedSystems ? 0 : 1;
+                            var choice = choices[result];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                    }
+                    row++;
+                }
+
+                IWebElement SaveButton = driver.FindElement(By.XPath("//div[text()='Save']"));
+                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", SaveButton);
+
+                WebDriverWait wait2 = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+                wait2.Until(driver =>
+                {
+                    var formElement = driver.FindElement(By.Id("matForm"));
+                    return formElement.GetAttribute("class").Contains("mod_submitting");
+                });
+
+                // Wait for the "mod_submitting" class to be removed
+                wait2.Until(driver =>
+                {
+                    var formElement = driver.FindElement(By.Id("matForm"));
+                    return !formElement.GetAttribute("class").Contains("mod_submitting");
+                });
+            }
+            catch (WebDriverTimeoutException ex)
+            {
+                // Handle timeout exceptions
+                Dispatcher.Invoke(() =>
+                {
+                    StatusText.Text = "Navigation timed out. Please try again.";
+                    Loading.Visibility = Visibility.Collapsed;
+                });
+                Debug.WriteLine($"Timeout Exception: {ex.Message}");
+                return 0;
+            }
+            catch (WebDriverException ex)
+            {
+                // Handle general WebDriver exceptions
+                Dispatcher.Invoke(() =>
+                {
+                    StatusText.Text = "An error occurred while navigation to luminaires.";
+                    Loading.Visibility = Visibility.Collapsed;
+                });
+                Debug.WriteLine($"WebDriver Exception: {ex.Message}");
+                return 0;
+            }
+            return 1;
+        });
+        if (result == 0)
+        {
+            return;
+        }
+    }
+    public async Task FillOutAllowances()
+    {
+        StatusText.Text = "Filling Out Allowances Section";
+        int result = await Task.Run(int () =>
+        {
+            try
+            {
+                IWebElement allowances = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Allowances']")));
+                allowances.Click();
+                try
+                {
+                    WebDriverWait continueWait = new WebDriverWait(driver, TimeSpan.FromSeconds(2));
+                    IWebElement continueAnyway = continueWait.Until(driver =>
+                    {
+                        try
+                        {
+                            return driver.FindElement(By.XPath("//div[text()='Continue Anyway']"));
+                        }
+                        catch (NoSuchElementException)
+                        {
+                            return null;
+                        }
+                    });
+
+                    if (continueAnyway != null)
+                    {
+                        continueAnyway.Click();
+                    }
+                }
+                catch (WebDriverTimeoutException)
+                {
+                    // If the "continue anyway" div is not found within the timeout, proceed
+                    Debug.WriteLine("The 'continue anyway' div was not found. Proceeding...");
+                }
+
+                //Grabbing Container For All Lighting Entries
+                IWebElement AddAreaButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Add Area']")));
+
+                IWebElement areaContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[name='organism_Table6_Row']")));
+                IWebElement areaChildrenContainer = areaContainer.FindElement(By.CssSelector("div[class='molecule_children']"));
+                var areas = areaChildrenContainer.FindElements(By.CssSelector(":scope > div[class='mod_multiField']"));
+                Debug.WriteLine("Areas count: " + areas.Count);
+
+                //Removing all entries and adding new ones
+                foreach (var area in areas)
+                {
+                    var delete = area.FindElement(By.CssSelector(":scope > div[class='mod_supportControl']"));
+                    var deleteIcon = delete.FindElement(By.CssSelector("i"));
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", deleteIcon);
+                }
+
+                foreach (var area in ControlAreaList)
+                {
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AddAreaButton);
+                    wait.Until(driver =>
+                    {
+                        var updatedAreas = areaChildrenContainer.FindElements(By.CssSelector(":scope > div[class='mod_multiField']"));
+                        return updatedAreas.Count >= ControlAreaList.IndexOf(area) + 1;
+                    });
+                }
+
+                areas = areaChildrenContainer.FindElements(By.CssSelector(":scope > div[class='mod_multiField']"));
+                //Editing Boxes
+                int row = 0;
+                foreach (var area in areas)
+                {
+                    //iterating through text entries
+                    var elements = area.FindElements(By.CssSelector("input[type='text']"));
+                    foreach (var element in elements)
+                    {
+                        string attributeValue = element.GetAttribute("placeholder");
+                        if (attributeValue != null && attributeValue.Contains("square footage", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, ControlAreaList[row].SquareFootage);
+                        }
+                    }
+
+                    var dropdownElements = area.FindElements(By.CssSelector("div[class='selectWrapper']"));
+                    foreach (var element in dropdownElements)
+                    {
+                        var textbox = element.FindElement(By.CssSelector("input"));
+                        string placeholderValue = textbox.GetAttribute("placeholder");
+                        if (placeholderValue != null && placeholderValue.Contains("area entered in the controls section", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[0];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("choose the controls section area", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[row];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("conditioned or unconditioned", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            int result = ControlAreaList[row].Conditioned ? 0 : 1;
+                            var choice = choices[result];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("additional power allowance", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var PowerAdjustmentBox = element.FindElement(By.CssSelector("div[data-name='PowerAdjustmentFactor'"));
+                            var NoAdditionalBox = element.FindElement(By.CssSelector("div[data-name='NoAdditionalAllowances'"));
+                            var PowerAdjustmentLabel = PowerAdjustmentBox.FindElement(By.CssSelector("label"));
+                            var NoAdditionalLabel = NoAdditionalBox.FindElement(By.CssSelector("label"));
+                            switch (ControlAreaList[row].PowerAdjustmentId)
+                            {
+                                case 1:
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", PowerAdjustmentLabel);
+                                    break;
+                                case 2:
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", NoAdditionalLabel);
+                                    break;
+                                case 3:
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", PowerAdjustmentLabel);
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", NoAdditionalLabel);
+                                    break;
+                            }
+                        }
+                    }
+                    row++;
+                }
+
+                IWebElement SaveButton = driver.FindElement(By.XPath("//div[text()='Save']"));
+                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", SaveButton);
+
+                WebDriverWait wait2 = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+                wait2.Until(driver =>
+                {
+                    var formElement = driver.FindElement(By.Id("matForm"));
+                    return formElement.GetAttribute("class").Contains("mod_submitting");
+                });
+
+                // Wait for the "mod_submitting" class to be removed
+                wait2.Until(driver =>
+                {
+                    var formElement = driver.FindElement(By.Id("matForm"));
+                    return !formElement.GetAttribute("class").Contains("mod_submitting");
+                });
+            }
+            catch (WebDriverTimeoutException ex)
+            {
+                // Handle timeout exceptions
+                Dispatcher.Invoke(() =>
+                {
+                    StatusText.Text = "Navigation timed out. Please try again.";
+                    Loading.Visibility = Visibility.Collapsed;
+                });
+                Debug.WriteLine($"Timeout Exception: {ex.Message}");
+                return 0;
+            }
+            catch (WebDriverException ex)
+            {
+                // Handle general WebDriver exceptions
+                Dispatcher.Invoke(() =>
+                {
+                    StatusText.Text = "An error occurred while navigating to luminaires.";
+                    Loading.Visibility = Visibility.Collapsed;
+                });
+                Debug.WriteLine($"WebDriver Exception: {ex.Message}");
+                return 0;
+            }
+            return 1;
+        });
+        if (result == 0)
+        {
             return;
         }
         StatusText.Text = "";
@@ -713,17 +1101,19 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private async void Export_Click(object sender, RoutedEventArgs e)
     {
-        if (LightingList.Count > 0)
+        if (LightingList.Count > 0 && VersionComboBox.SelectedItem is KeyValuePair<int, string> selectedPair)
         {
             Loading.Visibility = Visibility.Visible;
             StatusText.Text = "Saving";
             await db.UpdateLuminaires(LightingList);
+            await db.UpdateControlAreas(ControlAreaList, selectedPair.Value);
             await ActivateSelenium();
         }
     }
     private async void Download_Click(object sender, RoutedEventArgs e)
     {
         LightingList.Clear();
+        ControlAreaList.Clear();
         Loading.Visibility = Visibility.Visible;
         StatusText.Text = "Downloading";
         VersionComboBox.SelectedValue = 0;
@@ -741,11 +1131,12 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     }
     private async void Save_Click(object sender, RoutedEventArgs e)
     {
-        if (LightingList.Count > 0)
+        if (LightingList.Count > 0 && VersionComboBox.SelectedItem is KeyValuePair<int, string> selectedPair)
         {
             Loading.Visibility = Visibility.Visible;
             StatusText.Text = "Saving";
             await db.UpdateLuminaires(LightingList);
+            await db.UpdateControlAreas(ControlAreaList, selectedPair.Value);
             StatusText.Text = String.Empty;
             Loading.Visibility = Visibility.Collapsed;
         }
@@ -757,6 +1148,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             //Electrical Tab
             string newProjectId = selectedPair.Value;
             LightingList = await db.GetLighting(newProjectId);
+            ControlAreaList = await db.GetControlAreas(newProjectId);
 
         }
     }
