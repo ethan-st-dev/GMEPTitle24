@@ -820,6 +820,20 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                         ", element, ControlAreaList[row].Description);
                         }
                     }
+
+                    var dropdownElements = area.FindElements(By.CssSelector("div[class='selectWrapper']"));
+                    foreach (var element in dropdownElements)
+                    {
+                        var textbox = element.FindElement(By.CssSelector("input"));
+                        string placeholderValue = textbox.GetAttribute("placeholder");
+                        if (placeholderValue != null && placeholderValue.Contains("primary function area", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li:not(.mod_disabled)"));
+                            Debug.WriteLine("Choices Number: " + choices.Count.ToString());
+                            var choice = choices[controlAreaList[row].PrimaryFunctionId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                    }
                     row++;
                 }
 
