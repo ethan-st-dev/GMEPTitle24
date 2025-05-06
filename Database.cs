@@ -128,7 +128,7 @@ namespace GMEPTitle24
                         !reader.IsDBNull(reader.GetOrdinal("compliance_method_id")) ? reader.GetInt32("compliance_method_id") : 1,
                         !reader.IsDBNull(reader.GetOrdinal("occupancy_type_id")) ? reader.GetInt32("occupancy_type_id") : 1,
                         !reader.IsDBNull(reader.GetOrdinal("conditioned_type_id")) ? reader.GetInt32("conditioned_type_id") : 1,
-                        !reader.IsDBNull(reader.GetOrdinal("conditioned_qty"))?  reader.GetInt32("conditioned_qty") : 0,
+                        !reader.IsDBNull(reader.GetOrdinal("conditioned_qty")) ? reader.GetInt32("conditioned_qty") : 0,
                          !reader.IsDBNull(reader.GetOrdinal("unconditioned_qty")) ? reader.GetInt32("unconditioned_qty") : 0,
                         !reader.IsDBNull(reader.GetOrdinal("luminaire_qty")) ? reader.GetInt32("luminaire_qty") : 0,
                         !reader.IsDBNull(reader.GetOrdinal("volt_ampere_rating")) ? reader.GetFloat("volt_ampere_rating") : 0,
@@ -158,22 +158,22 @@ namespace GMEPTitle24
                 command = new MySqlCommand(query, Connection);
                 command.Parameters.AddWithValue("@id", Guid.NewGuid().ToString());
                 command.Parameters.AddWithValue("@fixtureId", luminaireId);
-                command.Parameters.AddWithValue("@typeId", 1); 
-                command.Parameters.AddWithValue("@isDecorative", false); 
-                command.Parameters.AddWithValue("@wattageSourceId", 1); 
+                command.Parameters.AddWithValue("@typeId", 1);
+                command.Parameters.AddWithValue("@isDecorative", false);
+                command.Parameters.AddWithValue("@wattageSourceId", 1);
                 command.Parameters.AddWithValue("@isExcluded", false);
-                command.Parameters.AddWithValue("@projectId", projectId); 
-                command.Parameters.AddWithValue("@complianceMethodId", 1); 
-                command.Parameters.AddWithValue("@occupancyTypeId", 1); 
+                command.Parameters.AddWithValue("@projectId", projectId);
+                command.Parameters.AddWithValue("@complianceMethodId", 1);
+                command.Parameters.AddWithValue("@occupancyTypeId", 1);
                 command.Parameters.AddWithValue("@conditionedTypeId", 1);
                 command.Parameters.AddWithValue("@conditionedQty", 0);
                 command.Parameters.AddWithValue("@unconditionedQty", 0);
-                command.Parameters.AddWithValue("@luminaireQty", 1); 
+                command.Parameters.AddWithValue("@luminaireQty", 1);
                 command.Parameters.AddWithValue("@voltAmpereRating", 0);
-                command.Parameters.AddWithValue("@linearFeet", 0); 
-                command.Parameters.AddWithValue("@branchCircuitVoltage", 0); 
+                command.Parameters.AddWithValue("@linearFeet", 0);
+                command.Parameters.AddWithValue("@branchCircuitVoltage", 0);
                 command.Parameters.AddWithValue("@combinedBreakerAmps", 0);
-                command.Parameters.AddWithValue("@maxInputWattage", 0); 
+                command.Parameters.AddWithValue("@maxInputWattage", 0);
                 await command.ExecuteNonQueryAsync();
             }
 
@@ -207,7 +207,7 @@ namespace GMEPTitle24
                 command.Parameters.AddWithValue("@id", lighting.Id);
                 command.Parameters.AddWithValue("@complianceMethodId", lighting.ComplianceMethodId);
                 command.Parameters.AddWithValue("@occupancyTypeId", lighting.OccupancyTypeId);
-                command.Parameters.AddWithValue("@conditionedTypeId", lighting.ConditionedTypeId); 
+                command.Parameters.AddWithValue("@conditionedTypeId", lighting.ConditionedTypeId);
                 command.Parameters.AddWithValue("@conditionedQty", lighting.ConditionedQty);
                 command.Parameters.AddWithValue("@unconditionedQty", lighting.UnconditionedQty);
                 command.Parameters.AddWithValue("@luminaireQty", lighting.LuminaireQty);
@@ -216,6 +216,110 @@ namespace GMEPTitle24
                 command.Parameters.AddWithValue("@branchCircuitVoltage", lighting.BranchCircuitVoltage);
                 command.Parameters.AddWithValue("@combinedBreakerAmps", lighting.CombinedBreakerAmps);
                 command.Parameters.AddWithValue("@maxInputWattage", lighting.MaxInputWattage);
+                await command.ExecuteNonQueryAsync();
+            }
+            await CloseConnectionAsync();
+        }
+        public async Task<ObservableCollection<ControlArea>> GetControlAreas(
+            string projectId
+        )
+        {
+            // Get the lighting data from the database
+            ObservableCollection<ControlArea> areas =
+                new ObservableCollection<ControlArea>();
+            string query = @"SELECT 
+                            *
+                            FROM 
+                                electrical_lighting_lti_control_areas
+                            WHERE 
+                                project_id = @projectId";
+            await OpenConnectionAsync();
+            MySqlCommand command = new MySqlCommand(query, Connection);
+            command.Parameters.AddWithValue("@projectId", projectId);
+            MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync();
+
+            List<string> newLuminaireIds = new List<string>();
+
+            while (await reader.ReadAsync())
+            {
+                areas.Add(
+                    new ControlArea(
+                        reader.GetString("id"),
+                        reader.GetString("project_id"),
+                        reader.GetString("description"),
+                        reader.GetInt32("primary_function_id"),
+                        reader.GetInt32("area_control_type_id"),
+                        reader.GetInt32("multilevel_control_type_id"),
+                        reader.GetInt32("shutoff_control_type_id"),
+                        reader.GetInt32("primary_daylight_control_type_id"),
+                        reader.GetInt32("secondary_daylight_control_type_id"),
+                        reader.GetBoolean("interlocked_systems"),
+                        reader.GetFloat("square_footage")
+                    )
+                );
+            }
+            await reader.CloseAsync();
+            return areas;
+        }
+        public async Task UpdateControlAreas(
+            ObservableCollection<ControlArea> areas,
+            string projectId
+        )
+        {
+            await OpenConnectionAsync();
+
+
+            string deleteQuery = @"
+                DELETE FROM electrical_lighting_lti_control_areas
+                WHERE project_id = @projectId
+                AND id NOT IN (@ids)";
+
+            var ids = string.Join(",", areas.Select(a => $"'{a.Id}'"));
+
+            if (!string.IsNullOrEmpty(ids))
+            {
+                MySqlCommand deleteCommand = new MySqlCommand(deleteQuery, Connection);
+                deleteCommand.Parameters.AddWithValue("@projectId", projectId);
+                deleteCommand.Parameters.AddWithValue("@ids", ids);
+                await deleteCommand.ExecuteNonQueryAsync();
+            }
+            foreach (var area in areas)
+            {
+                string query = @"
+                    INSERT INTO electrical_lighting_lti_control_areas 
+                    (id, project_id, description, primary_function_id, area_control_type_id, 
+                     multilevel_control_type_id, shutoff_control_type_id, 
+                     primary_daylight_control_type_id, secondary_daylight_control_type_id, 
+                     interlocked_systems, square_footage) 
+                    VALUES 
+                    (@id, @projectId, @description, @primaryFunctionId, @areaControlTypeId, 
+                     @multilevelControlTypeId, @shutoffControlTypeId, 
+                     @primaryDaylightControlTypeId, @secondaryDaylightControlTypeId, 
+                     @interlockedSystems, @squareFootage)
+                    ON DUPLICATE KEY UPDATE 
+                    description = @description, 
+                    primary_function_id = @primaryFunctionId, 
+                    area_control_type_id = @areaControlTypeId, 
+                    multilevel_control_type_id = @multilevelControlTypeId, 
+                    shutoff_control_type_id = @shutoffControlTypeId, 
+                    primary_daylight_control_type_id = @primaryDaylightControlTypeId, 
+                    secondary_daylight_control_type_id = @secondaryDaylightControlTypeId, 
+                    interlocked_systems = @interlockedSystems, 
+                    square_footage = @squareFootage";
+
+                MySqlCommand command = new MySqlCommand(query, Connection);
+                command.Parameters.AddWithValue("@id", area.Id);
+                command.Parameters.AddWithValue("@projectId", projectId);
+                command.Parameters.AddWithValue("@description", area.Description);
+                command.Parameters.AddWithValue("@primaryFunctionId", area.PrimaryFunctionId);
+                command.Parameters.AddWithValue("@areaControlTypeId", area.AreaControlTypeId);
+                command.Parameters.AddWithValue("@multilevelControlTypeId", area.MultilevelControlTypeId);
+                command.Parameters.AddWithValue("@shutoffControlTypeId", area.ShutoffControlTypeId);
+                command.Parameters.AddWithValue("@primaryDaylightControlTypeId", area.PrimaryDaylightControlTypeId);
+                command.Parameters.AddWithValue("@secondaryDaylightControlTypeId", area.SecondaryDaylightControlTypeId);
+                command.Parameters.AddWithValue("@interlockedSystems", area.InterlockedSystems);
+                command.Parameters.AddWithValue("@squareFootage", area.SquareFootage);
+
                 await command.ExecuteNonQueryAsync();
             }
             await CloseConnectionAsync();

@@ -925,17 +925,19 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private async void Export_Click(object sender, RoutedEventArgs e)
     {
-        if (LightingList.Count > 0)
+        if (LightingList.Count > 0 && VersionComboBox.SelectedItem is KeyValuePair<int, string> selectedPair)
         {
             Loading.Visibility = Visibility.Visible;
             StatusText.Text = "Saving";
             await db.UpdateLuminaires(LightingList);
+            await db.UpdateControlAreas(ControlAreaList, selectedPair.Value);
             await ActivateSelenium();
         }
     }
     private async void Download_Click(object sender, RoutedEventArgs e)
     {
         LightingList.Clear();
+        ControlAreaList.Clear();
         Loading.Visibility = Visibility.Visible;
         StatusText.Text = "Downloading";
         VersionComboBox.SelectedValue = 0;
@@ -953,11 +955,12 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     }
     private async void Save_Click(object sender, RoutedEventArgs e)
     {
-        if (LightingList.Count > 0)
+        if (LightingList.Count > 0 && VersionComboBox.SelectedItem is KeyValuePair<int, string> selectedPair)
         {
             Loading.Visibility = Visibility.Visible;
             StatusText.Text = "Saving";
             await db.UpdateLuminaires(LightingList);
+            await db.UpdateControlAreas(ControlAreaList, selectedPair.Value);
             StatusText.Text = String.Empty;
             Loading.Visibility = Visibility.Collapsed;
         }
@@ -969,6 +972,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             //Electrical Tab
             string newProjectId = selectedPair.Value;
             LightingList = await db.GetLighting(newProjectId);
+            ControlAreaList = await db.GetControlAreas(newProjectId);
 
         }
     }
