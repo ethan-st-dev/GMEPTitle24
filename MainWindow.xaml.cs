@@ -1019,6 +1019,33 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                             var choice = choices[row];
                             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
                         }
+                        if (placeholderValue != null && placeholderValue.Contains("conditioned or unconditioned", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            int result = ControlAreaList[row].Conditioned ? 0 : 1;
+                            var choice = choices[result];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("additional power allowance", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var PowerAdjustmentBox = element.FindElement(By.CssSelector("div[data-name='PowerAdjustmentFactor'"));
+                            var NoAdditionalBox = element.FindElement(By.CssSelector("div[data-name='NoAdditionalAllowances'"));
+                            var PowerAdjustmentLabel = PowerAdjustmentBox.FindElement(By.CssSelector("label"));
+                            var NoAdditionalLabel = NoAdditionalBox.FindElement(By.CssSelector("label"));
+                            switch (ControlAreaList[row].PowerAdjustmentId)
+                            {
+                                case 1:
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", PowerAdjustmentLabel);
+                                    break;
+                                case 2:
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", NoAdditionalLabel);
+                                    break;
+                                case 3:
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", PowerAdjustmentLabel);
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", NoAdditionalLabel);
+                                    break;
+                            }
+                        }
                     }
                     row++;
                 }
