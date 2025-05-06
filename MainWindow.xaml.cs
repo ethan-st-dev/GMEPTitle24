@@ -833,6 +833,37 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                             var choice = choices[controlAreaList[row].PrimaryFunctionId - 1];
                             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
                         }
+                        if (placeholderValue != null && placeholderValue.Contains("area controls", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[controlAreaList[row].AreaControlTypeId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("multi-level controls", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[controlAreaList[row].MultilevelControlTypeId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("primary/skylit daylighting controls", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[controlAreaList[row].PrimaryDaylightControlTypeId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("secondary daylighting controls", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[controlAreaList[row].SecondaryDaylightControlTypeId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("interlocked lighting systems", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            int result = controlAreaList[row].InterlockedSystems ? 0 : 1;
+                            var choice = choices[result];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
                     }
                     row++;
                 }
