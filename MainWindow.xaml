@@ -17,6 +17,41 @@
                             <Setter Property="Height" Value="25" />
                         </Style>
                     </TabControl.Resources>
+                    <TabItem Header="Scope" DataContext="{Binding ScopeData}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="5"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <GroupBox Grid.Row="0" Header="Options">
+                                
+                            </GroupBox>
+                            <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Background="LightGray"/>
+                            <GroupBox Grid.Row="2" Header="Occupancy Types" VerticalAlignment="Stretch">
+                                <ListBox ItemsSource="{Binding OccupancyTypes}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                    
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" Height="20">
+                                                    <CheckBox.LayoutTransform>
+                                                        <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                                                    </CheckBox.LayoutTransform>
+                                                </CheckBox>
+                                                <TextBlock Text="|" Margin="15 5 5 15" VerticalAlignment="Center" FontSize="25" Foreground="SlateGray"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </GroupBox>
+                        </Grid>
+                    </TabItem>
                     <TabItem Header="Fixtures">
                         <Grid>
                             <Grid.RowDefinitions>

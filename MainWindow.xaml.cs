@@ -80,6 +80,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     }
     public int ProjectVersion { get; set; }
 
+    public Scope ScopeData { get; set; }
+
     public ObservableCollection<Lighting> lightingList = new ObservableCollection<Lighting>();
     public ObservableCollection<Lighting> LightingList
     {
@@ -112,6 +114,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         string[] args = Environment.GetCommandLineArgs();
         string projectNo = string.Empty;
         string projectVersion = string.Empty;
+        ScopeData = new Scope("1", "Project123", 1, 2, "[1, 5, 10]");
         InitializeComponent();
         DataContext = this;
         if (args.Length > 1)
