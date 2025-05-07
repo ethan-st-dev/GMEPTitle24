@@ -16,8 +16,14 @@ namespace GMEPTitle24
         public int projectScopeId = 1;
         public int gradeStories = 0;
         public bool completeBuildingMethod = false;
-        public int conditionedMethodId = 5;
-        public int unconditionedMethodId = 5;
+        public int newConditionedMethodId = 5;
+        public int newUnconditionedMethodId = 5;
+        public int newConditionedSquareFootage = 0;
+        public int newUnconditionedSquareFootage = 0;
+        public int garageConditionedSquareFootage = 0;
+        public int garageUnconditionedSquareFootage = 0;
+        public bool oneForOneAlteration = false;
+
         public ObservableCollection<CheckboxItem> OccupancyTypes { get; set; } = new ObservableCollection<CheckboxItem>
         {
             new CheckboxItem { Name = "Auditorium Building", Number = 1, IsSelected = false },
@@ -47,14 +53,21 @@ namespace GMEPTitle24
             new CheckboxItem { Name = "Warehouse", Number = 25, IsSelected = false },
             new CheckboxItem { Name = "Other (Write In)", Number = 26, IsSelected = false }
         };
-        
+        public ObservableCollection<CheckboxItem> SystemTypes { get; set; } = new ObservableCollection<CheckboxItem>
+        {
+            new CheckboxItem { Name = "Altered System", Number = 1, IsSelected = false },
+            new CheckboxItem { Name = "New System", Number = 2, IsSelected = false },
+            new CheckboxItem { Name = "New System - Parking Garage", Number = 3, IsSelected = false },
+        };
+
 
         public Scope(
             string id,
             string projectId,
             int projectScopeId,
             int gradeStories,
-            string occupancyTypeIds
+            string occupancyTypeIds,
+            string systemTypeIds
         )
         {
             this.id = id;
@@ -63,19 +76,40 @@ namespace GMEPTitle24
             this.gradeStories = gradeStories;
 
             //Iterating through occupancytypeids to establish checkboxes
-            List<int> selectedIds = new List<int>();
+            List<int> selectedOccupancyTypeIds = new List<int>();
             if (!string.IsNullOrEmpty(occupancyTypeIds))
             {
                 try
                 {
-                    selectedIds = JsonSerializer.Deserialize<List<int>>(occupancyTypeIds);
+                    selectedOccupancyTypeIds = JsonSerializer.Deserialize<List<int>>(occupancyTypeIds);
                 }
                 catch (JsonException ex)
                 {
                     Console.WriteLine($"Error deserializing occupancyTypeIds: {ex.Message}");
                 }
             }
-            foreach (var typeId in selectedIds)
+            foreach (var typeId in selectedOccupancyTypeIds)
+            {
+                var matchingItem = OccupancyTypes.FirstOrDefault(item => item.Number == typeId);
+                if (matchingItem != null)
+                {
+                    matchingItem.IsSelected = true;
+                }
+            }
+
+            List<int> selectedSystemTypeIds = new List<int>();
+            if (!string.IsNullOrEmpty(systemTypeIds))
+            {
+                try
+                {
+                    selectedSystemTypeIds = JsonSerializer.Deserialize<List<int>>(systemTypeIds);
+                }
+                catch (JsonException ex)
+                {
+                    Console.WriteLine($"Error deserializing occupancyTypeIds: {ex.Message}");
+                }
+            }
+            foreach (var typeId in selectedSystemTypeIds)
             {
                 var matchingItem = OccupancyTypes.FirstOrDefault(item => item.Number == typeId);
                 if (matchingItem != null)
@@ -85,6 +119,151 @@ namespace GMEPTitle24
             }
 
         }
+        public string Id
+        {
+            get { return id; }
+            set
+            {
+                if (id != value)
+                {
+                    id = value;
+                    OnPropertyChanged(nameof(Id));
+                }
+            }
+        }
+        public string ProjectId
+        {
+            get { return projectId; }
+            set
+            {
+                if (projectId != value)
+                {
+                    projectId = value;
+                    OnPropertyChanged(nameof(ProjectId));
+                }
+            }
+        }
+        public int ProjectScopeId
+        {
+            get { return projectScopeId; }
+            set
+            {
+                if (projectScopeId != value)
+                {
+                    projectScopeId = value;
+                    OnPropertyChanged(nameof(ProjectScopeId));
+                }
+            }
+        }
+        public int GradeStories
+        {
+            get { return gradeStories; }
+            set
+            {
+                if (gradeStories != value)
+                {
+                    gradeStories = value;
+                    OnPropertyChanged(nameof(GradeStories));
+                }
+            }
+        }
+        public bool CompleteBuildingMethod
+        {
+            get { return completeBuildingMethod; }
+            set
+            {
+                if (completeBuildingMethod != value)
+                {
+                    completeBuildingMethod = value;
+                    OnPropertyChanged(nameof(CompleteBuildingMethod));
+                }
+            }
+        }
+        public int NewConditionedMethodId
+        {
+            get { return newConditionedMethodId; }
+            set
+            {
+                if (newConditionedMethodId != value)
+                {
+                    newConditionedMethodId = value;
+                    OnPropertyChanged(nameof(NewConditionedMethodId));
+                }
+            }
+        }
+        public int NewUnconditionedMethodId
+        {
+            get { return newUnconditionedMethodId; }
+            set
+            {
+                if (newUnconditionedMethodId != value)
+                {
+                    newUnconditionedMethodId = value;
+                    OnPropertyChanged(nameof(NewUnconditionedMethodId));
+                }
+            }
+        }
+        public int NewConditionedSquareFootage
+        {
+            get { return newConditionedSquareFootage; }
+            set
+            {
+                if (newConditionedSquareFootage != value)
+                {
+                    newConditionedSquareFootage = value;
+                    OnPropertyChanged(nameof(NewConditionedSquareFootage));
+                }
+            }
+        }
+        public int NewUnconditionedSquareFootage
+        {
+            get { return newUnconditionedSquareFootage; }
+            set
+            {
+                if (newUnconditionedSquareFootage != value)
+                {
+                    newUnconditionedSquareFootage = value;
+                    OnPropertyChanged(nameof(NewUnconditionedSquareFootage));
+                }
+            }
+        }
+        public int GarageConditionedSquareFootage
+        {
+            get { return garageConditionedSquareFootage; }
+            set
+            {
+                if (garageConditionedSquareFootage != value)
+                {
+                    garageConditionedSquareFootage = value;
+                    OnPropertyChanged(nameof(GarageConditionedSquareFootage));
+                }
+            }
+        }
+        public int GarageUnconditionedSquareFootage
+        {
+            get { return garageUnconditionedSquareFootage; }
+            set
+            {
+                if (garageUnconditionedSquareFootage != value)
+                {
+                    garageUnconditionedSquareFootage = value;
+                    OnPropertyChanged(nameof(GarageUnconditionedSquareFootage));
+                }
+            }
+        }
+        public bool OneForOneAlteration
+        {
+            get { return oneForOneAlteration; }
+            set
+            {
+                if (oneForOneAlteration != value)
+                {
+                    oneForOneAlteration = value;
+                    OnPropertyChanged(nameof(OneForOneAlteration));
+                }
+            }
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)

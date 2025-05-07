@@ -24,31 +24,75 @@
                                 <RowDefinition Height="5"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <GroupBox Grid.Row="0" Header="Options">
-                                
-                            </GroupBox>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="5"/>
+                                    <ColumnDefinition Width="5*"/>
+                                </Grid.ColumnDefinitions>
+                                <GroupBox Grid.Column="0" Header="Main Options">
+                                    <StackPanel Orientation="Vertical">
+                                        <StackPanel Orientation="Vertical">
+                                            <Label Content="Project Scope" FontWeight="Bold"/>
+                                            <ComboBox Width="200" HorizontalAlignment="Left">
+                                                <ComboBox.Items>
+                                                    <ComboBoxItem Content="Addition" Tag="1"/>
+                                                    <ComboBoxItem Content="Alteration" Tag="2"/>
+                                                    <ComboBoxItem Content="Addition and Alteration" Tag="3"/>
+                                                    <ComboBoxItem Content="New Construction" Tag="4"/>
+                                                </ComboBox.Items>
+                                            </ComboBox>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical">
+                                            <Label Content="Grade Stories" FontWeight="Bold"/>
+                                            <TextBox Width="200" HorizontalAlignment="Left">
+                                            </TextBox>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical">
+                                            <Label Content="Lighting System Type" FontWeight="Bold"/>
+                                            <ListBox HorizontalAlignment="Left" ItemsSource="{Binding SystemTypes}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" Height="20"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical">
+                                            <Label Content="Complete Building Method" FontWeight="Bold"/>
+                                            <CheckBox IsChecked="{Binding CompleteBuildingMethod}" Content="Using Complete Building Method"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </GroupBox>
+                                <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="LightGray"/>
+                                <GroupBox Grid.Column="2" Header="Occupancy Types">
+                                    <ListBox ItemsSource="{Binding OccupancyTypes}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                        <ListBox.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Horizontal" />
+                                            </ItemsPanelTemplate>
+                                        </ListBox.ItemsPanel>
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" Height="20">
+                                                        <CheckBox.LayoutTransform>
+                                                            <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                                                        </CheckBox.LayoutTransform>
+                                                    </CheckBox>
+                                                    <TextBlock Text="|" Margin="15 5 5 15" VerticalAlignment="Center" FontSize="25" Foreground="SlateGray"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </GroupBox>
+
+                            </Grid>
                             <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Background="LightGray"/>
-                            <GroupBox Grid.Row="2" Header="Occupancy Types" VerticalAlignment="Stretch">
-                                <ListBox ItemsSource="{Binding OccupancyTypes}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                    
-                                    <ListBox.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel Orientation="Horizontal" />
-                                        </ItemsPanelTemplate>
-                                    </ListBox.ItemsPanel>
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" Height="20">
-                                                    <CheckBox.LayoutTransform>
-                                                        <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
-                                                    </CheckBox.LayoutTransform>
-                                                </CheckBox>
-                                                <TextBlock Text="|" Margin="15 5 5 15" VerticalAlignment="Center" FontSize="25" Foreground="SlateGray"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>
+                            <GroupBox Grid.Row="2" Header="Method Options" VerticalAlignment="Stretch">
+                               
                             </GroupBox>
                         </Grid>
                     </TabItem>
