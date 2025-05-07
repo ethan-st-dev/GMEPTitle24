@@ -153,7 +153,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                         {
                             Dispatcher.Invoke(() =>
                             {
-                                StatusText.Text = "Version Not Found";
+                                VersionComboBox.SelectedValue = ProjectIds.Keys.First();
+                                ControlAreaGrid.IsEnabled = true;
                             });
                         }
                     }
@@ -161,7 +162,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                     {
                         Dispatcher.Invoke(() =>
                         {
-                            StatusText.Text = "Invalid Version Argument";
+                            VersionComboBox.SelectedValue = ProjectIds.Keys.First();
+                            ControlAreaGrid.IsEnabled = true;
                         });
                     }
                 }
