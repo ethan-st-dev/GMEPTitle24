@@ -23,6 +23,9 @@ namespace GMEPTitle24
         public int garageConditionedSquareFootage = 0;
         public int garageUnconditionedSquareFootage = 0;
         public bool oneForOneAlteration = false;
+        public bool alteredSystem = false;
+        public bool newSystem = false;
+        public bool garageSystem = false;
 
         public ObservableCollection<CheckboxItem> OccupancyTypes { get; set; } = new ObservableCollection<CheckboxItem>
         {
@@ -53,12 +56,6 @@ namespace GMEPTitle24
             new CheckboxItem { Name = "Warehouse", Number = 25, IsSelected = false },
             new CheckboxItem { Name = "Other (Write In)", Number = 26, IsSelected = false }
         };
-        public ObservableCollection<CheckboxItem> SystemTypes { get; set; } = new ObservableCollection<CheckboxItem>
-        {
-            new CheckboxItem { Name = "Altered System", Number = 1, IsSelected = false },
-            new CheckboxItem { Name = "New System", Number = 2, IsSelected = false },
-            new CheckboxItem { Name = "New System - Parking Garage", Number = 3, IsSelected = false },
-        };
 
 
         public Scope(
@@ -67,13 +64,18 @@ namespace GMEPTitle24
             int projectScopeId,
             int gradeStories,
             string occupancyTypeIds,
-            string systemTypeIds
+            bool alteredSystem,
+            bool newSystem,
+            bool garageSystem
         )
         {
             this.id = id;
             this.projectId = projectId;
             this.projectScopeId = projectScopeId;
             this.gradeStories = gradeStories;
+            this.alteredSystem = alteredSystem;
+            this.newSystem = newSystem;
+            this.garageSystem = garageSystem;
 
             //Iterating through occupancytypeids to establish checkboxes
             List<int> selectedOccupancyTypeIds = new List<int>();
@@ -96,28 +98,6 @@ namespace GMEPTitle24
                     matchingItem.IsSelected = true;
                 }
             }
-
-            List<int> selectedSystemTypeIds = new List<int>();
-            if (!string.IsNullOrEmpty(systemTypeIds))
-            {
-                try
-                {
-                    selectedSystemTypeIds = JsonSerializer.Deserialize<List<int>>(systemTypeIds);
-                }
-                catch (JsonException ex)
-                {
-                    Console.WriteLine($"Error deserializing occupancyTypeIds: {ex.Message}");
-                }
-            }
-            foreach (var typeId in selectedSystemTypeIds)
-            {
-                var matchingItem = OccupancyTypes.FirstOrDefault(item => item.Number == typeId);
-                if (matchingItem != null)
-                {
-                    matchingItem.IsSelected = true;
-                }
-            }
-
         }
         public string Id
         {
@@ -260,6 +240,42 @@ namespace GMEPTitle24
                 {
                     oneForOneAlteration = value;
                     OnPropertyChanged(nameof(OneForOneAlteration));
+                }
+            }
+        }
+        public bool AlteredSystem
+        {
+            get { return alteredSystem; }
+            set
+            {
+                if (alteredSystem != value)
+                {
+                    alteredSystem = value;
+                    OnPropertyChanged(nameof(AlteredSystem));
+                }
+            }
+        }
+        public bool NewSystem
+        {
+            get { return newSystem; }
+            set
+            {
+                if (newSystem != value)
+                {
+                    newSystem = value;
+                    OnPropertyChanged(nameof(NewSystem));
+                }
+            }
+        }
+        public bool GarageSystem
+        {
+            get { return garageSystem; }
+            set
+            {
+                if (garageSystem != value)
+                {
+                    garageSystem = value;
+                    OnPropertyChanged(nameof(GarageSystem));
                 }
             }
         }

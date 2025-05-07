@@ -50,15 +50,9 @@
                                         </StackPanel>
                                         <StackPanel Orientation="Vertical">
                                             <Label Content="Lighting System Type" FontWeight="Bold"/>
-                                            <ListBox HorizontalAlignment="Left" ItemsSource="{Binding SystemTypes}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                                <ListBox.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" Height="20"/>
-                                                        </StackPanel>
-                                                    </DataTemplate>
-                                                </ListBox.ItemTemplate>
-                                            </ListBox>
+                                            <CheckBox IsChecked="{Binding AlteredSystem}" Content="Altered System"/>
+                                            <CheckBox IsChecked="{Binding NewSystem}" Content="New System"/>
+                                            <CheckBox IsChecked="{Binding GarageSystem}" Content="New System - Parking Garage"/>
                                         </StackPanel>
                                         <StackPanel Orientation="Vertical">
                                             <Label Content="Complete Building Method" FontWeight="Bold"/>
