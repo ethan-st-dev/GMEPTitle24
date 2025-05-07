@@ -34,7 +34,7 @@
                                     <StackPanel Orientation="Vertical">
                                         <StackPanel Orientation="Vertical">
                                             <Label Content="Project Scope" FontWeight="Bold"/>
-                                            <ComboBox Width="200" HorizontalAlignment="Left">
+                                            <ComboBox SelectedValue="{Binding ProjectScopeId}" SelectedValuePath="Tag" Width="200" HorizontalAlignment="Left">
                                                 <ComboBox.Items>
                                                     <ComboBoxItem Content="Addition" Tag="1"/>
                                                     <ComboBoxItem Content="Alteration" Tag="2"/>
@@ -45,7 +45,7 @@
                                         </StackPanel>
                                         <StackPanel Orientation="Vertical">
                                             <Label Content="Grade Stories" FontWeight="Bold"/>
-                                            <TextBox Width="200" HorizontalAlignment="Left">
+                                            <TextBox Width="200" Text="{Binding GradeStories}" HorizontalAlignment="Left">
                                             </TextBox>
                                         </StackPanel>
                                         <StackPanel Orientation="Vertical">
@@ -86,7 +86,36 @@
                             </Grid>
                             <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Background="LightGray"/>
                             <GroupBox Grid.Row="2" Header="Method Options" VerticalAlignment="Stretch">
-                               
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Vertical">
+                                        <Label Content="Conditoned Space Calculation Method For New System" FontWeight="Bold"/>
+                                        <ComboBox SelectedValue="{Binding NewConditionedMethodId}" SelectedValuePath="Tag">
+                                            <ComboBox.Items>
+                                                <ComboBoxItem Content="Area Category" Tag="1"/>
+                                                <ComboBoxItem Content="Area Category + Tailored" Tag="2"/>
+                                                <ComboBoxItem Content="Complete Building" Tag="3"/>
+                                                <ComboBoxItem Content="Tailored" Tag="4"/>
+                                                <ComboBoxItem Content="No Conditioned Spaces" Tag="5"/>
+                                            </ComboBox.Items>
+                                        </ComboBox>
+                                        <Label Content="Conditioned Square Footage" FontWeight="Bold"/>
+                                        <TextBox Text="{Binding NewConditionedSquareFootage}"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="20 0 0 0" Orientation="Vertical">
+                                        <Label Content="Unconditoned Space Calculation Method For New System" FontWeight="Bold"/>
+                                        <ComboBox SelectedValue="{Binding NewUnconditionedMethodId}" SelectedValuePath="Tag">
+                                            <ComboBox.Items>
+                                                <ComboBoxItem Content="Area Category" Tag="1"/>
+                                                <ComboBoxItem Content="Area Category + Tailored" Tag="2"/>
+                                                <ComboBoxItem Content="Complete Building" Tag="3"/>
+                                                <ComboBoxItem Content="Tailored" Tag="4"/>
+                                                <ComboBoxItem Content="No Conditioned Spaces" Tag="5"/>
+                                            </ComboBox.Items>
+                                        </ComboBox>
+                                        <Label Content="Unconditioned Square Footage" FontWeight="Bold"/>
+                                        <TextBox Text="{Binding NewUnconditionedSquareFootage}"/>
+                                    </StackPanel>
+                                </StackPanel>
                             </GroupBox>
                         </Grid>
                     </TabItem>
