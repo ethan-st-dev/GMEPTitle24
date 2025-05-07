@@ -134,6 +134,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                     Dispatcher.Invoke(() =>
                     {
                         VersionComboBox.SelectedValue = ProjectIds.Keys.First();
+                        ControlAreaGrid.IsEnabled = true;
                     });
                 }
                 else if (args.Length > 2)
@@ -145,6 +146,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                             Dispatcher.Invoke(() =>
                             {
                                 VersionComboBox.SelectedValue = versionKey;
+                                ControlAreaGrid.IsEnabled = true;
                             });
                         }
                         else
@@ -1121,9 +1123,11 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         if (ProjectIds.Count == 0)
         {
             StatusText.Text = "Project Not Found";
+            ControlAreaGrid.IsEnabled = false;
             Loading.Visibility = Visibility.Collapsed;
             return;
         }
+        ControlAreaGrid.IsEnabled = true;
         VersionComboBox.SelectedValue = ProjectIds.Keys.First();
         StatusText.Text = String.Empty;
         Loading.Visibility = Visibility.Collapsed;

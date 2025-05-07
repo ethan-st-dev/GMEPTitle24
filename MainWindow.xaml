@@ -379,7 +379,7 @@
                         </Grid>
                     </TabItem>
                     <TabItem Header="Control Areas">
-                        <DataGrid x:Name="ControlAreaGrid" SelectionChanged="OptionsGrid_SelectionChanged" CanUserAddRows="True" CanUserDeleteRows="True" ItemsSource="{Binding ControlAreaList}" AutoGenerateColumns="False">
+                        <DataGrid x:Name="ControlAreaGrid" IsEnabled="False" SelectionChanged="OptionsGrid_SelectionChanged" CanUserAddRows="True" CanUserDeleteRows="True" ItemsSource="{Binding ControlAreaList}" AutoGenerateColumns="False">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*"/>
                                 <DataGridTextColumn Header="Square Footage" Binding="{Binding SquareFootage}" Width="*"/>
