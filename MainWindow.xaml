@@ -85,38 +85,67 @@
 
                             </Grid>
                             <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Background="LightGray"/>
-                            <GroupBox Grid.Row="2" Header="Method Options" VerticalAlignment="Stretch">
-                                <StackPanel Orientation="Horizontal">
+                            <Grid Grid.Row="2" VerticalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="5"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+                                <GroupBox Header="Method Options" Grid.Column="0">
                                     <StackPanel Orientation="Vertical">
-                                        <Label Content="Conditoned Space Calculation Method For New System" FontWeight="Bold"/>
-                                        <ComboBox SelectedValue="{Binding NewConditionedMethodId}" SelectedValuePath="Tag">
-                                            <ComboBox.Items>
-                                                <ComboBoxItem Content="Area Category" Tag="1"/>
-                                                <ComboBoxItem Content="Area Category + Tailored" Tag="2"/>
-                                                <ComboBoxItem Content="Complete Building" Tag="3"/>
-                                                <ComboBoxItem Content="Tailored" Tag="4"/>
-                                                <ComboBoxItem Content="No Conditioned Spaces" Tag="5"/>
-                                            </ComboBox.Items>
-                                        </ComboBox>
-                                        <Label Content="Conditioned Square Footage" FontWeight="Bold"/>
-                                        <TextBox Text="{Binding NewConditionedSquareFootage}"/>
+                                        <StackPanel Orientation="Vertical">
+                                            <Label Content="New System Method Options" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                            <StackPanel Orientation="Vertical" Width="600">
+                                                <Label Content="Conditoned Space Calculation Method" FontWeight="Bold"/>
+                                                <ComboBox SelectedValue="{Binding NewConditionedMethodId}" SelectedValuePath="Tag">
+                                                    <ComboBox.Items>
+                                                        <ComboBoxItem Content="Area Category" Tag="1"/>
+                                                        <ComboBoxItem Content="Area Category + Tailored" Tag="2"/>
+                                                        <ComboBoxItem Content="Complete Building" Tag="3"/>
+                                                        <ComboBoxItem Content="Tailored" Tag="4"/>
+                                                        <ComboBoxItem Content="No Conditioned Spaces" Tag="5"/>
+                                                    </ComboBox.Items>
+                                                </ComboBox>
+                                                <Label Content="Conditioned Square Footage" FontWeight="Bold"/>
+                                                <TextBox Text="{Binding NewConditionedSquareFootage}"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0 20 0 0" Orientation="Vertical" Width="600">
+                                                <Label Content="Unconditoned Space Calculation Method" FontWeight="Bold"/>
+                                                <ComboBox SelectedValue="{Binding NewUnconditionedMethodId}" SelectedValuePath="Tag">
+                                                    <ComboBox.Items>
+                                                        <ComboBoxItem Content="Area Category" Tag="1"/>
+                                                        <ComboBoxItem Content="Area Category + Tailored" Tag="2"/>
+                                                        <ComboBoxItem Content="Complete Building" Tag="3"/>
+                                                        <ComboBoxItem Content="Tailored" Tag="4"/>
+                                                        <ComboBoxItem Content="No Conditioned Spaces" Tag="5"/>
+                                                    </ComboBox.Items>
+                                                </ComboBox>
+                                                <Label Content="Unconditioned Square Footage" FontWeight="Bold"/>
+                                                <TextBox Text="{Binding NewUnconditionedSquareFootage}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical" Margin="0 20 0 0">
+                                            <Label Content="New Garage System Method Options" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                            <StackPanel Orientation="Vertical" Width="600">
+                                                <Label Content="Conditioned Square Footage" FontWeight="Bold"/>
+                                                <TextBox Text="{Binding GarageConditionedSquareFootage}"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0 20 0 0" Orientation="Vertical" Width="600">
+                                                <Label Content="Unconditioned Square Footage" FontWeight="Bold"/>
+                                                <TextBox Text="{Binding GarageUnconditionedSquareFootage}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical"  Margin="0 20 0 0">
+                                            <Label Content="Altered System Method Options" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                            <CheckBox HorizontalAlignment="Center" Margin="0 10 0 0" Content="One-for-one luminaire alteration within a building or tenant space of 5,000sf or less"/>
+                                        </StackPanel>
                                     </StackPanel>
-                                    <StackPanel Margin="20 0 0 0" Orientation="Vertical">
-                                        <Label Content="Unconditoned Space Calculation Method For New System" FontWeight="Bold"/>
-                                        <ComboBox SelectedValue="{Binding NewUnconditionedMethodId}" SelectedValuePath="Tag">
-                                            <ComboBox.Items>
-                                                <ComboBoxItem Content="Area Category" Tag="1"/>
-                                                <ComboBoxItem Content="Area Category + Tailored" Tag="2"/>
-                                                <ComboBoxItem Content="Complete Building" Tag="3"/>
-                                                <ComboBoxItem Content="Tailored" Tag="4"/>
-                                                <ComboBoxItem Content="No Conditioned Spaces" Tag="5"/>
-                                            </ComboBox.Items>
-                                        </ComboBox>
-                                        <Label Content="Unconditioned Square Footage" FontWeight="Bold"/>
-                                        <TextBox Text="{Binding NewUnconditionedSquareFootage}"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </GroupBox>
+                                </GroupBox>
+                                <GridSplitter HorizontalAlignment="Stretch" Grid.Column="1" Background="LightGray"/>
+                                <GroupBox Grid.Column="2" Header="Method Options - Altered Lighting Systems">
+                                    
+                                </GroupBox>
+                            </Grid>
                         </Grid>
                     </TabItem>
                     <TabItem Header="Fixtures">
