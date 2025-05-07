@@ -127,13 +127,13 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                     {
                         StatusText.Text = "Project Not Found";
                     });
-                    
                 }
                 else if (args.Length == 2)
                 {
                     Dispatcher.Invoke(() =>
                     {
                         VersionComboBox.SelectedValue = ProjectIds.Keys.First();
+                        ControlAreaGrid.IsEnabled = true;
                     });
                 }
                 else if (args.Length > 2)
@@ -145,13 +145,15 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                             Dispatcher.Invoke(() =>
                             {
                                 VersionComboBox.SelectedValue = versionKey;
+                                ControlAreaGrid.IsEnabled = true;
                             });
                         }
                         else
                         {
                             Dispatcher.Invoke(() =>
                             {
-                                StatusText.Text = "Version Not Found";
+                                VersionComboBox.SelectedValue = ProjectIds.Keys.First();
+                                ControlAreaGrid.IsEnabled = true;
                             });
                         }
                     }
@@ -159,7 +161,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                     {
                         Dispatcher.Invoke(() =>
                         {
-                            StatusText.Text = "Invalid Version Argument";
+                            VersionComboBox.SelectedValue = ProjectIds.Keys.First();
+                            ControlAreaGrid.IsEnabled = true;
                         });
                     }
                 }
@@ -1121,9 +1124,11 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         if (ProjectIds.Count == 0)
         {
             StatusText.Text = "Project Not Found";
+            ControlAreaGrid.IsEnabled = false;
             Loading.Visibility = Visibility.Collapsed;
             return;
         }
+        ControlAreaGrid.IsEnabled = true;
         VersionComboBox.SelectedValue = ProjectIds.Keys.First();
         StatusText.Text = String.Empty;
         Loading.Visibility = Visibility.Collapsed;
