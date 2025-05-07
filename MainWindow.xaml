@@ -21,8 +21,40 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>
-                                <RowDefinition Height="5"/>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition>
+                                    <RowDefinition.Style>
+                                        <Style TargetType="RowDefinition">
+                                            <Setter Property="Height" Value="5"/>
+                                            <Style.Triggers>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding NewSystem}" Value="False"/>
+                                                        <Condition Binding="{Binding AlteredSystem}" Value="False"/>
+                                                        <Condition Binding="{Binding GarageSystem}" Value="False"/>
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter Property="Height" Value="0"/>
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </RowDefinition.Style>
+                                </RowDefinition>
+                                <RowDefinition>
+                                    <RowDefinition.Style>
+                                        <Style TargetType="RowDefinition">
+                                            <Setter Property="Height" Value="*"/>
+                                            <Style.Triggers>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding NewSystem}" Value="False"/>
+                                                        <Condition Binding="{Binding AlteredSystem}" Value="False"/>
+                                                        <Condition Binding="{Binding GarageSystem}" Value="False"/>
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter Property="Height" Value="0"/>
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </RowDefinition.Style>
+                                </RowDefinition>
                             </Grid.RowDefinitions>
                             <Grid Grid.Row="0">
                                 <Grid.ColumnDefinitions>
@@ -82,7 +114,6 @@
                                         </ListBox.ItemTemplate>
                                     </ListBox>
                                 </GroupBox>
-
                             </Grid>
                             <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Background="LightGray"/>
                             <Grid Grid.Row="2" VerticalAlignment="Stretch">
