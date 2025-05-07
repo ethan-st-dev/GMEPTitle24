@@ -127,7 +127,6 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                     {
                         StatusText.Text = "Project Not Found";
                     });
-                    
                 }
                 else if (args.Length == 2)
                 {
