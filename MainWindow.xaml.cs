@@ -118,13 +118,10 @@ namespace GMEPTitle24
             string projectVersion = string.Empty;
 
             //dummy values
-            ObservableCollection<AlteredSystem> alteredSystems = new ObservableCollection<AlteredSystem>{
-            new AlteredSystem { Id = Guid.NewGuid().ToString(), ProjectId = string.Empty, AlteredConditionedMethodId = 5, AlteredUnconditionedMethodId = 5, AlteredConditionedSquareFootage = 0, AlteredUnconditionedSquareFootage = 0 }
-        };
-            List<int> occupancyIds = new List<int> { 1, 5, 10 };
+            ObservableCollection<AlteredSystem> alteredSystems = new ObservableCollection<AlteredSystem>();
             //
 
-            ScopeData = new Scope("1", "Project123", 1, 2, false, false, false, occupancyIds, alteredSystems);
+            ScopeData = new Scope("1", "Project123", 1, 2, false, false, false, [1, 4, 5], alteredSystems);
             InitializeComponent();
             DataContext = this;
             ScopeData.PropertyChanged += ScopeData_PropertyChanged;
