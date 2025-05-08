@@ -57,6 +57,7 @@ namespace GMEPTitle24
             new CheckboxItem { Name = "Warehouse", Number = 25, IsSelected = false },
             new CheckboxItem { Name = "Other (Write In)", Number = 26, IsSelected = false }
         };
+        public ObservableCollection<AlteredSystem> alteredSystems = new ObservableCollection<AlteredSystem>();
 
 
         public Scope(
@@ -64,10 +65,11 @@ namespace GMEPTitle24
             string projectId,
             int projectScopeId,
             int gradeStories,
-            string occupancyTypeIds,
             bool alteredSystem,
             bool newSystem,
-            bool garageSystem
+            bool garageSystem,
+            List<int> occupancyTypeIds,
+            ObservableCollection<AlteredSystem> alteredSystems
         )
         {
             this.id = id;
@@ -77,21 +79,9 @@ namespace GMEPTitle24
             this.alteredSystem = alteredSystem;
             this.newSystem = newSystem;
             this.garageSystem = garageSystem;
-
-            //Iterating through occupancytypeids to establish checkboxes
-            List<int> selectedOccupancyTypeIds = new List<int>();
-            if (!string.IsNullOrEmpty(occupancyTypeIds))
-            {
-                try
-                {
-                    selectedOccupancyTypeIds = JsonSerializer.Deserialize<List<int>>(occupancyTypeIds);
-                }
-                catch (JsonException ex)
-                {
-                    Console.WriteLine($"Error deserializing occupancyTypeIds: {ex.Message}");
-                }
-            }
-            foreach (var typeId in selectedOccupancyTypeIds)
+            this.alteredSystems = alteredSystems;
+        
+            foreach (var typeId in occupancyTypeIds)
             {
                 var matchingItem = OccupancyTypes.FirstOrDefault(item => item.Number == typeId);
                 if (matchingItem != null)
@@ -295,6 +285,18 @@ namespace GMEPTitle24
                 }
             }
         }
+        public ObservableCollection<AlteredSystem> AlteredSystems
+        {
+            get { return alteredSystems; }
+            set
+            {
+                if (alteredSystems != value)
+                {
+                    alteredSystems = value;
+                    OnPropertyChanged(nameof(AlteredSystems));
+                }
+            }
+        }
         public void DetermineSystemFlag()
         {
             if (GarageSystem || NewSystem || AlteredSystem)
@@ -328,6 +330,26 @@ namespace GMEPTitle24
         public int alteredUnconditionedMethodId = 5;
         public int alteredConditionedSquareFootage = 0;
         public int alteredUnconditionedSquareFootage = 0;
+
+        public AlteredSystem(
+            string id, 
+            string projectId, 
+            int alteredConditionedMethodId, 
+            int alteredUnconditionedMethodId, 
+            int alteredConditionedSquareFootage, 
+            int alteredUnconditionedSquareFootage)
+        {
+            Id=id;
+            ProjectId=projectId;
+            AlteredConditionedMethodId=alteredConditionedMethodId;
+            AlteredUnconditionedMethodId=alteredUnconditionedMethodId;
+            AlteredConditionedSquareFootage=alteredConditionedSquareFootage;
+            AlteredUnconditionedSquareFootage=alteredUnconditionedSquareFootage;
+        }
+        public AlteredSystem()
+        {
+            //:3
+        }
 
         public string Id
         {

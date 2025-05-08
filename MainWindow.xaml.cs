@@ -115,7 +115,15 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         string[] args = Environment.GetCommandLineArgs();
         string projectNo = string.Empty;
         string projectVersion = string.Empty;
-        ScopeData = new Scope("1", "Project123", 1, 2, "[1, 5, 10]", false, false, false);
+
+        //dummy values
+        ObservableCollection<AlteredSystem> alteredSystems = new ObservableCollection<AlteredSystem>{
+            new AlteredSystem { Id = Guid.NewGuid().ToString(), ProjectId = string.Empty, AlteredConditionedMethodId = 5, AlteredUnconditionedMethodId = 5, AlteredConditionedSquareFootage = 0, AlteredUnconditionedSquareFootage = 0 }
+        };
+        List<int> occupancyIds = new List<int> { 1, 5, 10};
+        //
+
+        ScopeData = new Scope("1", "Project123", 1, 2, false, false, false, occupancyIds, alteredSystems);
         InitializeComponent();
         DataContext = this;
         ScopeData.PropertyChanged += ScopeData_PropertyChanged;

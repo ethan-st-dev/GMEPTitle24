@@ -328,7 +328,12 @@
                                 </GroupBox>
                                 <GridSplitter HorizontalAlignment="Stretch" Grid.Column="1" Background="LightGray"/>
                                 <GroupBox Grid.Column="2" Header="Method Options - Altered Lighting Systems">
-                                    
+                                    <DataGrid x:Name="AlteredSystemGrid" IsEnabled="False" CanUserAddRows="True" CanUserDeleteRows="True" ItemsSource="{Binding AlteredSystems}" AutoGenerateColumns="False">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Conditioned Space Square Footage" Binding="{Binding AlteredConditionedSquareFootage}"/>
+                                            <DataGridTextColumn Header="Unconditined Space Square Footage" Binding="{Binding AlteredUnconditionedSquareFootage}"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
                                 </GroupBox>
                             </Grid>
                         </Grid>
