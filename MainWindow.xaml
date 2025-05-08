@@ -81,7 +81,7 @@
                                         </StackPanel>
                                         <StackPanel Orientation="Vertical">
                                             <Label Content="Complete Building Method" FontWeight="Bold"/>
-                                            <CheckBox IsChecked="{Binding CompleteBuildingMethod}" Content="Using Complete Building Method"/>
+                                            <CheckBox IsChecked="{Binding CompleteBuildingMethod, UpdateSourceTrigger=PropertyChanged}" Content="Using Complete Building Method"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </GroupBox>

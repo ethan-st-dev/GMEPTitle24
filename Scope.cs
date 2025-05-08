@@ -147,6 +147,7 @@ namespace GMEPTitle24
                 {
                     completeBuildingMethod = value;
                     OnPropertyChanged(nameof(CompleteBuildingMethod));
+                    ResetCalculationMethodIds();
                 }
             }
         }
@@ -306,6 +307,16 @@ namespace GMEPTitle24
             }
             SystemFlag = false;
         }
+        public void ResetCalculationMethodIds()
+        {
+            NewConditionedMethodId = 5;
+            NewUnconditionedMethodId = 5;
+            foreach (var elem in AlteredSystems)
+            {
+                elem.AlteredUnconditionedMethodId = 5;
+                elem.AlteredConditionedMethodId = 5;
+            }
+        }
 
 
 
@@ -430,5 +441,6 @@ namespace GMEPTitle24
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+      
     }
 }
