@@ -320,4 +320,93 @@ namespace GMEPTitle24
         public int Number { get; set; }
         public bool IsSelected { get; set; }
     }
+    public class AlteredSystem : INotifyPropertyChanged
+    {
+        public string id = Guid.NewGuid().ToString();
+        public string projectId = string.Empty;
+        public int alteredConditionedMethodId = 5;
+        public int alteredUnconditionedMethodId = 5;
+        public int alteredConditionedSquareFootage = 0;
+        public int alteredUnconditionedSquareFootage = 0;
+
+        public string Id
+        {
+            get { return id; }
+            set
+            {
+                if (id != value)
+                {
+                    id = value;
+                    OnPropertyChanged(nameof(Id));
+                }
+            }
+        }
+        public string ProjectId
+        {
+            get { return projectId; }
+            set
+            {
+                if (projectId != value)
+                {
+                    projectId = value;
+                    OnPropertyChanged(nameof(ProjectId));
+                }
+            }
+        }
+        public int AlteredConditionedMethodId
+        {
+            get { return alteredConditionedMethodId; }
+            set
+            {
+                if (alteredConditionedMethodId != value)
+                {
+                    alteredConditionedMethodId = value;
+                    OnPropertyChanged(nameof(AlteredConditionedMethodId));
+                }
+            }
+        }
+        public int AlteredUnconditionedMethodId
+        {
+            get { return alteredUnconditionedMethodId; }
+            set
+            {
+                if (alteredUnconditionedMethodId != value)
+                {
+                    alteredUnconditionedMethodId = value;
+                    OnPropertyChanged(nameof(AlteredUnconditionedMethodId));
+                }
+            }
+        }
+        public int AlteredConditionedSquareFootage
+        {
+            get { return alteredConditionedSquareFootage; }
+            set
+            {
+                if (alteredConditionedSquareFootage != value)
+                {
+                    alteredConditionedSquareFootage = value;
+                    OnPropertyChanged(nameof(AlteredConditionedSquareFootage));
+                }
+            }
+        }
+        public int AlteredUnconditionedSquareFootage
+        {
+            get { return alteredUnconditionedSquareFootage; }
+            set
+            {
+                if (alteredUnconditionedSquareFootage != value)
+                {
+                    alteredUnconditionedSquareFootage = value;
+                    OnPropertyChanged(nameof(AlteredUnconditionedSquareFootage));
+                }
+            }
+        }
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
 }
