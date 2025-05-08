@@ -108,9 +108,31 @@
                             <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Background="LightGray"/>
                             <Grid Grid.Row="2" VerticalAlignment="Stretch">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="5"/>
-                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition x:Name="Column1" Width="*"/>
+                                    <ColumnDefinition>
+                                        <ColumnDefinition.Style>
+                                            <Style TargetType="ColumnDefinition">
+                                                <Setter Property="Width" Value="5"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding AlteredSystem}" Value="False">
+                                                        <Setter Property="Width" Value="0"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ColumnDefinition.Style>
+                                    </ColumnDefinition>
+                                    <ColumnDefinition x:Name="Column3">
+                                        <ColumnDefinition.Style>
+                                            <Style TargetType="ColumnDefinition">
+                                                <Setter Property="Width" Value="2*"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding AlteredSystem}" Value="False">
+                                                        <Setter Property="Width" Value="0"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ColumnDefinition.Style>
+                                    </ColumnDefinition>
                                 </Grid.ColumnDefinitions>
                                 <GroupBox Header="Method Options" Grid.Column="0">
                                     <StackPanel Orientation="Vertical">

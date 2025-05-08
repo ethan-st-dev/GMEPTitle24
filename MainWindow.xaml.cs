@@ -1195,11 +1195,24 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             {
                 Reset_RowHeight();
             }
+           
+        }
+        if (e.PropertyName == nameof(Scope.AlteredSystem))
+        {
+            if (!ScopeData.AlteredSystem)
+            {
+                Reset_ColumnWidth();
+            }
         }
     }
     private void Reset_RowHeight()
     {
         Row1.ClearValue(RowDefinition.HeightProperty);
         Row3.ClearValue(RowDefinition.HeightProperty);
+    }
+    private void Reset_ColumnWidth()
+    {
+        Column1.ClearValue(ColumnDefinition.WidthProperty);
+        Column3.ClearValue(ColumnDefinition.WidthProperty);
     }
 }
