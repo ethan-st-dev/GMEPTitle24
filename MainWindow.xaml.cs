@@ -21,6 +21,7 @@ using System.IO;
 using Path = System.IO.Path;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows.Controls.Primitives;
 
 
 namespace GMEPTitle24;
@@ -117,6 +118,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         ScopeData = new Scope("1", "Project123", 1, 2, "[1, 5, 10]", false, false, false);
         InitializeComponent();
         DataContext = this;
+        ScopeData.PropertyChanged += ScopeData_PropertyChanged;
         if (args.Length > 1)
         {
             ProjectNo = args[1];
@@ -1183,5 +1185,21 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     protected virtual void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private void ScopeData_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(Scope.SystemFlag))
+        {
+            if (!ScopeData.SystemFlag)
+            {
+                Reset_RowHeight();
+            }
+        }
+    }
+    private void Reset_RowHeight()
+    {
+        Row1.ClearValue(RowDefinition.HeightProperty);
+        Row3.ClearValue(RowDefinition.HeightProperty);
     }
 }

@@ -26,6 +26,7 @@ namespace GMEPTitle24
         public bool alteredSystem = false;
         public bool newSystem = false;
         public bool garageSystem = false;
+        public bool systemFlag = false;
 
         public ObservableCollection<CheckboxItem> OccupancyTypes { get; set; } = new ObservableCollection<CheckboxItem>
         {
@@ -252,6 +253,7 @@ namespace GMEPTitle24
                 {
                     alteredSystem = value;
                     OnPropertyChanged(nameof(AlteredSystem));
+                    DetermineSystemFlag();
                 }
             }
         }
@@ -264,6 +266,7 @@ namespace GMEPTitle24
                 {
                     newSystem = value;
                     OnPropertyChanged(nameof(NewSystem));
+                    DetermineSystemFlag();
                 }
             }
         }
@@ -276,9 +279,32 @@ namespace GMEPTitle24
                 {
                     garageSystem = value;
                     OnPropertyChanged(nameof(GarageSystem));
+                    DetermineSystemFlag();
                 }
             }
         }
+        public bool SystemFlag
+        {
+            get { return systemFlag; }
+            set
+            {
+                if (systemFlag != value)
+                {
+                    systemFlag = value;
+                    OnPropertyChanged(nameof(SystemFlag));
+                }
+            }
+        }
+        public void DetermineSystemFlag()
+        {
+            if (GarageSystem || NewSystem || AlteredSystem)
+            {
+                SystemFlag = true;
+                return;
+            }
+            SystemFlag = false;
+        }
+
 
 
         public event PropertyChangedEventHandler PropertyChanged;

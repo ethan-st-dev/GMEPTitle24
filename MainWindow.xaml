@@ -18,39 +18,29 @@
                         </Style>
                     </TabControl.Resources>
                     <TabItem Header="Scope" DataContext="{Binding ScopeData}">
-                        <Grid>
+                        <Grid x:Name="MainGrid">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition x:Name="Row1" Height="*"/>
                                 <RowDefinition>
                                     <RowDefinition.Style>
                                         <Style TargetType="RowDefinition">
                                             <Setter Property="Height" Value="5"/>
                                             <Style.Triggers>
-                                                <MultiDataTrigger>
-                                                    <MultiDataTrigger.Conditions>
-                                                        <Condition Binding="{Binding NewSystem}" Value="False"/>
-                                                        <Condition Binding="{Binding AlteredSystem}" Value="False"/>
-                                                        <Condition Binding="{Binding GarageSystem}" Value="False"/>
-                                                    </MultiDataTrigger.Conditions>
+                                                <DataTrigger Binding="{Binding SystemFlag}" Value="False">
                                                     <Setter Property="Height" Value="0"/>
-                                                </MultiDataTrigger>
+                                                </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </RowDefinition.Style>
                                 </RowDefinition>
-                                <RowDefinition>
+                                <RowDefinition x:Name="Row3">
                                     <RowDefinition.Style>
                                         <Style TargetType="RowDefinition">
                                             <Setter Property="Height" Value="*"/>
                                             <Style.Triggers>
-                                                <MultiDataTrigger>
-                                                    <MultiDataTrigger.Conditions>
-                                                        <Condition Binding="{Binding NewSystem}" Value="False"/>
-                                                        <Condition Binding="{Binding AlteredSystem}" Value="False"/>
-                                                        <Condition Binding="{Binding GarageSystem}" Value="False"/>
-                                                    </MultiDataTrigger.Conditions>
+                                                <DataTrigger Binding="{Binding SystemFlag}" Value="False">
                                                     <Setter Property="Height" Value="0"/>
-                                                </MultiDataTrigger>
+                                                </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </RowDefinition.Style>
