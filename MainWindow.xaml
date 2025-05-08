@@ -8,6 +8,9 @@
         xmlns:gif="http://wpfanimatedgif.codeplex.com"
         Title="GMEP Title 24" Height="450" Width="800"
         Icon="/gmep.ico">
+    <Window.Resources>
+        <local:BindingProxy x:Key="ScopeProxy" Data="{Binding ScopeData}"/>
+    </Window.Resources>
     <Grid Background="SlateGray">
         <Border BorderBrush="DarkSlateGray" BorderThickness="2" Margin="10" Background="LightGray">
             <Grid>
@@ -338,7 +341,7 @@
                                                                 <Style TargetType="ComboBoxItem">
                                                                     <Setter Property="Visibility" Value="Visible"/>
                                                                     <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding CompleteBuildingMethod}" Value="True">
+                                                                        <DataTrigger Binding="{Binding Data.CompleteBuildingMethod, Source={StaticResource ScopeProxy}}" Value="True">
                                                                             <Setter Property="Visibility" Value="Collapsed"/>
                                                                         </DataTrigger>
                                                                     </Style.Triggers>
@@ -350,7 +353,7 @@
                                                                 <Style TargetType="ComboBoxItem">
                                                                     <Setter Property="Visibility" Value="Visible"/>
                                                                     <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding CompleteBuildingMethod}" Value="True">
+                                                                        <DataTrigger Binding="{Binding Data.CompleteBuildingMethod, Source={StaticResource ScopeProxy}}" Value="True">
                                                                             <Setter Property="Visibility" Value="Collapsed"/>
                                                                         </DataTrigger>
                                                                     </Style.Triggers>
@@ -362,7 +365,7 @@
                                                                 <Style TargetType="ComboBoxItem">
                                                                     <Setter Property="Visibility" Value="Collapsed"/>
                                                                     <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding CompleteBuildingMethod}" Value="True">
+                                                                        <DataTrigger Binding="{Binding Data.CompleteBuildingMethod, Source={StaticResource ScopeProxy}}" Value="True">
                                                                             <Setter Property="Visibility" Value="Visible"/>
                                                                         </DataTrigger>
                                                                     </Style.Triggers>
@@ -374,7 +377,7 @@
                                                                 <Style TargetType="ComboBoxItem">
                                                                     <Setter Property="Visibility" Value="Visible"/>
                                                                     <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding CompleteBuildingMethod}" Value="True">
+                                                                        <DataTrigger Binding="{Binding Data.CompleteBuildingMethod, Source={StaticResource ScopeProxy}}" Value="True">
                                                                             <Setter Property="Visibility" Value="Collapsed"/>
                                                                         </DataTrigger>
                                                                     </Style.Triggers>
@@ -393,7 +396,7 @@
                                                                 <Style TargetType="ComboBoxItem">
                                                                     <Setter Property="Visibility" Value="Visible"/>
                                                                     <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding CompleteBuildingMethod}" Value="True">
+                                                                        <DataTrigger Binding="{Binding Data.CompleteBuildingMethod, Source={StaticResource ScopeProxy}}" Value="True">
                                                                             <Setter Property="Visibility" Value="Collapsed"/>
                                                                         </DataTrigger>
                                                                     </Style.Triggers>
@@ -405,7 +408,7 @@
                                                                 <Style TargetType="ComboBoxItem">
                                                                     <Setter Property="Visibility" Value="Visible"/>
                                                                     <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding CompleteBuildingMethod}" Value="True">
+                                                                        <DataTrigger Binding="{Binding Data.CompleteBuildingMethod, Source={StaticResource ScopeProxy}}" Value="True">
                                                                             <Setter Property="Visibility" Value="Collapsed"/>
                                                                         </DataTrigger>
                                                                     </Style.Triggers>
@@ -417,7 +420,7 @@
                                                                 <Style TargetType="ComboBoxItem">
                                                                     <Setter Property="Visibility" Value="Collapsed"/>
                                                                     <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding CompleteBuildingMethod}" Value="True">
+                                                                        <DataTrigger Binding="{Binding Data.CompleteBuildingMethod, Source={StaticResource ScopeProxy}}" Value="True">
                                                                             <Setter Property="Visibility" Value="Visible"/>
                                                                         </DataTrigger>
                                                                     </Style.Triggers>
@@ -429,7 +432,7 @@
                                                                 <Style TargetType="ComboBoxItem">
                                                                     <Setter Property="Visibility" Value="Visible"/>
                                                                     <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding CompleteBuildingMethod}" Value="True">
+                                                                        <DataTrigger Binding="{Binding Data.CompleteBuildingMethod, Source={StaticResource ScopeProxy}}" Value="True">
                                                                             <Setter Property="Visibility" Value="Collapsed"/>
                                                                         </DataTrigger>
                                                                     </Style.Triggers>
