@@ -1195,7 +1195,6 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             {
                 Reset_RowHeight();
             }
-           
         }
         if (e.PropertyName == nameof(Scope.AlteredSystem))
         {
