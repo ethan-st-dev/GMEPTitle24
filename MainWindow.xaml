@@ -328,10 +328,162 @@
                                 </GroupBox>
                                 <GridSplitter HorizontalAlignment="Stretch" Grid.Column="1" Background="LightGray"/>
                                 <GroupBox Grid.Column="2" Header="Method Options - Altered Lighting Systems">
-                                    <DataGrid x:Name="AlteredSystemGrid" IsEnabled="False" CanUserAddRows="True" CanUserDeleteRows="True" ItemsSource="{Binding AlteredSystems}" AutoGenerateColumns="False">
+                                    <DataGrid x:Name="AlteredSystemGrid" CanUserAddRows="True" CanUserDeleteRows="True" ItemsSource="{Binding AlteredSystems}" AutoGenerateColumns="False">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Conditioned Space Square Footage" Binding="{Binding AlteredConditionedSquareFootage}"/>
-                                            <DataGridTextColumn Header="Unconditined Space Square Footage" Binding="{Binding AlteredUnconditionedSquareFootage}"/>
+                                            <DataGridComboBoxColumn Width="*" SelectedValueBinding="{Binding AlteredConditionedMethodId, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Tag" Header="Conditioned Space Calculation Method">
+                                                <DataGridComboBoxColumn.ItemsSource>
+                                                    <CompositeCollection>
+                                                        <ComboBoxItem Content="Area Category" Tag="1">
+                                                            <ComboBoxItem.Style>
+                                                                <Style TargetType="ComboBoxItem">
+                                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding CompleteBuildingMethod}" Value="True">
+                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </ComboBoxItem.Style>
+                                                        </ComboBoxItem>
+                                                        <ComboBoxItem Content="Area Category + Tailored" Tag="2">
+                                                            <ComboBoxItem.Style>
+                                                                <Style TargetType="ComboBoxItem">
+                                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding CompleteBuildingMethod}" Value="True">
+                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </ComboBoxItem.Style>
+                                                        </ComboBoxItem>
+                                                        <ComboBoxItem Content="Complete Building" Tag="3">
+                                                            <ComboBoxItem.Style>
+                                                                <Style TargetType="ComboBoxItem">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding CompleteBuildingMethod}" Value="True">
+                                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </ComboBoxItem.Style>
+                                                        </ComboBoxItem>
+                                                        <ComboBoxItem Content="Tailored" Tag="4">
+                                                            <ComboBoxItem.Style>
+                                                                <Style TargetType="ComboBoxItem">
+                                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding CompleteBuildingMethod}" Value="True">
+                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </ComboBoxItem.Style>
+                                                        </ComboBoxItem>
+                                                        <ComboBoxItem Content="No Conditioned Spaces" Tag="5"/>
+                                                    </CompositeCollection>
+                                                </DataGridComboBoxColumn.ItemsSource>
+                                            </DataGridComboBoxColumn>
+                                            <DataGridComboBoxColumn Width="*" SelectedValueBinding="{Binding AlteredUnconditionedMethodId, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Tag" Header="Unconditioned Space Calculation Method">
+                                                <DataGridComboBoxColumn.ItemsSource>
+                                                    <CompositeCollection>
+                                                        <ComboBoxItem Content="Area Category" Tag="1">
+                                                            <ComboBoxItem.Style>
+                                                                <Style TargetType="ComboBoxItem">
+                                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding CompleteBuildingMethod}" Value="True">
+                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </ComboBoxItem.Style>
+                                                        </ComboBoxItem>
+                                                        <ComboBoxItem Content="Area Category + Tailored" Tag="2">
+                                                            <ComboBoxItem.Style>
+                                                                <Style TargetType="ComboBoxItem">
+                                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding CompleteBuildingMethod}" Value="True">
+                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </ComboBoxItem.Style>
+                                                        </ComboBoxItem>
+                                                        <ComboBoxItem Content="Complete Building" Tag="3">
+                                                            <ComboBoxItem.Style>
+                                                                <Style TargetType="ComboBoxItem">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding CompleteBuildingMethod}" Value="True">
+                                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </ComboBoxItem.Style>
+                                                        </ComboBoxItem>
+                                                        <ComboBoxItem Content="Tailored" Tag="4">
+                                                            <ComboBoxItem.Style>
+                                                                <Style TargetType="ComboBoxItem">
+                                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding CompleteBuildingMethod}" Value="True">
+                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </ComboBoxItem.Style>
+                                                        </ComboBoxItem>
+                                                        <ComboBoxItem Content="No Unconditioned Spaces" Tag="5"/>
+                                                    </CompositeCollection>
+                                                </DataGridComboBoxColumn.ItemsSource>
+                                            </DataGridComboBoxColumn>
+                                            <DataGridTextColumn Width="*" Header="Conditioned Space Square Footage" Binding="{Binding AlteredConditionedSquareFootage}">
+                                                <DataGridTextColumn.ElementStyle>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding AlteredConditionedMethodId}" Value="5">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </DataGridTextColumn.ElementStyle>
+                                                <DataGridTextColumn.EditingElementStyle>
+                                                    <Style TargetType="TextBox">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding AlteredConditionedMethodId}" Value="5">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </DataGridTextColumn.EditingElementStyle>
+                                            </DataGridTextColumn>
+                                            <DataGridTextColumn Width="*" Header="Unconditioned Space Square Footage" Binding="{Binding AlteredUnconditionedSquareFootage}">
+                                                <DataGridTextColumn.ElementStyle>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding AlteredUnconditionedMethodId}" Value="5">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </DataGridTextColumn.ElementStyle>
+                                                <DataGridTextColumn.EditingElementStyle>
+                                                    <Style TargetType="TextBox">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding AlteredUnconditionedMethodId}" Value="5">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </DataGridTextColumn.EditingElementStyle>
+                                            </DataGridTextColumn>
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </GroupBox>
