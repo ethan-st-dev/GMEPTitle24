@@ -1338,16 +1338,20 @@ namespace GMEPTitle24
         }
         public void FilterBuildings()
         {
-            // Filter the Buildings dictionary to include only entries with even keys
+            var keysToInclude = new HashSet<int> { 3, 24, 30, 31, 34, 48, 57, 59, 60, 62, 65, 68, 70, 73, 76, 79, 80, 93 };
             if (ScopeData.CompleteBuildingMethod)
             {
+                // Include only the specified keys
                 FilteredBuildings = Buildings
-                    .Where(kvp => kvp.Key % 2 == 0)
+                    .Where(kvp => keysToInclude.Contains(kvp.Key))
                     .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             }
             else
             {
-                FilteredBuildings = Buildings;
+                // Exclude the specified keys
+                FilteredBuildings = Buildings
+                    .Where(kvp => !keysToInclude.Contains(kvp.Key))
+                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             }
         }
     }
