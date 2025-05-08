@@ -26,7 +26,6 @@ using System.Windows.Controls.Primitives;
 
 namespace GMEPTitle24
 {
-
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -110,6 +109,41 @@ namespace GMEPTitle24
                 }
             }
         }
+        public Dictionary<int, string> Buildings { get; set; } = new Dictionary<int, string>
+        {
+            { 3, "Assembly Building" },
+            { 24, "Financial Institution Building" },
+            { 30, "Grocery Store Building" },
+            { 31, "Gymnasium Building" },
+            { 34, "Hospital Building" },
+            { 48, "Library Building" },
+            { 57, "Manufacturing Facility Building" },
+            { 59, "Motion Picture Building" },
+            { 60, "Museum Building" },
+            { 62, "Office Building" },
+            { 65, "Parking Garage Building" },
+            { 68, "Performing Arts Theater Building" },
+            { 70, "Religious Facility Building" },
+            { 73, "Restaurant Building" },
+            { 76, "Retail Building" },
+            { 79, "School Building" },
+            { 80, "Sports Arena Building" },
+            { 93, "All Other Buildings" }
+        };
+
+        public Dictionary<int, string> filteredBuildings;
+        public Dictionary<int, string> FilteredBuildings
+        {
+            get { return filteredBuildings; }
+            set
+            {
+                if (filteredBuildings != value)
+                {
+                    filteredBuildings = value;
+                    OnPropertyChanged(nameof(FilteredBuildings));
+                }
+            }
+        }
 
         public MainWindow()
         {
@@ -180,6 +214,7 @@ namespace GMEPTitle24
                 }
                 );
             }
+            FilterBuildings();
         }
         public async Task ActivateSelenium()
         {
@@ -1210,6 +1245,10 @@ namespace GMEPTitle24
                     Reset_ColumnWidth();
                 }
             }
+            if (e.PropertyName == nameof(Scope.CompleteBuildingMethod))
+            {
+                FilterBuildings();
+            }
         }
         private void Reset_RowHeight()
         {
@@ -1220,6 +1259,20 @@ namespace GMEPTitle24
         {
             Column1.ClearValue(ColumnDefinition.WidthProperty);
             Column3.ClearValue(ColumnDefinition.WidthProperty);
+        }
+        public void FilterBuildings()
+        {
+            // Filter the Buildings dictionary to include only entries with even keys
+            if (ScopeData.CompleteBuildingMethod)
+            {
+                FilteredBuildings = Buildings
+                    .Where(kvp => kvp.Key % 2 == 0)
+                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            }
+            else
+            {
+                FilteredBuildings = Buildings;
+            }
         }
     }
     public class BindingProxy : Freezable

@@ -10,6 +10,7 @@
         Icon="/gmep.ico">
     <Window.Resources>
         <local:BindingProxy x:Key="ScopeProxy" Data="{Binding ScopeData}"/>
+        <local:BindingProxy x:Key="FilteredBuildingsProxy" Data="{Binding FilteredBuildings}"/>
     </Window.Resources>
     <Grid Background="SlateGray">
         <Border BorderBrush="DarkSlateGray" BorderThickness="2" Margin="10" Background="LightGray">
@@ -859,30 +860,7 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*"/>
                                 <DataGridTextColumn Header="Square Footage" Binding="{Binding SquareFootage}" Width="*"/>
-                                <DataGridComboBoxColumn Header="Primary Function Area" Width="*" SelectedValueBinding="{Binding PrimaryFunctionId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
-                                    <DataGridComboBoxColumn.ItemsSource>
-                                        <CompositeCollection>
-                                            <ComboBoxItem Content="Assembly Building" Tag="3" />
-                                            <ComboBoxItem Content="Financial Institution Building" Tag="24" />
-                                            <ComboBoxItem Content="Grocery Store Building" Tag="30" />
-                                            <ComboBoxItem Content="Gymnasium Building" Tag="31" />
-                                            <ComboBoxItem Content="Hospital Building" Tag="34" />
-                                            <ComboBoxItem Content="Library Building" Tag="48" />
-                                            <ComboBoxItem Content="Manufacturing Facility Building" Tag="57" />
-                                            <ComboBoxItem Content="Motion Picture Building" Tag="59" />
-                                            <ComboBoxItem Content="Museum Building" Tag="60" />
-                                            <ComboBoxItem Content="Office Building" Tag="62" />
-                                            <ComboBoxItem Content="Parking Garage Building" Tag="65" />
-                                            <ComboBoxItem Content="Performing Arts Theater Building" Tag="68" />
-                                            <ComboBoxItem Content="Religious Facility Building" Tag="70" />
-                                            <ComboBoxItem Content="Restaurant Building" Tag="73" />
-                                            <ComboBoxItem Content="Retail Building" Tag="76" />
-                                            <ComboBoxItem Content="School Building" Tag="79" />
-                                            <ComboBoxItem Content="Sports Arena Building" Tag="80" />
-                                            <ComboBoxItem Content="All Other Buildings" Tag="93" />
-                                        </CompositeCollection>
-                                    </DataGridComboBoxColumn.ItemsSource>
-                                </DataGridComboBoxColumn>
+                                <DataGridComboBoxColumn Header="Primary Function Area" Width="*" ItemsSource="{Binding Data, Source={StaticResource FilteredBuildingsProxy}}" SelectedValueBinding="{Binding PrimaryFunctionId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Key" DisplayMemberPath="Value"/>
                                 <DataGridComboBoxColumn Header="Area Controls" Width="*" SelectedValueBinding="{Binding AreaControlTypeId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
                                     <DataGridComboBoxColumn.ItemsSource>
                                         <CompositeCollection>
