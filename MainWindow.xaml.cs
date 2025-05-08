@@ -844,7 +844,7 @@ namespace GMEPTitle24
                             string placeholderValue = textbox.GetAttribute("placeholder");
                             if (placeholderValue != null && placeholderValue.Contains("primary function area", StringComparison.OrdinalIgnoreCase))
                             {
-                                var choices = element.FindElements(By.CssSelector("li:not(.mod_disabled)"));
+                                var choices = element.FindElements(By.CssSelector("li"));
                                 Debug.WriteLine("Choices Number: " + choices.Count.ToString());
                                 var choice = choices[controlAreaList[row].PrimaryFunctionId - 1];
                                 ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);

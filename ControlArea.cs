@@ -13,7 +13,7 @@ namespace GMEPTitle24
         private string id = Guid.NewGuid().ToString();
         private string projectId = string.Empty;
         private string description = string.Empty;
-        private int primaryFunctionId = 18;
+        private int primaryFunctionId = 93;
         private int areaControlTypeId = 3;
         private int multilevelControlTypeId = 1;
         private int shutoffControlTypeId = 1;

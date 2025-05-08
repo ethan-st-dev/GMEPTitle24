@@ -862,24 +862,24 @@
                                 <DataGridComboBoxColumn Header="Primary Function Area" Width="*" SelectedValueBinding="{Binding PrimaryFunctionId,UpdateSourceTrigger=LostFocus}" SelectedValuePath="Tag">
                                     <DataGridComboBoxColumn.ItemsSource>
                                         <CompositeCollection>
-                                            <ComboBoxItem Content="Assembly Building" Tag="1" />
-                                            <ComboBoxItem Content="Financial Institution Building" Tag="2" />
-                                            <ComboBoxItem Content="Grocery Store Building" Tag="3" />
-                                            <ComboBoxItem Content="Gymnasium Building" Tag="4" />
-                                            <ComboBoxItem Content="Hospital Building" Tag="5" />
-                                            <ComboBoxItem Content="Library Building" Tag="6" />
-                                            <ComboBoxItem Content="Manufacturing Facility Building" Tag="7" />
-                                            <ComboBoxItem Content="Motion Picture Building" Tag="8" />
-                                            <ComboBoxItem Content="Museum Building" Tag="9" />
-                                            <ComboBoxItem Content="Office Building" Tag="10" />
-                                            <ComboBoxItem Content="Parking Garage Building" Tag="11" />
-                                            <ComboBoxItem Content="Performing Arts Theater Building" Tag="12" />
-                                            <ComboBoxItem Content="Religious Facility Building" Tag="13" />
-                                            <ComboBoxItem Content="Restaurant Building" Tag="14" />
-                                            <ComboBoxItem Content="Retail Building" Tag="15" />
-                                            <ComboBoxItem Content="School Building" Tag="16" />
-                                            <ComboBoxItem Content="Sports Arena Building" Tag="17" />
-                                            <ComboBoxItem Content="All Other Buildings" Tag="18" />
+                                            <ComboBoxItem Content="Assembly Building" Tag="3" />
+                                            <ComboBoxItem Content="Financial Institution Building" Tag="24" />
+                                            <ComboBoxItem Content="Grocery Store Building" Tag="30" />
+                                            <ComboBoxItem Content="Gymnasium Building" Tag="31" />
+                                            <ComboBoxItem Content="Hospital Building" Tag="34" />
+                                            <ComboBoxItem Content="Library Building" Tag="48" />
+                                            <ComboBoxItem Content="Manufacturing Facility Building" Tag="57" />
+                                            <ComboBoxItem Content="Motion Picture Building" Tag="59" />
+                                            <ComboBoxItem Content="Museum Building" Tag="60" />
+                                            <ComboBoxItem Content="Office Building" Tag="62" />
+                                            <ComboBoxItem Content="Parking Garage Building" Tag="65" />
+                                            <ComboBoxItem Content="Performing Arts Theater Building" Tag="68" />
+                                            <ComboBoxItem Content="Religious Facility Building" Tag="70" />
+                                            <ComboBoxItem Content="Restaurant Building" Tag="73" />
+                                            <ComboBoxItem Content="Retail Building" Tag="76" />
+                                            <ComboBoxItem Content="School Building" Tag="79" />
+                                            <ComboBoxItem Content="Sports Arena Building" Tag="80" />
+                                            <ComboBoxItem Content="All Other Buildings" Tag="93" />
                                         </CompositeCollection>
                                     </DataGridComboBoxColumn.ItemsSource>
                                 </DataGridComboBoxColumn>
