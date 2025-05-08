@@ -1324,6 +1324,7 @@ namespace GMEPTitle24
             if (e.PropertyName == nameof(Scope.CompleteBuildingMethod))
             {
                 FilterBuildings();
+                ResetPrimaryFunctionIds();
             }
         }
         private void Reset_RowHeight()
@@ -1352,6 +1353,20 @@ namespace GMEPTitle24
                 FilteredBuildings = Buildings
                     .Where(kvp => !keysToInclude.Contains(kvp.Key))
                     .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            }
+        }
+        public void ResetPrimaryFunctionIds()
+        {
+            foreach (var elem in controlAreaList)
+            {
+                if (ScopeData.CompleteBuildingMethod)
+                {
+                    elem.PrimaryFunctionId = 93;
+                }
+                else
+                {
+                    elem.PrimaryFunctionId = 94;
+                }
             }
         }
     }
