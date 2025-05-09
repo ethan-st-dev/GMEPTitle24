@@ -27,6 +27,7 @@ namespace GMEPTitle24
         public bool newSystem = false;
         public bool garageSystem = false;
         public bool systemFlag = false;
+        public bool completePrimaryFunctionList = false;
 
         public ObservableCollection<CheckboxItem> OccupancyTypes { get; set; } = new ObservableCollection<CheckboxItem>
         {
@@ -57,7 +58,7 @@ namespace GMEPTitle24
             new CheckboxItem { Name = "Warehouse", Number = 25, IsSelected = false },
             new CheckboxItem { Name = "Other (Write In)", Number = 26, IsSelected = false }
         };
-        public ObservableCollection<AlteredSystem> alteredSystems = new ObservableCollection<AlteredSystem>();
+        public ObservableCollection<AlteredSystemEntry> alteredSystems = new ObservableCollection<AlteredSystemEntry>();
 
 
         public Scope(
@@ -69,7 +70,7 @@ namespace GMEPTitle24
             bool newSystem,
             bool garageSystem,
             List<int> occupancyTypeIds,
-            ObservableCollection<AlteredSystem> alteredSystems
+            ObservableCollection<AlteredSystemEntry> alteredSystems
         )
         {
             this.id = id;
@@ -89,6 +90,15 @@ namespace GMEPTitle24
                     matchingItem.IsSelected = true;
                 }
             }
+
+            //applying listener events to alteredsystems
+            foreach(var system in AlteredSystems)
+            {
+                system.PropertyChanged += AlteredSystem_PropertyChanged;
+            }
+            AlteredSystems.CollectionChanged += AlteredSystems_CollectionChanged;
+
+            DetermineCompletePrimaryFunctionList();
         }
         public string Id
         {
@@ -148,6 +158,7 @@ namespace GMEPTitle24
                     completeBuildingMethod = value;
                     OnPropertyChanged(nameof(CompleteBuildingMethod));
                     ResetCalculationMethodIds();
+                    DetermineCompletePrimaryFunctionList();
                 }
             }
         }
@@ -160,6 +171,7 @@ namespace GMEPTitle24
                 {
                     newConditionedMethodId = value;
                     OnPropertyChanged(nameof(NewConditionedMethodId));
+                    DetermineCompletePrimaryFunctionList();
                 }
             }
         }
@@ -172,6 +184,7 @@ namespace GMEPTitle24
                 {
                     newUnconditionedMethodId = value;
                     OnPropertyChanged(nameof(NewUnconditionedMethodId));
+                    DetermineCompletePrimaryFunctionList();
                 }
             }
         }
@@ -245,6 +258,7 @@ namespace GMEPTitle24
                     alteredSystem = value;
                     OnPropertyChanged(nameof(AlteredSystem));
                     DetermineSystemFlag();
+                    DetermineCompletePrimaryFunctionList();
                 }
             }
         }
@@ -258,6 +272,7 @@ namespace GMEPTitle24
                     newSystem = value;
                     OnPropertyChanged(nameof(NewSystem));
                     DetermineSystemFlag();
+                    DetermineCompletePrimaryFunctionList();
                 }
             }
         }
@@ -286,7 +301,20 @@ namespace GMEPTitle24
                 }
             }
         }
-        public ObservableCollection<AlteredSystem> AlteredSystems
+        public bool CompletePrimaryFunctionList
+        {
+            get { return completePrimaryFunctionList; }
+            set
+            {
+                if (completePrimaryFunctionList != value)
+                {
+                    completePrimaryFunctionList = value;
+                    OnPropertyChanged(nameof(CompletePrimaryFunctionList));
+                    
+                }
+            }
+        }
+        public ObservableCollection<AlteredSystemEntry> AlteredSystems
         {
             get { return alteredSystems; }
             set
@@ -317,8 +345,60 @@ namespace GMEPTitle24
                 elem.AlteredConditionedMethodId = 5;
             }
         }
+        public void DetermineCompletePrimaryFunctionList()
+        {
+            if (NewSystem && !CompleteBuildingMethod)
+            {
+                if (NewConditionedMethodId == 1 || NewConditionedMethodId == 2 || NewUnconditionedMethodId == 1 || NewUnconditionedMethodId == 2)
+                {
+                    CompletePrimaryFunctionList = true;
+                    return;
+                }
+                
+            }
+            if (AlteredSystem && !CompleteBuildingMethod)
+            {
+                foreach (var elem in AlteredSystems)
+                {
+                    if (elem.AlteredConditionedMethodId == 1 || elem.AlteredConditionedMethodId == 2 || elem.AlteredUnconditionedMethodId == 1 || elem.AlteredUnconditionedMethodId == 2)
+                    {
+                        CompletePrimaryFunctionList = true;
+                        return;
+                    }
+                }
+            }
+            CompletePrimaryFunctionList = false;
+        }
+        public void AlteredSystem_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (sender is AlteredSystemEntry alteredSystem)
+            {
+                if (e.PropertyName == nameof(AlteredSystemEntry.AlteredConditionedMethodId) || e.PropertyName == nameof(AlteredSystemEntry.AlteredUnconditionedMethodId))
+                {
+                    DetermineCompletePrimaryFunctionList();
+                }
+            }
+        }
+        private void AlteredSystems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                // Attach the PropertyChanged event to new items
+                foreach (AlteredSystemEntry newItem in e.NewItems)
+                {
+                    newItem.PropertyChanged += AlteredSystem_PropertyChanged;
+                }
+            }
 
-
+            if (e.OldItems != null)
+            {
+                // Detach the PropertyChanged event from removed items
+                foreach (AlteredSystemEntry oldItem in e.OldItems)
+                {
+                    oldItem.PropertyChanged -= AlteredSystem_PropertyChanged;
+                }
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
@@ -333,7 +413,7 @@ namespace GMEPTitle24
         public int Number { get; set; }
         public bool IsSelected { get; set; }
     }
-    public class AlteredSystem : INotifyPropertyChanged
+    public class AlteredSystemEntry : INotifyPropertyChanged
     {
         public string id = Guid.NewGuid().ToString();
         public string projectId = string.Empty;
@@ -342,7 +422,7 @@ namespace GMEPTitle24
         public int alteredConditionedSquareFootage = 0;
         public int alteredUnconditionedSquareFootage = 0;
 
-        public AlteredSystem(
+        public AlteredSystemEntry(
             string id, 
             string projectId, 
             int alteredConditionedMethodId, 
@@ -357,7 +437,7 @@ namespace GMEPTitle24
             AlteredConditionedSquareFootage=alteredConditionedSquareFootage;
             AlteredUnconditionedSquareFootage=alteredUnconditionedSquareFootage;
         }
-        public AlteredSystem()
+        public AlteredSystemEntry()
         {
             //:3
         }
@@ -441,6 +521,5 @@ namespace GMEPTitle24
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-      
     }
 }

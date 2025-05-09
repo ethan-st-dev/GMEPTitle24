@@ -228,7 +228,7 @@ namespace GMEPTitle24
             string projectVersion = string.Empty;
 
             //dummy values
-            ObservableCollection<AlteredSystem> alteredSystems = new ObservableCollection<AlteredSystem>();
+            ObservableCollection<AlteredSystemEntry> alteredSystems = new ObservableCollection<AlteredSystemEntry>();
             //
 
             ScopeData = new Scope("1", "Project123", 1, 2, false, false, false, [1, 4, 5], alteredSystems);
@@ -1321,7 +1321,7 @@ namespace GMEPTitle24
                     Reset_ColumnWidth();
                 }
             }
-            if (e.PropertyName == nameof(Scope.CompleteBuildingMethod))
+            if (e.PropertyName == nameof(Scope.CompletePrimaryFunctionList))
             {
                 FilterBuildings();
                 ResetPrimaryFunctionIds();
@@ -1340,7 +1340,7 @@ namespace GMEPTitle24
         public void FilterBuildings()
         {
             var keysToInclude = new HashSet<int> { 3, 24, 30, 31, 34, 48, 57, 59, 60, 62, 65, 68, 70, 73, 76, 79, 80, 93 };
-            if (ScopeData.CompleteBuildingMethod)
+            if (!ScopeData.CompletePrimaryFunctionList)
             {
                 // Include only the specified keys
                 FilteredBuildings = Buildings
@@ -1359,7 +1359,7 @@ namespace GMEPTitle24
         {
             foreach (var elem in controlAreaList)
             {
-                if (ScopeData.CompleteBuildingMethod)
+                if (!ScopeData.CompletePrimaryFunctionList)
                 {
                     elem.PrimaryFunctionId = 93;
                 }
