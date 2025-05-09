@@ -18,10 +18,10 @@ namespace GMEPTitle24
         public bool completeBuildingMethod = false;
         public int newConditionedMethodId = 5;
         public int newUnconditionedMethodId = 5;
-        public int newConditionedSquareFootage = 0;
-        public int newUnconditionedSquareFootage = 0;
-        public int garageConditionedSquareFootage = 0;
-        public int garageUnconditionedSquareFootage = 0;
+        public float newConditionedSquareFootage = 0;
+        public float newUnconditionedSquareFootage = 0;
+        public float garageConditionedSquareFootage = 0;
+        public float garageUnconditionedSquareFootage = 0;
         public bool oneForOneAlteration = false;
         public bool alteredSystem = false;
         public bool newSystem = false;
@@ -66,10 +66,17 @@ namespace GMEPTitle24
             string projectId,
             int projectScopeId,
             int gradeStories,
+            bool oneForOneAlteration,
             bool alteredSystem,
             bool newSystem,
             bool garageSystem,
-            List<int> occupancyTypeIds,
+            int newConditionedMethodId,
+            int newUnconditionedMethodId,
+            float newConditionedSquareFootage,
+            float newUnconditionedSquareFootage,
+            float garageConditionedSquareFootage,
+            float garageUnconditionedSquareFootage,
+        List<int> occupancyTypeIds,
             ObservableCollection<AlteredSystemEntry> alteredSystems
         )
         {
@@ -81,7 +88,15 @@ namespace GMEPTitle24
             this.newSystem = newSystem;
             this.garageSystem = garageSystem;
             this.alteredSystems = alteredSystems;
-        
+            this.oneForOneAlteration = oneForOneAlteration;
+            this.newConditionedMethodId = newConditionedMethodId;
+            this.newUnconditionedMethodId = newConditionedMethodId;
+            this.newConditionedSquareFootage = newConditionedSquareFootage;
+            this.newUnconditionedSquareFootage = newUnconditionedSquareFootage;
+            this.garageConditionedSquareFootage = garageConditionedSquareFootage;
+            this.garageUnconditionedSquareFootage = garageConditionedSquareFootage;
+
+
             foreach (var typeId in occupancyTypeIds)
             {
                 var matchingItem = OccupancyTypes.FirstOrDefault(item => item.Number == typeId);
@@ -99,6 +114,7 @@ namespace GMEPTitle24
             AlteredSystems.CollectionChanged += AlteredSystems_CollectionChanged;
 
             DetermineCompletePrimaryFunctionList();
+            DetermineSystemFlag();
         }
         public string Id
         {
@@ -188,7 +204,7 @@ namespace GMEPTitle24
                 }
             }
         }
-        public int NewConditionedSquareFootage
+        public float NewConditionedSquareFootage
         {
             get { return newConditionedSquareFootage; }
             set
@@ -200,7 +216,7 @@ namespace GMEPTitle24
                 }
             }
         }
-        public int NewUnconditionedSquareFootage
+        public float NewUnconditionedSquareFootage
         {
             get { return newUnconditionedSquareFootage; }
             set
@@ -212,7 +228,7 @@ namespace GMEPTitle24
                 }
             }
         }
-        public int GarageConditionedSquareFootage
+        public float GarageConditionedSquareFootage
         {
             get { return garageConditionedSquareFootage; }
             set
@@ -224,7 +240,7 @@ namespace GMEPTitle24
                 }
             }
         }
-        public int GarageUnconditionedSquareFootage
+        public float GarageUnconditionedSquareFootage
         {
             get { return garageUnconditionedSquareFootage; }
             set
@@ -419,16 +435,16 @@ namespace GMEPTitle24
         public string projectId = string.Empty;
         public int alteredConditionedMethodId = 5;
         public int alteredUnconditionedMethodId = 5;
-        public int alteredConditionedSquareFootage = 0;
-        public int alteredUnconditionedSquareFootage = 0;
+        public float alteredConditionedSquareFootage = 0;
+        public float alteredUnconditionedSquareFootage = 0;
 
         public AlteredSystemEntry(
             string id, 
             string projectId, 
             int alteredConditionedMethodId, 
-            int alteredUnconditionedMethodId, 
-            int alteredConditionedSquareFootage, 
-            int alteredUnconditionedSquareFootage)
+            int alteredUnconditionedMethodId,
+            float alteredConditionedSquareFootage,
+            float alteredUnconditionedSquareFootage)
         {
             Id=id;
             ProjectId=projectId;
@@ -490,7 +506,7 @@ namespace GMEPTitle24
                 }
             }
         }
-        public int AlteredConditionedSquareFootage
+        public float AlteredConditionedSquareFootage
         {
             get { return alteredConditionedSquareFootage; }
             set
@@ -502,7 +518,7 @@ namespace GMEPTitle24
                 }
             }
         }
-        public int AlteredUnconditionedSquareFootage
+        public float AlteredUnconditionedSquareFootage
         {
             get { return alteredUnconditionedSquareFootage; }
             set

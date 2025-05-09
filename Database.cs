@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 
@@ -328,6 +329,188 @@ namespace GMEPTitle24
 
                 await command.ExecuteNonQueryAsync();
             }
+            await CloseConnectionAsync();
+        }
+        public async Task<Scope> GetScope(
+            string projectId
+        )
+        {
+            await OpenConnectionAsync();
+            
+
+            // Retrieve the altered systems
+            ObservableCollection<AlteredSystemEntry> systems = new ObservableCollection<AlteredSystemEntry>();
+            string query = @"SELECT 
+                            *
+                            FROM 
+                                electrical_lighting_lti_altered_systems
+                            WHERE 
+                                project_id = @projectId";
+
+           
+            MySqlCommand command = new MySqlCommand(query, Connection);
+            command.Parameters.AddWithValue("@projectId", projectId);
+            MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync();
+
+
+            while (await reader.ReadAsync())
+            {
+                systems.Add(
+                    new AlteredSystemEntry(
+                        reader.GetString("id"),
+                        reader.GetString("project_id"),
+                        reader.GetInt32("altered_conditioned_method_id"),
+                        reader.GetInt32("altered_unconditioned_method_id"),
+                        reader.GetFloat("altered_conditioned_method_id"),
+                        reader.GetFloat("altered_unconditioned_method_id")
+                        )
+                    );
+            }
+
+            //Getting the scope
+            Scope scope = new Scope(
+                    Guid.NewGuid().ToString(),
+                    projectId,
+                    2,
+                    0,
+                    false,
+                    false,
+                    false,
+                    false,
+                    5,
+                    5,
+                    0,
+                    0,
+                    0,
+                    0,
+                    [],
+                    systems
+                    );
+            string scopeQuery = @"SELECT 
+                *
+                FROM 
+                    electrical_lighting_lti_altered_systems
+                WHERE 
+                    project_id = @projectId
+                LIMIT 1";
+            MySqlCommand scopeCommand = new MySqlCommand(scopeQuery, Connection);
+            scopeCommand.Parameters.AddWithValue("@projectId", projectId);
+            MySqlDataReader scopeReader = (MySqlDataReader)await scopeCommand.ExecuteReaderAsync();
+
+            bool hasEntry = await reader.ReadAsync();
+            if (hasEntry) {
+                while (await scopeReader.ReadAsync())
+                {
+                    List<int> occupancyTypeIds = JsonSerializer.Deserialize<List<int>>(reader.GetString("occupancy_type_ids"));
+                    scope = new Scope(
+                        reader.GetString("id"),
+                        projectId,
+                        reader.GetInt32("project_scope_id"),
+                        reader.GetInt32("grade_stories"),
+                        reader.GetBoolean("one_for_one_alteration"),
+                        reader.GetBoolean("altered_system"),
+                        reader.GetBoolean("new_system"),
+                        reader.GetBoolean("garage_system"),
+                        reader.GetInt32("new_conditioned_method_id"),
+                        reader.GetInt32("new_unconditioned_method_id"),
+                        reader.GetFloat("new_conditioned_square_footage"),
+                        reader.GetFloat("new_unconditioned_square_footage"),
+                        reader.GetFloat("garage_conditioned_square_footage"),
+                        reader.GetFloat("garage_unconditioned_square_footage"),
+                        occupancyTypeIds,
+                        systems
+                    );
+                }
+            }
+
+             await reader.CloseAsync();
+             return scope;
+        }
+        public async Task UpdateScope(Scope scope,string projectId)
+        {
+            await OpenConnectionAsync();
+
+            //updating the altered systems in the scope
+            string deleteQuery = @"
+                DELETE FROM electrical_lighting_lti_altered_systems
+                WHERE project_id = @projectId
+                AND id NOT IN (@ids)";
+
+            var ids = string.Join(",", scope.AlteredSystems.Select(a => $"'{a.Id}'"));
+
+            if (!string.IsNullOrEmpty(ids))
+            {
+                MySqlCommand deleteCommand = new MySqlCommand(deleteQuery, Connection);
+                deleteCommand.Parameters.AddWithValue("@projectId", projectId);
+                deleteCommand.Parameters.AddWithValue("@ids", ids);
+                await deleteCommand.ExecuteNonQueryAsync();
+            }
+  
+            foreach (var system in scope.AlteredSystems)
+            {
+                string query = @"
+                    INSERT INTO electrical_lighting_lti_altered_systems
+                    (id, project_id, altered_conditioned_method_id, altered_unconditioned_method_id, altered_conditioned_square_footage, altered_unconditioned_square_footage) 
+                    VALUES 
+                    (@id, @projectId, @alteredConditionedMethodId, @alteredUnconditionedMethodId, @alteredConditionedSquareFootage, @alteredUnconditionedSquareFootage)
+                    ON DUPLICATE KEY UPDATE 
+                    description = @description, 
+                    altered_conditioned_method_id = @alteredConditionedMethodId,
+                    altered_unconditioned_method_id = @alteredUnconditionedMethodId,
+                    altered_conditioned_square_footage = @alteredConditionedSquareFootage
+                    altered_unconditioned_square_footage = @alteredUnconditionedSquareFootage";
+
+                MySqlCommand command = new MySqlCommand(query, Connection);
+                command.Parameters.AddWithValue("@id", system.Id);
+                command.Parameters.AddWithValue("@projectId", projectId);
+                command.Parameters.AddWithValue("@alteredConditionedMethodId", system.AlteredConditionedMethodId);
+                command.Parameters.AddWithValue("@alteredUnconditionedMethodId", system.AlteredUnconditionedMethodId);
+                command.Parameters.AddWithValue("@alteredConditionedSquareFootage", system.AlteredConditionedSquareFootage);
+                command.Parameters.AddWithValue("@alteredUnconditionedSquareFootage", system.AlteredUnconditionedSquareFootage);
+
+                await command.ExecuteNonQueryAsync();
+            }
+
+            //updating the scope object
+            string scopeQuery = @"
+                    INSERT INTO electrical_lighting_lti_scope
+                    (id, project_id, project_scope_id, complete_building_method, grade_stories, occupancy_type_ids, altered_system, new_system, garage_system, new_conditioned_method_id, new_unconditioned_method_id, new_conditioned_square_footage, new_unconditioned_square_footage, garage_conditioned_square_footage, garage_unconditioned_square_footage, one_for_one_alteration) 
+                    VALUES 
+                    (@id, @projectId, @projectScopeId, @completeBuildingMethod, @gradeStories, @occupancyTypeIds, @alteredSystem, @newSystem, @garageSystem, @newConditionedMethodId, @newUnconditionedMethodId, @newConditionedSquareFootage, @newUnconditionedSquareFootage, @garageConditionedSquareFootage, @garageUnconditionedSquareFootage, @oneForOneAlteration)
+                    ON DUPLICATE KEY UPDATE 
+                    project_scope_id = @projectScopeId, 
+                    complete_building_method = @completeBuildingMethod,
+                    grade_stories = @gradeStories,
+                    occupancy_type_ids = @occupancyTypeIds,
+                    altered_system = @alteredSystem,
+                    new_system = @newSystem,
+                    garage_system = @garageSystem,
+                    new_conditioned_method_id = @newConditionedMethodId, 
+                    new_unconditioned_method_id = @newUnconditionedMethodId, 
+                    new_conditioned_square_footage = @newConditionedSquareFootage, 
+                    new_unconditioned_square_footage = @newUnconditionedSquareFootage, 
+                    garage_conditioned_square_footage = @garageConditionedSquareFootage, 
+                    garage_unconditioned_square_footage = @garageUnconditionedSquareFootage, 
+                    one_for_one_alteration = @oneForOneAlteration";
+
+            string occupancyTypeIdsJson = JsonSerializer.Serialize(scope.OccupancyTypes.Where(o => o.IsSelected).Select(o => o.Number).ToList());
+            MySqlCommand scopeCommand = new MySqlCommand(scopeQuery, Connection);
+            scopeCommand.Parameters.AddWithValue("@id", scope.Id);
+            scopeCommand.Parameters.AddWithValue("@projectId", projectId);
+            scopeCommand.Parameters.AddWithValue("@projectScopeId", scope.ProjectScopeId);
+            scopeCommand.Parameters.AddWithValue("@completeBuildingMethod", scope.CompleteBuildingMethod);
+            scopeCommand.Parameters.AddWithValue("@gradeStories", scope.GradeStories);
+            scopeCommand.Parameters.AddWithValue("@occupancyTypeIds", occupancyTypeIdsJson);
+            scopeCommand.Parameters.AddWithValue("@alteredSystem", scope.AlteredSystem);
+            scopeCommand.Parameters.AddWithValue("@newSystem", scope.NewSystem);
+            scopeCommand.Parameters.AddWithValue("@garageSystem", scope.GarageSystem);
+            scopeCommand.Parameters.AddWithValue("@newConditionedMethodId", scope.NewConditionedMethodId);
+            scopeCommand.Parameters.AddWithValue("@newUnconditionedMethodId", scope.NewUnconditionedMethodId);
+            scopeCommand.Parameters.AddWithValue("@newConditionedSquareFootage", scope.NewConditionedSquareFootage);
+            scopeCommand.Parameters.AddWithValue("@newUnconditionedSquareFootage", scope.NewUnconditionedSquareFootage);
+            scopeCommand.Parameters.AddWithValue("@garageConditionedSquareFootage", scope.GarageConditionedSquareFootage);
+            scopeCommand.Parameters.AddWithValue("@garageUnconditionedSquareFootage", scope.GarageUnconditionedSquareFootage);
+            scopeCommand.Parameters.AddWithValue("@oneForOneAlteration", scope.OneForOneAlteration);
             await CloseConnectionAsync();
         }
     }
