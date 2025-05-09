@@ -531,6 +531,74 @@ namespace GMEPTitle24
             await FillOutControls();
             await FillOutAllowances();
         }
+        public async Task FillOutScope()
+        {
+            StatusText.Text = "Filling Out Scope Section";
+            int result = await Task.Run(int () =>
+            {
+                try
+                {
+                    var elements = driver.FindElements(By.CssSelector("input[type='text']"));
+                    foreach (var element in elements)
+                    {
+                        string attributeValue = element.GetAttribute("placeholder");
+                        if (attributeValue != null && attributeValue.Contains("grade stories", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, ScopeData.GradeStories);
+                        }
+                    }
+                    var dropdownElements = driver.FindElements(By.CssSelector("div[class='selectWrapper']"));
+                    foreach (var element in dropdownElements)
+                    {
+                        var textbox = element.FindElement(By.CssSelector("input"));
+                        string placeholderValue = textbox.GetAttribute("placeholder");
+                        if (placeholderValue != null && placeholderValue.Contains("project's scope", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[ScopeData.ProjectScopeId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("complete building method", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[1];
+                            if (ScopeData.CompleteBuildingMethod)
+                            {
+                                choice = choices[0];
+                            }
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                    }
+                }
+                catch (WebDriverTimeoutException ex)
+                {
+                    // Handle timeout exceptions
+                    Dispatcher.Invoke(() =>
+                    {
+                        StatusText.Text = "Navigation timed out. Please try again.";
+                        Loading.Visibility = Visibility.Collapsed;
+                    });
+                    Debug.WriteLine($"Timeout Exception: {ex.Message}");
+                    return 0;
+                }
+                catch (WebDriverException ex)
+                {
+                    // Handle general WebDriver exceptions
+                    Dispatcher.Invoke(() =>
+                    {
+                        StatusText.Text = "An error occurred while navigation to scope.";
+                        Loading.Visibility = Visibility.Collapsed;
+                    });
+                    Debug.WriteLine($"WebDriver Exception: {ex.Message}");
+                    return 0;
+                }
+                return 1;
+            });
+        }
         public async Task FillOutLuminaires()
         {
             StatusText.Text = "Filling Out Luminaires Section";
