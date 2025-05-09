@@ -1246,6 +1246,7 @@ namespace GMEPTitle24
         {
             LightingList.Clear();
             ControlAreaList.Clear();
+            ScopeData = null;
             Loading.Visibility = Visibility.Visible;
             StatusText.Text = "Downloading";
             VersionComboBox.SelectedValue = 0;
@@ -1255,6 +1256,7 @@ namespace GMEPTitle24
                 StatusText.Text = "Project Not Found";
                 ControlAreaGrid.IsEnabled = false;
                 Loading.Visibility = Visibility.Collapsed;
+                ProjectCover.Visibility = Visibility.Visible;
                 return;
             }
             ControlAreaGrid.IsEnabled = true;
@@ -1262,6 +1264,7 @@ namespace GMEPTitle24
             StatusText.Text = String.Empty;
             Loading.Visibility = Visibility.Collapsed;
             SaveProjectNo = ProjectNo;
+
         }
         private async void Save_Click(object sender, RoutedEventArgs e)
         {
@@ -1287,6 +1290,7 @@ namespace GMEPTitle24
                 FilterBuildings();
                 LightingList = await db.GetLighting(newProjectId);
                 ControlAreaList = await db.GetControlAreas(newProjectId);
+                ProjectCover.Visibility = Visibility.Collapsed;
             }
         }
         public void OptionsGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)

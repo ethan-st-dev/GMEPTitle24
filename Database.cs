@@ -361,8 +361,8 @@ namespace GMEPTitle24
                         reader.GetString("project_id"),
                         reader.GetInt32("altered_conditioned_method_id"),
                         reader.GetInt32("altered_unconditioned_method_id"),
-                        reader.GetFloat("altered_conditioned_method_id"),
-                        reader.GetFloat("altered_unconditioned_method_id")
+                        reader.GetFloat("altered_conditioned_square_footage"),
+                        reader.GetFloat("altered_unconditioned_square_footage")
                         )
                     );
             }
@@ -452,10 +452,9 @@ namespace GMEPTitle24
                     VALUES 
                     (@id, @projectId, @alteredConditionedMethodId, @alteredUnconditionedMethodId, @alteredConditionedSquareFootage, @alteredUnconditionedSquareFootage)
                     ON DUPLICATE KEY UPDATE 
-                    description = @description, 
                     altered_conditioned_method_id = @alteredConditionedMethodId,
                     altered_unconditioned_method_id = @alteredUnconditionedMethodId,
-                    altered_conditioned_square_footage = @alteredConditionedSquareFootage
+                    altered_conditioned_square_footage = @alteredConditionedSquareFootage,
                     altered_unconditioned_square_footage = @alteredUnconditionedSquareFootage";
 
                 MySqlCommand command = new MySqlCommand(query, Connection);
