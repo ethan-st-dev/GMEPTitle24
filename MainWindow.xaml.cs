@@ -81,7 +81,19 @@ namespace GMEPTitle24
         }
         public int ProjectVersion { get; set; }
 
-        public Scope ScopeData { get; set; }
+        public Scope scopeData;
+        public Scope ScopeData
+        {
+            get { return scopeData; }
+            set
+            {
+                if (scopeData != value)
+                {
+                    scopeData = value;
+                    OnPropertyChanged(nameof(ScopeData));
+                }
+            }
+        }
 
         public ObservableCollection<Lighting> lightingList = new ObservableCollection<Lighting>();
         public ObservableCollection<Lighting> LightingList
@@ -227,14 +239,9 @@ namespace GMEPTitle24
             string projectNo = string.Empty;
             string projectVersion = string.Empty;
 
-            //dummy values
-            ObservableCollection<AlteredSystemEntry> alteredSystems = new ObservableCollection<AlteredSystemEntry>();
-            //
-
-            ScopeData = new Scope("1", "Project123", 1, 2, false, false, false, [1, 4, 5], alteredSystems);
             InitializeComponent();
             DataContext = this;
-            ScopeData.PropertyChanged += ScopeData_PropertyChanged;
+
             if (args.Length > 1)
             {
                 ProjectNo = args[1];
@@ -290,7 +297,6 @@ namespace GMEPTitle24
                 }
                 );
             }
-            FilterBuildings();
         }
         public async Task ActivateSelenium()
         {
@@ -1265,6 +1271,7 @@ namespace GMEPTitle24
                 StatusText.Text = "Saving";
                 await db.UpdateLuminaires(LightingList);
                 await db.UpdateControlAreas(ControlAreaList, selectedPair.Value);
+                await db.UpdateScope(ScopeData, selectedPair.Value);
                 StatusText.Text = String.Empty;
                 Loading.Visibility = Visibility.Collapsed;
             }
@@ -1275,9 +1282,11 @@ namespace GMEPTitle24
             {
                 //Electrical Tab
                 string newProjectId = selectedPair.Value;
+                ScopeData = await db.GetScope(newProjectId);
+                ScopeData.PropertyChanged += ScopeData_PropertyChanged;
+                FilterBuildings();
                 LightingList = await db.GetLighting(newProjectId);
                 ControlAreaList = await db.GetControlAreas(newProjectId);
-
             }
         }
         public void OptionsGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)

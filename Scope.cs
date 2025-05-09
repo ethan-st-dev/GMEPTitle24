@@ -90,11 +90,11 @@ namespace GMEPTitle24
             this.alteredSystems = alteredSystems;
             this.oneForOneAlteration = oneForOneAlteration;
             this.newConditionedMethodId = newConditionedMethodId;
-            this.newUnconditionedMethodId = newConditionedMethodId;
+            this.newUnconditionedMethodId = newUnconditionedMethodId;
             this.newConditionedSquareFootage = newConditionedSquareFootage;
             this.newUnconditionedSquareFootage = newUnconditionedSquareFootage;
             this.garageConditionedSquareFootage = garageConditionedSquareFootage;
-            this.garageUnconditionedSquareFootage = garageConditionedSquareFootage;
+            this.garageUnconditionedSquareFootage = garageUnconditionedSquareFootage;
 
 
             foreach (var typeId in occupancyTypeIds)

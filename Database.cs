@@ -366,7 +366,7 @@ namespace GMEPTitle24
                         )
                     );
             }
-
+            await reader.CloseAsync();
             //Getting the scope
             Scope scope = new Scope(
                     Guid.NewGuid().ToString(),
@@ -389,7 +389,7 @@ namespace GMEPTitle24
             string scopeQuery = @"SELECT 
                 *
                 FROM 
-                    electrical_lighting_lti_altered_systems
+                    electrical_lighting_lti_scope
                 WHERE 
                     project_id = @projectId
                 LIMIT 1";
@@ -397,33 +397,31 @@ namespace GMEPTitle24
             scopeCommand.Parameters.AddWithValue("@projectId", projectId);
             MySqlDataReader scopeReader = (MySqlDataReader)await scopeCommand.ExecuteReaderAsync();
 
-            bool hasEntry = await reader.ReadAsync();
-            if (hasEntry) {
-                while (await scopeReader.ReadAsync())
-                {
-                    List<int> occupancyTypeIds = JsonSerializer.Deserialize<List<int>>(reader.GetString("occupancy_type_ids"));
-                    scope = new Scope(
-                        reader.GetString("id"),
-                        projectId,
-                        reader.GetInt32("project_scope_id"),
-                        reader.GetInt32("grade_stories"),
-                        reader.GetBoolean("one_for_one_alteration"),
-                        reader.GetBoolean("altered_system"),
-                        reader.GetBoolean("new_system"),
-                        reader.GetBoolean("garage_system"),
-                        reader.GetInt32("new_conditioned_method_id"),
-                        reader.GetInt32("new_unconditioned_method_id"),
-                        reader.GetFloat("new_conditioned_square_footage"),
-                        reader.GetFloat("new_unconditioned_square_footage"),
-                        reader.GetFloat("garage_conditioned_square_footage"),
-                        reader.GetFloat("garage_unconditioned_square_footage"),
-                        occupancyTypeIds,
-                        systems
-                    );
-                }
+       
+            while (await scopeReader.ReadAsync())
+            {
+                List<int> occupancyTypeIds = JsonSerializer.Deserialize<List<int>>(scopeReader.GetString("occupancy_type_ids"));
+                scope = new Scope(
+                    scopeReader.GetString("id"),
+                    projectId,
+                    scopeReader.GetInt32("project_scope_id"),
+                    scopeReader.GetInt32("grade_stories"),
+                    scopeReader.GetBoolean("one_for_one_alteration"),
+                    scopeReader.GetBoolean("altered_system"),
+                    scopeReader.GetBoolean("new_system"),
+                    scopeReader.GetBoolean("garage_system"),
+                    scopeReader.GetInt32("new_conditioned_method_id"),
+                    scopeReader.GetInt32("new_unconditioned_method_id"),
+                    scopeReader.GetFloat("new_conditioned_square_footage"),
+                    scopeReader.GetFloat("new_unconditioned_square_footage"),
+                    scopeReader.GetFloat("garage_conditioned_square_footage"),
+                    scopeReader.GetFloat("garage_unconditioned_square_footage"),
+                    occupancyTypeIds,
+                    systems
+                );
             }
 
-             await reader.CloseAsync();
+             await scopeReader.CloseAsync();
              return scope;
         }
         public async Task UpdateScope(Scope scope,string projectId)
@@ -511,6 +509,7 @@ namespace GMEPTitle24
             scopeCommand.Parameters.AddWithValue("@garageConditionedSquareFootage", scope.GarageConditionedSquareFootage);
             scopeCommand.Parameters.AddWithValue("@garageUnconditionedSquareFootage", scope.GarageUnconditionedSquareFootage);
             scopeCommand.Parameters.AddWithValue("@oneForOneAlteration", scope.OneForOneAlteration);
+            await scopeCommand.ExecuteNonQueryAsync();
             await CloseConnectionAsync();
         }
     }
