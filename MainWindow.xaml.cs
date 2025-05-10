@@ -527,9 +527,10 @@ namespace GMEPTitle24
             {
                 return;
             }
-            await FillOutLuminaires();
-            await FillOutControls();
-            await FillOutAllowances();
+            await FillOutScope();
+            //await FillOutLuminaires();
+            //await FillOutControls();
+            //await FillOutAllowances();
         }
         public async Task FillOutScope()
         {
@@ -572,7 +573,46 @@ namespace GMEPTitle24
                             }
                             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
                         }
+                        if (placeholderValue != null && placeholderValue.Contains("occupancy types", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("div[data-eco-field-type='checkbox'"));
+                            foreach(var choice in choices)
+                            {
+                                if (choice.GetAttribute("class").Contains("mod_populated"))
+                                {
+                                    var choiceLabel = choice.FindElement(By.CssSelector("label"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choiceLabel);
+                                }
+                            }
+                            foreach(var type in ScopeData.OccupancyTypes)
+                            {
+                                if (type.IsSelected)
+                                {
+                                    var choice = choices[type.Number - 1];
+                                    var choiceLabel = choice.FindElement(By.CssSelector("label"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choiceLabel);
+                                }
+                            }
+                        }
                     }
+
+                    IWebElement SaveButton = driver.FindElement(By.XPath("//div[text()='Save']"));
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", SaveButton);
+
+                    WebDriverWait wait2 = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+                    wait2.Until(driver =>
+                    {
+                        var formElement = driver.FindElement(By.Id("matForm"));
+                        return formElement.GetAttribute("class").Contains("mod_submitting");
+                    });
+
+                    // Wait for the "mod_submitting" class to be removed
+                    wait2.Until(driver =>
+                    {
+                        var formElement = driver.FindElement(By.Id("matForm"));
+                        return !formElement.GetAttribute("class").Contains("mod_submitting");
+                    });
+
                 }
                 catch (WebDriverTimeoutException ex)
                 {
