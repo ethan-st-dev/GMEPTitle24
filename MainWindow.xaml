@@ -328,30 +328,42 @@
                                                 </StackPanel.Style>
                                                 <Label Content="Altered System Method Options" FontWeight="Bold" HorizontalAlignment="Center"/>
                                                 <CheckBox HorizontalAlignment="Center" Margin="0 10 0 0" IsChecked ="{Binding OneForOneAlteration}" Content="One-for-one luminaire alteration within a building or tenant space of 5,000sf or less"/>
-                                                <StackPanel Margin="0 20 0 0" Orientation="Vertical" Width="600">
-                                                    <Label FontSize="10" Content="Are there any complete floors or tenant spaces in the project scope that are altering 50 or fewer luminaires per annum?" FontWeight="Bold"/>
-                                                    <ComboBox SelectedValue="{Binding ReductionComplianceId}" SelectedValuePath="Tag">
-                                                        <ComboBox.Items>
-                                                            <ComboBoxItem Content="Yes" Tag="1"/>
-                                                            <ComboBoxItem Content="Yes, this applies to all spaces within the permit application" Tag="2"/>
-                                                            <ComboBoxItem Content="No" Tag="3"/>
-                                                        </ComboBox.Items>
-                                                    </ComboBox>
-                                                </StackPanel>
-                                                <StackPanel Margin="0 20 0 0" Orientation="Vertical" Width="600">
-                                                    <StackPanel.Style>
-                                                        <Style TargetType="StackPanel">
+                                                <Grid>
+                                                    <Grid.Style>
+                                                        <Style TargetType="Grid">
                                                             <Setter Property="Visibility" Value="Collapsed"/>
                                                             <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding ReductionComplianceId}" Value="1">
+                                                                <DataTrigger Binding="{Binding ReductionComplianceFlag}" Value="True">
                                                                     <Setter Property="Visibility" Value="Visible"/>
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
-                                                    </StackPanel.Style>
-                                                    <Label Content="Which tenant space or floor does this apply to?" FontWeight="Bold"/>
-                                                    <TextBox Text="{Binding ReductionComplianceSpace}"/>
-                                                </StackPanel>
+                                                    </Grid.Style>
+                                                    <StackPanel Margin="0 20 0 0" Orientation="Vertical" Width="600">
+                                                        <Label FontSize="10" Content="Are there any complete floors or tenant spaces in the project scope that are altering 50 or fewer luminaires per annum?" FontWeight="Bold"/>
+                                                        <ComboBox SelectedValue="{Binding ReductionComplianceId}" SelectedValuePath="Tag">
+                                                            <ComboBox.Items>
+                                                                <ComboBoxItem Content="Yes" Tag="1"/>
+                                                                <ComboBoxItem Content="Yes, this applies to all spaces within the permit application" Tag="2"/>
+                                                                <ComboBoxItem Content="No" Tag="3"/>
+                                                            </ComboBox.Items>
+                                                        </ComboBox>
+                                                    </StackPanel>
+                                                    <StackPanel Margin="0 20 0 0" Orientation="Vertical" Width="600">
+                                                        <StackPanel.Style>
+                                                            <Style TargetType="StackPanel">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding ReductionComplianceId}" Value="1">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </StackPanel.Style>
+                                                        <Label Content="Which tenant space or floor does this apply to?" FontWeight="Bold"/>
+                                                        <TextBox Text="{Binding ReductionComplianceSpace}"/>
+                                                    </StackPanel>
+                                                </Grid>
                                             </StackPanel>
                                         </StackPanel>
                                     </GroupBox>

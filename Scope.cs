@@ -28,8 +28,10 @@ namespace GMEPTitle24
         public bool garageSystem = false;
         public bool systemFlag = false;
         public bool completePrimaryFunctionList = false;
+        public bool reductionComplianceFlag = false;
         private int reductionComplianceId = 3;
         private string reductionComplianceSpace = string.Empty;
+
 
         public ObservableCollection<CheckboxItem> OccupancyTypes { get; set; } = new ObservableCollection<CheckboxItem>
         {
@@ -116,6 +118,7 @@ namespace GMEPTitle24
             AlteredSystems.CollectionChanged += AlteredSystems_CollectionChanged;
 
             DetermineCompletePrimaryFunctionList();
+            DetermineReductionComplianceFlag();
             DetermineSystemFlag();
         }
         public string Id
@@ -373,6 +376,18 @@ namespace GMEPTitle24
                 }
             }
         }
+        public bool ReductionComplianceFlag
+        {
+            get { return reductionComplianceFlag; }
+            set
+            {
+                if (reductionComplianceFlag != value)
+                {
+                    reductionComplianceFlag = value;
+                    OnPropertyChanged(nameof(ReductionComplianceFlag));
+                }
+            }
+        }
         public void DetermineSystemFlag()
         {
             if (GarageSystem || NewSystem || AlteredSystem)
@@ -416,6 +431,21 @@ namespace GMEPTitle24
             }
             CompletePrimaryFunctionList = false;
         }
+        private void DetermineReductionComplianceFlag()
+        {
+            if (AlteredSystem && !CompleteBuildingMethod)
+            {
+                foreach (var elem in AlteredSystems)
+                {
+                    if (elem.AlteredConditionedMethodId == 4 || elem.AlteredUnconditionedMethodId == 4)
+                    {
+                        ReductionComplianceFlag = true;
+                        return;
+                    }
+                }
+            }
+           ReductionComplianceFlag = false;
+        }
         public void AlteredSystem_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (sender is AlteredSystemEntry alteredSystem)
@@ -423,6 +453,7 @@ namespace GMEPTitle24
                 if (e.PropertyName == nameof(AlteredSystemEntry.AlteredConditionedMethodId) || e.PropertyName == nameof(AlteredSystemEntry.AlteredUnconditionedMethodId))
                 {
                     DetermineCompletePrimaryFunctionList();
+                    DetermineReductionComplianceFlag();
                 }
             }
         }
@@ -446,6 +477,7 @@ namespace GMEPTitle24
                 }
             }
         }
+        
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
