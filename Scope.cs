@@ -28,6 +28,8 @@ namespace GMEPTitle24
         public bool garageSystem = false;
         public bool systemFlag = false;
         public bool completePrimaryFunctionList = false;
+        private int reductionComplianceId = 3;
+        private string reductionComplianceSpace = string.Empty;
 
         public ObservableCollection<CheckboxItem> OccupancyTypes { get; set; } = new ObservableCollection<CheckboxItem>
         {
@@ -344,6 +346,30 @@ namespace GMEPTitle24
                 {
                     alteredSystems = value;
                     OnPropertyChanged(nameof(AlteredSystems));
+                }
+            }
+        }
+        public int ReductionComplianceId
+        {
+            get { return reductionComplianceId; }
+            set
+            {
+                if (reductionComplianceId != value)
+                {
+                    reductionComplianceId = value;
+                    OnPropertyChanged(nameof(ReductionComplianceId));
+                }
+            }
+        }
+        public string ReductionComplianceSpace
+        {
+            get { return reductionComplianceSpace; }
+            set
+            {
+                if (reductionComplianceSpace != value)
+                {
+                    reductionComplianceSpace = value;
+                    OnPropertyChanged(nameof(ReductionComplianceSpace));
                 }
             }
         }
