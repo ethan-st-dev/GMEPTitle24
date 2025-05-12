@@ -304,7 +304,12 @@ namespace GMEPTitle24
             service.HideCommandPromptWindow = true;
 
             options = new ChromeOptions();
-            options.AddArgument("headless");
+            options.AddArgument("headless=new");
+            options.AddArgument("--disable-gpu");
+            options.AddArgument("--window-size=1920,1080");
+            options.AddArgument("--disable-extensions");
+            options.AddArgument("--disable-dev-shm-usage");
+            options.AddArgument("--no-sandbox");
             driver = new ChromeDriver(service, options);
 
             StatusText.Text = "Navigating to Site";
@@ -527,9 +532,302 @@ namespace GMEPTitle24
             {
                 return;
             }
+            await FillOutScope();
             await FillOutLuminaires();
             await FillOutControls();
             await FillOutAllowances();
+        }
+        public async Task FillOutScope()
+        {
+            StatusText.Text = "Filling Out Scope Section";
+            int result = await Task.Run(int () =>
+            {
+                try
+                {
+                    var elements = driver.FindElements(By.CssSelector("input[type='text']"));
+                    foreach (var element in elements)
+                    {
+                        string attributeValue = element.GetAttribute("placeholder");
+                        if (attributeValue != null && attributeValue.Contains("square footage of conditioned space being served by the new lighting system", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, ScopeData.NewConditionedSquareFootage);
+                        }
+                        if (attributeValue != null && attributeValue.Contains("square footage of unconditioned space being served by the new lighting system", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, ScopeData.NewUnconditionedSquareFootage);
+                        }
+                        if (attributeValue != null && attributeValue.Contains("square footage of conditioned space in the parking garage", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, ScopeData.GarageConditionedSquareFootage);
+                        }
+                        if (attributeValue != null && attributeValue.Contains("square footage of unconditioned space in parking garage", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, ScopeData.GarageUnconditionedSquareFootage);
+                        }
+                        if (attributeValue != null && attributeValue.Contains("grade stories", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, ScopeData.GradeStories);
+                        }
+                        if (attributeValue != null && attributeValue.Contains("which tenant space or floor does this apply to", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, ScopeData.ReductionComplianceSpace);
+                        }
+                    }
+                    var dropdownElements = driver.FindElements(By.CssSelector("div[class='selectWrapper']"));
+                    foreach (var element in dropdownElements)
+                    {
+                        var textbox = element.FindElement(By.CssSelector("input"));
+                        string placeholderValue = textbox.GetAttribute("placeholder");
+                        if (placeholderValue != null && placeholderValue.Contains("project's scope", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[ScopeData.ProjectScopeId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("in your conditioned space, which calculation method", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[ScopeData.NewConditionedMethodId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("in your unconditioned space, which calculation method", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[ScopeData.NewUnconditionedMethodId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("are there any complete floors or tenant spaces", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[ScopeData.ReductionComplianceId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("complete building method", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[1];
+                            if (ScopeData.CompleteBuildingMethod)
+                            {
+                                choice = choices[0];
+                            }
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("one-for-one luminaire alteration", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[1];
+                            if (ScopeData.OneForOneAlteration)
+                            {
+                                choice = choices[0];
+                            }
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("occupancy types", StringComparison.OrdinalIgnoreCase))
+                        {
+
+                            var choices = element.FindElements(By.CssSelector("div[data-eco-field-type='checkbox'"));
+
+                            foreach (var choice in choices)
+                            {
+                                var input = choice.FindElement(By.CssSelector("input"));
+                                if (input.GetAttribute("checked") != null)
+                                {
+                                    var choiceLabel = choice.FindElement(By.CssSelector("label"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choiceLabel);
+                                }
+                            }
+                            foreach(var type in ScopeData.OccupancyTypes)
+                            {
+                                if (type.IsSelected)
+                                {
+                                    var choice = choices[type.Number - 1];
+                                    var choiceLabel = choice.FindElement(By.CssSelector("label"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choiceLabel);
+                                }
+                            }
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("lighting system will be installed", StringComparison.OrdinalIgnoreCase))
+                        {
+
+                            var choices = element.FindElements(By.CssSelector("div[data-eco-field-type='checkbox'"));
+
+                            foreach (var choice in choices)
+                            {
+                                var input = choice.FindElement(By.CssSelector("input"));
+                                if (input.GetAttribute("checked") != null)
+                                {
+                                    var choiceLabel = choice.FindElement(By.CssSelector("label"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choiceLabel);
+                                }
+                            }
+                            if (ScopeData.AlteredSystem)
+                            {
+                                var choice = choices[0];
+                                var choiceLabel = choice.FindElement(By.CssSelector("label"));
+                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choiceLabel);
+                            }
+                            if (ScopeData.NewSystem)
+                            {
+                                var choice = choices[1];
+                                var choiceLabel = choice.FindElement(By.CssSelector("label"));
+                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choiceLabel);
+                            }
+                            if (ScopeData.GarageSystem)
+                            {
+                                var choice = choices[2];
+                                var choiceLabel = choice.FindElement(By.CssSelector("label"));
+                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choiceLabel);
+                            }
+                        }
+                    }
+                    if (ScopeData.AlteredSystem)
+                    {
+                        IWebElement AddSystemButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Add Altered Lighting System']")));
+
+                        IWebElement alteredSystemContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[name='organism_Table_Row']")));
+                        var Systems = alteredSystemContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
+
+                        foreach (var system in Systems)
+                        {
+                            var delete = system.FindElement(By.CssSelector("div[class='mod_supportControl']"));
+                            var deleteIcon = delete.FindElement(By.CssSelector("i"));
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", deleteIcon);
+                        }
+                        foreach (var system in ScopeData.AlteredSystems)
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AddSystemButton);
+
+                            wait.Until(driver =>
+                            {
+                                var updatedSystems = alteredSystemContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
+                                return updatedSystems.Count >= ScopeData.AlteredSystems.IndexOf(system) + 1;
+                            });
+                        }
+                  
+                      
+
+                        Systems = alteredSystemContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
+                        //Editing Boxes
+                        int row = 0;
+                        foreach (var system in Systems)
+                        {
+                            var systemDropdownElements = system.FindElements(By.CssSelector("div[class='selectWrapper']"));
+                            foreach (var element in systemDropdownElements)
+                            {
+                                var textbox = element.FindElement(By.CssSelector("input"));
+                                string placeholderValue = textbox.GetAttribute("placeholder");
+                                if (placeholderValue != null && placeholderValue.Contains("in your conditioned space, which calculation method", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    var choices = element.FindElements(By.CssSelector("li"));
+                                    var choice = choices[ScopeData.AlteredSystems[row].AlteredConditionedMethodId - 1];
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                                }
+                                if (placeholderValue != null && placeholderValue.Contains("in your unconditioned space, which calculation method", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    var choices = element.FindElements(By.CssSelector("li"));
+                                    var choice = choices[ScopeData.AlteredSystems[row].AlteredUnconditionedMethodId - 1];
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                                }
+                            }
+
+                            var systemElements = system.FindElements(By.CssSelector("input[type='text']"));
+                            foreach (var element in systemElements)
+                            {
+                                string attributeValue = element.GetAttribute("placeholder");
+                                if (attributeValue != null && attributeValue.Contains("square footage of conditioned space", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                                arguments[0].value = arguments[1];
+                                arguments[0].dispatchEvent(new Event('input'));
+                                arguments[0].dispatchEvent(new Event('change'));
+                                ", element, ScopeData.AlteredSystems[row].AlteredConditionedSquareFootage);
+                                }
+                                if (attributeValue != null && attributeValue.Contains("square footage of unconditioned space", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                                arguments[0].value = arguments[1];
+                                arguments[0].dispatchEvent(new Event('input'));
+                                arguments[0].dispatchEvent(new Event('change'));
+                                ", element, ScopeData.AlteredSystems[row].AlteredUnconditionedSquareFootage);
+                                }
+                            }
+
+                            row++;
+                        }
+                    }
+
+
+                    IWebElement SaveButton = driver.FindElement(By.XPath("//div[text()='Save']"));
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", SaveButton);
+
+                    WebDriverWait wait2 = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+                    wait2.Until(driver =>
+                    {
+                        var formElement = driver.FindElement(By.Id("matForm"));
+                        return formElement.GetAttribute("class").Contains("mod_submitting");
+                    });
+
+                    // Wait for the "mod_submitting" class to be removed
+                    wait2.Until(driver =>
+                    {
+                        var formElement = driver.FindElement(By.Id("matForm"));
+                        return !formElement.GetAttribute("class").Contains("mod_submitting");
+                    });
+
+                }
+                catch (WebDriverTimeoutException ex)
+                {
+                    // Handle timeout exceptions
+                    Dispatcher.Invoke(() =>
+                    {
+                        StatusText.Text = "Navigation timed out. Please try again.";
+                        Loading.Visibility = Visibility.Collapsed;
+                    });
+                    Debug.WriteLine($"Timeout Exception: {ex.Message}");
+                    return 0;
+                }
+                catch (WebDriverException ex)
+                {
+                    // Handle general WebDriver exceptions
+                    Dispatcher.Invoke(() =>
+                    {
+                        StatusText.Text = "An error occurred while navigation to scope.";
+                        Loading.Visibility = Visibility.Collapsed;
+                    });
+                    Debug.WriteLine($"WebDriver Exception: {ex.Message}");
+                    return 0;
+                }
+                return 1;
+            });
+            if (result == 0)
+            {
+                Debug.WriteLine("Meow");
+                return;
+            }
         }
         public async Task FillOutLuminaires()
         {

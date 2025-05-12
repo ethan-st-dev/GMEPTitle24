@@ -383,6 +383,8 @@ namespace GMEPTitle24
                     0,
                     0,
                     0,
+                    3,
+                    "",
                     [],
                     systems
                     );
@@ -416,6 +418,8 @@ namespace GMEPTitle24
                     scopeReader.GetFloat("new_unconditioned_square_footage"),
                     scopeReader.GetFloat("garage_conditioned_square_footage"),
                     scopeReader.GetFloat("garage_unconditioned_square_footage"),
+                    scopeReader.GetInt32("reduction_compliance_id"),
+                    scopeReader.GetString("reduction_compliance_space"),
                     occupancyTypeIds,
                     systems
                 );
@@ -471,9 +475,9 @@ namespace GMEPTitle24
             //updating the scope object
             string scopeQuery = @"
                     INSERT INTO electrical_lighting_lti_scope
-                    (id, project_id, project_scope_id, complete_building_method, grade_stories, occupancy_type_ids, altered_system, new_system, garage_system, new_conditioned_method_id, new_unconditioned_method_id, new_conditioned_square_footage, new_unconditioned_square_footage, garage_conditioned_square_footage, garage_unconditioned_square_footage, one_for_one_alteration) 
+                    (id, project_id, project_scope_id, complete_building_method, grade_stories, occupancy_type_ids, altered_system, new_system, garage_system, new_conditioned_method_id, new_unconditioned_method_id, new_conditioned_square_footage, new_unconditioned_square_footage, garage_conditioned_square_footage, garage_unconditioned_square_footage, one_for_one_alteration, reduction_compliance_id, reduction_compliance_space) 
                     VALUES 
-                    (@id, @projectId, @projectScopeId, @completeBuildingMethod, @gradeStories, @occupancyTypeIds, @alteredSystem, @newSystem, @garageSystem, @newConditionedMethodId, @newUnconditionedMethodId, @newConditionedSquareFootage, @newUnconditionedSquareFootage, @garageConditionedSquareFootage, @garageUnconditionedSquareFootage, @oneForOneAlteration)
+                    (@id, @projectId, @projectScopeId, @completeBuildingMethod, @gradeStories, @occupancyTypeIds, @alteredSystem, @newSystem, @garageSystem, @newConditionedMethodId, @newUnconditionedMethodId, @newConditionedSquareFootage, @newUnconditionedSquareFootage, @garageConditionedSquareFootage, @garageUnconditionedSquareFootage, @oneForOneAlteration, @reductionComplianceId, @reductionComplianceSpace)
                     ON DUPLICATE KEY UPDATE 
                     project_scope_id = @projectScopeId, 
                     complete_building_method = @completeBuildingMethod,
@@ -488,6 +492,8 @@ namespace GMEPTitle24
                     new_unconditioned_square_footage = @newUnconditionedSquareFootage, 
                     garage_conditioned_square_footage = @garageConditionedSquareFootage, 
                     garage_unconditioned_square_footage = @garageUnconditionedSquareFootage, 
+                    reduction_compliance_id = @reductionComplianceId, 
+                    reduction_compliance_space = @reductionComplianceSpace,
                     one_for_one_alteration = @oneForOneAlteration";
 
             string occupancyTypeIdsJson = JsonSerializer.Serialize(scope.OccupancyTypes.Where(o => o.IsSelected).Select(o => o.Number).ToList());
@@ -508,6 +514,8 @@ namespace GMEPTitle24
             scopeCommand.Parameters.AddWithValue("@garageConditionedSquareFootage", scope.GarageConditionedSquareFootage);
             scopeCommand.Parameters.AddWithValue("@garageUnconditionedSquareFootage", scope.GarageUnconditionedSquareFootage);
             scopeCommand.Parameters.AddWithValue("@oneForOneAlteration", scope.OneForOneAlteration);
+            scopeCommand.Parameters.AddWithValue("@reductionComplianceId", scope.ReductionComplianceId);
+            scopeCommand.Parameters.AddWithValue("@reductionComplianceSpace", scope.ReductionComplianceSpace);
             await scopeCommand.ExecuteNonQueryAsync();
             await CloseConnectionAsync();
         }

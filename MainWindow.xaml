@@ -327,7 +327,43 @@
                                                     </Style>
                                                 </StackPanel.Style>
                                                 <Label Content="Altered System Method Options" FontWeight="Bold" HorizontalAlignment="Center"/>
-                                                <CheckBox HorizontalAlignment="Center" Margin="0 10 0 0" Content="One-for-one luminaire alteration within a building or tenant space of 5,000sf or less"/>
+                                                <CheckBox HorizontalAlignment="Center" Margin="0 10 0 0" IsChecked ="{Binding OneForOneAlteration}" Content="One-for-one luminaire alteration within a building or tenant space of 5,000sf or less"/>
+                                                <StackPanel Orientation="Vertical">
+                                                    <StackPanel.Style>
+                                                        <Style TargetType="StackPanel">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding ReductionComplianceFlag}" Value="True">
+                                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </StackPanel.Style>
+                                                    <StackPanel Margin="0 20 0 0" Orientation="Vertical" Width="600">
+                                                        <Label FontSize="10" Content="Are there any complete floors or tenant spaces in the project scope that are altering 50 or fewer luminaires per annum?" FontWeight="Bold"/>
+                                                        <ComboBox SelectedValue="{Binding ReductionComplianceId}" SelectedValuePath="Tag">
+                                                            <ComboBox.Items>
+                                                                <ComboBoxItem Content="Yes" Tag="1"/>
+                                                                <ComboBoxItem Content="Yes, this applies to all spaces within the permit application" Tag="2"/>
+                                                                <ComboBoxItem Content="No" Tag="3"/>
+                                                            </ComboBox.Items>
+                                                        </ComboBox>
+                                                    </StackPanel>
+                                                    <StackPanel Margin="0 20 0 0" Orientation="Vertical" Width="600">
+                                                        <StackPanel.Style>
+                                                            <Style TargetType="StackPanel">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding ReductionComplianceId}" Value="1">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </StackPanel.Style>
+                                                        <Label Content="Which tenant space or floor does this apply to?" FontWeight="Bold"/>
+                                                        <TextBox Text="{Binding ReductionComplianceSpace}"/>
+                                                    </StackPanel>
+                                                </StackPanel>
                                             </StackPanel>
                                         </StackPanel>
                                     </GroupBox>
@@ -374,7 +410,23 @@
                                                                     </Style>
                                                                 </ComboBoxItem.Style>
                                                             </ComboBoxItem>
-                                                            <ComboBoxItem Content="Tailored" Tag="4">
+                                                            <ComboBoxItem Content="Rated Power Reduction" Tag="4">
+                                                                <ComboBoxItem.Style>
+                                                                    <Style TargetType="ComboBoxItem">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        <Style.Triggers>
+                                                                            <MultiDataTrigger>
+                                                                                <MultiDataTrigger.Conditions>
+                                                                                    <Condition Binding="{Binding Data.CompleteBuildingMethod, Source={StaticResource ScopeProxy}}" Value="False"/>
+                                                                                    <Condition Binding="{Binding Data.OneForOneAlteration, Source={StaticResource ScopeProxy}}" Value="True"/>
+                                                                                </MultiDataTrigger.Conditions>
+                                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                                            </MultiDataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </ComboBoxItem.Style>
+                                                            </ComboBoxItem>
+                                                            <ComboBoxItem Content="Tailored" Tag="5">
                                                                 <ComboBoxItem.Style>
                                                                     <Style TargetType="ComboBoxItem">
                                                                         <Setter Property="Visibility" Value="Visible"/>
@@ -386,7 +438,7 @@
                                                                     </Style>
                                                                 </ComboBoxItem.Style>
                                                             </ComboBoxItem>
-                                                            <ComboBoxItem Content="No Conditioned Spaces" Tag="5"/>
+                                                            <ComboBoxItem Content="No Conditioned Spaces" Tag="6"/>
                                                         </CompositeCollection>
                                                     </DataGridComboBoxColumn.ItemsSource>
                                                 </DataGridComboBoxColumn>
@@ -429,7 +481,23 @@
                                                                     </Style>
                                                                 </ComboBoxItem.Style>
                                                             </ComboBoxItem>
-                                                            <ComboBoxItem Content="Tailored" Tag="4">
+                                                            <ComboBoxItem Content="Rated Power Reduction" Tag="4">
+                                                                <ComboBoxItem.Style>
+                                                                    <Style TargetType="ComboBoxItem">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        <Style.Triggers>
+                                                                            <MultiDataTrigger>
+                                                                                <MultiDataTrigger.Conditions>
+                                                                                    <Condition Binding="{Binding Data.CompleteBuildingMethod, Source={StaticResource ScopeProxy}}" Value="False"/>
+                                                                                    <Condition Binding="{Binding Data.OneForOneAlteration, Source={StaticResource ScopeProxy}}" Value="True"/>
+                                                                                </MultiDataTrigger.Conditions>
+                                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                                            </MultiDataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </ComboBoxItem.Style>
+                                                            </ComboBoxItem>
+                                                            <ComboBoxItem Content="Tailored" Tag="5">
                                                                 <ComboBoxItem.Style>
                                                                     <Style TargetType="ComboBoxItem">
                                                                         <Setter Property="Visibility" Value="Visible"/>
@@ -441,7 +509,7 @@
                                                                     </Style>
                                                                 </ComboBoxItem.Style>
                                                             </ComboBoxItem>
-                                                            <ComboBoxItem Content="No Unconditioned Spaces" Tag="5"/>
+                                                            <ComboBoxItem Content="No Unconditioned Spaces" Tag="6"/>
                                                         </CompositeCollection>
                                                     </DataGridComboBoxColumn.ItemsSource>
                                                 </DataGridComboBoxColumn>
@@ -450,7 +518,7 @@
                                                         <Style TargetType="TextBlock">
                                                             <Setter Property="Visibility" Value="Visible"/>
                                                             <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding AlteredConditionedMethodId}" Value="5">
+                                                                <DataTrigger Binding="{Binding AlteredConditionedMethodId}" Value="6">
                                                                     <Setter Property="Visibility" Value="Collapsed"/>
                                                                 </DataTrigger>
                                                             </Style.Triggers>
@@ -460,7 +528,7 @@
                                                         <Style TargetType="TextBox">
                                                             <Setter Property="Visibility" Value="Visible"/>
                                                             <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding AlteredConditionedMethodId}" Value="5">
+                                                                <DataTrigger Binding="{Binding AlteredConditionedMethodId}" Value="6">
                                                                     <Setter Property="Visibility" Value="Collapsed"/>
                                                                 </DataTrigger>
                                                             </Style.Triggers>
@@ -472,7 +540,7 @@
                                                         <Style TargetType="TextBlock">
                                                             <Setter Property="Visibility" Value="Visible"/>
                                                             <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding AlteredUnconditionedMethodId}" Value="5">
+                                                                <DataTrigger Binding="{Binding AlteredUnconditionedMethodId}" Value="6">
                                                                     <Setter Property="Visibility" Value="Collapsed"/>
                                                                 </DataTrigger>
                                                             </Style.Triggers>
@@ -482,7 +550,7 @@
                                                         <Style TargetType="TextBox">
                                                             <Setter Property="Visibility" Value="Visible"/>
                                                             <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding AlteredUnconditionedMethodId}" Value="5">
+                                                                <DataTrigger Binding="{Binding AlteredUnconditionedMethodId}" Value="6">
                                                                     <Setter Property="Visibility" Value="Collapsed"/>
                                                                 </DataTrigger>
                                                             </Style.Triggers>
