@@ -304,12 +304,12 @@ namespace GMEPTitle24
             service.HideCommandPromptWindow = true;
 
             options = new ChromeOptions();
-           /* options.AddArgument("headless=new");
+            options.AddArgument("headless=new");
             options.AddArgument("--disable-gpu");
             options.AddArgument("--window-size=1920,1080");
             options.AddArgument("--disable-extensions");
             options.AddArgument("--disable-dev-shm-usage");
-            options.AddArgument("--no-sandbox");*/
+            options.AddArgument("--no-sandbox");
             driver = new ChromeDriver(service, options);
 
             StatusText.Text = "Navigating to Site";
@@ -533,9 +533,9 @@ namespace GMEPTitle24
                 return;
             }
             await FillOutScope();
-            //await FillOutLuminaires();
-            //await FillOutControls();
-            //await FillOutAllowances();
+            await FillOutLuminaires();
+            await FillOutControls();
+            await FillOutAllowances();
         }
         public async Task FillOutScope()
         {
@@ -823,6 +823,11 @@ namespace GMEPTitle24
                 }
                 return 1;
             });
+            if (result == 0)
+            {
+                Debug.WriteLine("Meow");
+                return;
+            }
         }
         public async Task FillOutLuminaires()
         {
