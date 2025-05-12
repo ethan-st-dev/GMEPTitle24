@@ -80,7 +80,9 @@ namespace GMEPTitle24
             float newUnconditionedSquareFootage,
             float garageConditionedSquareFootage,
             float garageUnconditionedSquareFootage,
-        List<int> occupancyTypeIds,
+            int reductionComplianceId,
+            string reductionComplianceSpace,
+            List<int> occupancyTypeIds,
             ObservableCollection<AlteredSystemEntry> alteredSystems
         )
         {
@@ -99,6 +101,8 @@ namespace GMEPTitle24
             this.newUnconditionedSquareFootage = newUnconditionedSquareFootage;
             this.garageConditionedSquareFootage = garageConditionedSquareFootage;
             this.garageUnconditionedSquareFootage = garageUnconditionedSquareFootage;
+            this.reductionComplianceId = reductionComplianceId;
+            this.reductionComplianceSpace = reductionComplianceSpace;
 
 
             foreach (var typeId in occupancyTypeIds)
