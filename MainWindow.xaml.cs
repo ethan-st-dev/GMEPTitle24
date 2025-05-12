@@ -588,6 +588,14 @@ namespace GMEPTitle24
                             arguments[0].dispatchEvent(new Event('change'));
                         ", element, ScopeData.GradeStories);
                         }
+                        if (attributeValue != null && attributeValue.Contains("which tenant space or floor does this apply to", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, ScopeData.ReductionComplianceSpace);
+                        }
                     }
                     var dropdownElements = driver.FindElements(By.CssSelector("div[class='selectWrapper']"));
                     foreach (var element in dropdownElements)
@@ -610,6 +618,12 @@ namespace GMEPTitle24
                         {
                             var choices = element.FindElements(By.CssSelector("li"));
                             var choice = choices[ScopeData.NewUnconditionedMethodId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("are there any complete floors or tenant spaces", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[ScopeData.ReductionComplianceId - 1];
                             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
                         }
                         if (placeholderValue != null && placeholderValue.Contains("complete building method", StringComparison.OrdinalIgnoreCase))

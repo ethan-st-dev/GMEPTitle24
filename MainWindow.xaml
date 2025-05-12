@@ -328,9 +328,9 @@
                                                 </StackPanel.Style>
                                                 <Label Content="Altered System Method Options" FontWeight="Bold" HorizontalAlignment="Center"/>
                                                 <CheckBox HorizontalAlignment="Center" Margin="0 10 0 0" IsChecked ="{Binding OneForOneAlteration}" Content="One-for-one luminaire alteration within a building or tenant space of 5,000sf or less"/>
-                                                <Grid>
-                                                    <Grid.Style>
-                                                        <Style TargetType="Grid">
+                                                <StackPanel Orientation="Vertical">
+                                                    <StackPanel.Style>
+                                                        <Style TargetType="StackPanel">
                                                             <Setter Property="Visibility" Value="Collapsed"/>
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding ReductionComplianceFlag}" Value="True">
@@ -338,7 +338,7 @@
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
-                                                    </Grid.Style>
+                                                    </StackPanel.Style>
                                                     <StackPanel Margin="0 20 0 0" Orientation="Vertical" Width="600">
                                                         <Label FontSize="10" Content="Are there any complete floors or tenant spaces in the project scope that are altering 50 or fewer luminaires per annum?" FontWeight="Bold"/>
                                                         <ComboBox SelectedValue="{Binding ReductionComplianceId}" SelectedValuePath="Tag">
@@ -363,7 +363,7 @@
                                                         <Label Content="Which tenant space or floor does this apply to?" FontWeight="Bold"/>
                                                         <TextBox Text="{Binding ReductionComplianceSpace}"/>
                                                     </StackPanel>
-                                                </Grid>
+                                                </StackPanel>
                                             </StackPanel>
                                         </StackPanel>
                                     </GroupBox>
