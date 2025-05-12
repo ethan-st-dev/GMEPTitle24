@@ -575,10 +575,13 @@ namespace GMEPTitle24
                         }
                         if (placeholderValue != null && placeholderValue.Contains("occupancy types", StringComparison.OrdinalIgnoreCase))
                         {
+
                             var choices = element.FindElements(By.CssSelector("div[data-eco-field-type='checkbox'"));
-                            foreach(var choice in choices)
+
+                            foreach (var choice in choices)
                             {
-                                if (choice.GetAttribute("class").Contains("mod_populated"))
+                                var input = choice.FindElement(By.CssSelector("input"));
+                                if (input.GetAttribute("checked") != null)
                                 {
                                     var choiceLabel = choice.FindElement(By.CssSelector("label"));
                                     ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choiceLabel);
