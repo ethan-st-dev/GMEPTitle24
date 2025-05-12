@@ -304,12 +304,12 @@ namespace GMEPTitle24
             service.HideCommandPromptWindow = true;
 
             options = new ChromeOptions();
-            options.AddArgument("headless=new");
+           /* options.AddArgument("headless=new");
             options.AddArgument("--disable-gpu");
             options.AddArgument("--window-size=1920,1080");
             options.AddArgument("--disable-extensions");
             options.AddArgument("--disable-dev-shm-usage");
-            options.AddArgument("--no-sandbox");
+            options.AddArgument("--no-sandbox");*/
             driver = new ChromeDriver(service, options);
 
             StatusText.Text = "Navigating to Site";
@@ -600,13 +600,13 @@ namespace GMEPTitle24
                             var choice = choices[ScopeData.ProjectScopeId - 1];
                             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
                         }
-                        if (placeholderValue != null && placeholderValue.Contains("conditioned space, which calculation method", StringComparison.OrdinalIgnoreCase))
+                        if (placeholderValue != null && placeholderValue.Contains("in your conditioned space, which calculation method", StringComparison.OrdinalIgnoreCase))
                         {
                             var choices = element.FindElements(By.CssSelector("li"));
                             var choice = choices[ScopeData.NewConditionedMethodId - 1];
                             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
                         }
-                        if (placeholderValue != null && placeholderValue.Contains("unconditioned space, which calculation method", StringComparison.OrdinalIgnoreCase))
+                        if (placeholderValue != null && placeholderValue.Contains("in your unconditioned space, which calculation method", StringComparison.OrdinalIgnoreCase))
                         {
                             var choices = element.FindElements(By.CssSelector("li"));
                             var choice = choices[ScopeData.NewUnconditionedMethodId - 1];
@@ -690,6 +690,82 @@ namespace GMEPTitle24
                             }
                         }
                     }
+                    if (ScopeData.AlteredSystem)
+                    {
+                        IWebElement AddSystemButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Add Altered Lighting System']")));
+
+                        IWebElement alteredSystemContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[name='organism_Table_Row']")));
+                        var Systems = alteredSystemContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
+
+                        foreach (var system in Systems)
+                        {
+                            var delete = system.FindElement(By.CssSelector("div[class='mod_supportControl']"));
+                            var deleteIcon = delete.FindElement(By.CssSelector("i"));
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", deleteIcon);
+                        }
+                        foreach (var system in ScopeData.AlteredSystems)
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AddSystemButton);
+
+                            wait.Until(driver =>
+                            {
+                                var updatedSystems = alteredSystemContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
+                                return updatedSystems.Count >= ScopeData.AlteredSystems.IndexOf(system) + 1;
+                            });
+                        }
+                  
+                      
+
+                        Systems = alteredSystemContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
+                        //Editing Boxes
+                        int row = 0;
+                        foreach (var system in Systems)
+                        {
+                            var systemDropdownElements = system.FindElements(By.CssSelector("div[class='selectWrapper']"));
+                            foreach (var element in systemDropdownElements)
+                            {
+                                var textbox = element.FindElement(By.CssSelector("input"));
+                                string placeholderValue = textbox.GetAttribute("placeholder");
+                                if (placeholderValue != null && placeholderValue.Contains("in your conditioned space, which calculation method", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    var choices = element.FindElements(By.CssSelector("li"));
+                                    var choice = choices[ScopeData.AlteredSystems[row].AlteredConditionedMethodId - 1];
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                                }
+                                if (placeholderValue != null && placeholderValue.Contains("in your unconditioned space, which calculation method", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    var choices = element.FindElements(By.CssSelector("li"));
+                                    var choice = choices[ScopeData.AlteredSystems[row].AlteredUnconditionedMethodId - 1];
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                                }
+                            }
+
+                            /*var systemElements = system.FindElements(By.CssSelector("input[type='text']"));
+                            foreach (var element in elements)
+                            {
+                                string attributeValue = element.GetAttribute("placeholder");
+                                if (attributeValue != null && attributeValue.Contains("square footage of conditioned space", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                                arguments[0].value = arguments[1];
+                                arguments[0].dispatchEvent(new Event('input'));
+                                arguments[0].dispatchEvent(new Event('change'));
+                                ", element, ScopeData.AlteredSystems[row].AlteredConditionedSquareFootage);
+                                }
+                                if (attributeValue != null && attributeValue.Contains("square footage of unconditioned space", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                                arguments[0].value = arguments[1];
+                                arguments[0].dispatchEvent(new Event('input'));
+                                arguments[0].dispatchEvent(new Event('change'));
+                                ", element, ScopeData.AlteredSystems[row].AlteredUnconditionedSquareFootage);
+                                }
+                            }*/
+
+                            row++;
+                        }
+                    }
+
 
                     IWebElement SaveButton = driver.FindElement(By.XPath("//div[text()='Save']"));
                     ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", SaveButton);

@@ -261,6 +261,11 @@ namespace GMEPTitle24
                 {
                     oneForOneAlteration = value;
                     OnPropertyChanged(nameof(OneForOneAlteration));
+                    foreach(var system in AlteredSystems)
+                    {
+                        system.AlteredConditionedMethodId = 6;
+                        system.AlteredUnconditionedMethodId = 6;
+                    }
                 }
             }
         }
@@ -357,8 +362,8 @@ namespace GMEPTitle24
             NewUnconditionedMethodId = 5;
             foreach (var elem in AlteredSystems)
             {
-                elem.AlteredUnconditionedMethodId = 5;
-                elem.AlteredConditionedMethodId = 5;
+                elem.AlteredUnconditionedMethodId = 6;
+                elem.AlteredConditionedMethodId = 6;
             }
         }
         public void DetermineCompletePrimaryFunctionList()
