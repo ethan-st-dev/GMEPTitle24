@@ -310,7 +310,6 @@ namespace GMEPTitle24
             options.AddArgument("--disable-extensions");
             options.AddArgument("--disable-dev-shm-usage");
             options.AddArgument("--no-sandbox");
-            options.AddArgument("--remote-debugging-port=9222");
             driver = new ChromeDriver(service, options);
 
             StatusText.Text = "Navigating to Site";
@@ -549,6 +548,38 @@ namespace GMEPTitle24
                     foreach (var element in elements)
                     {
                         string attributeValue = element.GetAttribute("placeholder");
+                        if (attributeValue != null && attributeValue.Contains("square footage of conditioned space being served by the new lighting system", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, ScopeData.NewConditionedSquareFootage);
+                        }
+                        if (attributeValue != null && attributeValue.Contains("square footage of unconditioned space being served by the new lighting system", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, ScopeData.NewUnconditionedSquareFootage);
+                        }
+                        if (attributeValue != null && attributeValue.Contains("square footage of conditioned space in the parking garage", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, ScopeData.GarageConditionedSquareFootage);
+                        }
+                        if (attributeValue != null && attributeValue.Contains("square footage of unconditioned space in parking garage", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                            arguments[0].value = arguments[1];
+                            arguments[0].dispatchEvent(new Event('input'));
+                            arguments[0].dispatchEvent(new Event('change'));
+                        ", element, ScopeData.GarageUnconditionedSquareFootage);
+                        }
                         if (attributeValue != null && attributeValue.Contains("grade stories", StringComparison.OrdinalIgnoreCase))
                         {
                             ((IJavaScriptExecutor)driver).ExecuteScript(@"
@@ -569,11 +600,33 @@ namespace GMEPTitle24
                             var choice = choices[ScopeData.ProjectScopeId - 1];
                             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
                         }
+                        if (placeholderValue != null && placeholderValue.Contains("conditioned space, which calculation method", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[ScopeData.NewConditionedMethodId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("unconditioned space, which calculation method", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[ScopeData.NewUnconditionedMethodId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
                         if (placeholderValue != null && placeholderValue.Contains("complete building method", StringComparison.OrdinalIgnoreCase))
                         {
                             var choices = element.FindElements(By.CssSelector("li"));
                             var choice = choices[1];
                             if (ScopeData.CompleteBuildingMethod)
+                            {
+                                choice = choices[0];
+                            }
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("one-for-one luminaire alteration", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[1];
+                            if (ScopeData.OneForOneAlteration)
                             {
                                 choice = choices[0];
                             }
@@ -601,6 +654,39 @@ namespace GMEPTitle24
                                     var choiceLabel = choice.FindElement(By.CssSelector("label"));
                                     ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choiceLabel);
                                 }
+                            }
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("lighting system will be installed", StringComparison.OrdinalIgnoreCase))
+                        {
+
+                            var choices = element.FindElements(By.CssSelector("div[data-eco-field-type='checkbox'"));
+
+                            foreach (var choice in choices)
+                            {
+                                var input = choice.FindElement(By.CssSelector("input"));
+                                if (input.GetAttribute("checked") != null)
+                                {
+                                    var choiceLabel = choice.FindElement(By.CssSelector("label"));
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choiceLabel);
+                                }
+                            }
+                            if (ScopeData.AlteredSystem)
+                            {
+                                var choice = choices[0];
+                                var choiceLabel = choice.FindElement(By.CssSelector("label"));
+                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choiceLabel);
+                            }
+                            if (ScopeData.NewSystem)
+                            {
+                                var choice = choices[1];
+                                var choiceLabel = choice.FindElement(By.CssSelector("label"));
+                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choiceLabel);
+                            }
+                            if (ScopeData.GarageSystem)
+                            {
+                                var choice = choices[2];
+                                var choiceLabel = choice.FindElement(By.CssSelector("label"));
+                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choiceLabel);
                             }
                         }
                     }
