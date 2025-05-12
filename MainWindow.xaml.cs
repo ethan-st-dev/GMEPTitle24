@@ -304,7 +304,13 @@ namespace GMEPTitle24
             service.HideCommandPromptWindow = true;
 
             options = new ChromeOptions();
-            options.AddArgument("headless");
+            options.AddArgument("headless=new");
+            options.AddArgument("--disable-gpu");
+            options.AddArgument("--window-size=1920,1080");
+            options.AddArgument("--disable-extensions");
+            options.AddArgument("--disable-dev-shm-usage");
+            options.AddArgument("--no-sandbox");
+            options.AddArgument("--remote-debugging-port=9222");
             driver = new ChromeDriver(service, options);
 
             StatusText.Text = "Navigating to Site";
