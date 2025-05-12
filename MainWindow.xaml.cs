@@ -740,7 +740,7 @@ namespace GMEPTitle24
                                 }
                             }
 
-                            /*var systemElements = system.FindElements(By.CssSelector("input[type='text']"));
+                            var systemElements = system.FindElements(By.CssSelector("input[type='text']"));
                             foreach (var element in elements)
                             {
                                 string attributeValue = element.GetAttribute("placeholder");
