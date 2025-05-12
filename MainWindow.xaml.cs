@@ -741,7 +741,7 @@ namespace GMEPTitle24
                             }
 
                             var systemElements = system.FindElements(By.CssSelector("input[type='text']"));
-                            foreach (var element in elements)
+                            foreach (var element in systemElements)
                             {
                                 string attributeValue = element.GetAttribute("placeholder");
                                 if (attributeValue != null && attributeValue.Contains("square footage of conditioned space", StringComparison.OrdinalIgnoreCase))
@@ -760,7 +760,7 @@ namespace GMEPTitle24
                                 arguments[0].dispatchEvent(new Event('change'));
                                 ", element, ScopeData.AlteredSystems[row].AlteredUnconditionedSquareFootage);
                                 }
-                            }*/
+                            }
 
                             row++;
                         }
