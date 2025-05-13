@@ -223,7 +223,8 @@ namespace GMEPTitle24
         public void SetDefaults()
         {
             switch(PrimaryFunctionId){
-                case 74 | 75:
+                case 74:
+                case 75:
                     MultilevelControlTypeId = 9;
                     ShutoffControlTypeId = 5;
                     PrimaryDaylightControlTypeId = 7;
