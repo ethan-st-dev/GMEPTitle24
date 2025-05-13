@@ -74,6 +74,7 @@ namespace GMEPTitle24
                 {
                     primaryFunctionId = value;
                     OnPropertyChanged(nameof(PrimaryFunctionId));
+                    SetDefaults();
                 }
             }
         }
@@ -218,6 +219,18 @@ namespace GMEPTitle24
         public ControlArea()
         {
             // Default constructor :3
+        }
+        public void SetDefaults()
+        {
+            switch(PrimaryFunctionId){
+                case 74:
+                case 75:
+                    MultilevelControlTypeId = 9;
+                    ShutoffControlTypeId = 5;
+                    PrimaryDaylightControlTypeId = 7;
+                    SecondaryDaylightControlTypeId= 7;
+                    break;
+            }
         }
     }
 }
