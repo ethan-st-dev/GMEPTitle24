@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:GMEPTitle24"
         mc:Ignorable="d"
         xmlns:gif="http://wpfanimatedgif.codeplex.com"
-        Title="GMEP Title 24" Height="450" Width="800"
+        Title="GMEP Title 24 - NRCC/2022" Height="450" Width="800"
         Icon="/gmep.ico">
     <Window.Resources>
         <local:BindingProxy x:Key="ScopeProxy" Data="{Binding ScopeData}"/>
