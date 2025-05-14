@@ -204,10 +204,6 @@ namespace GMEPTitle24
         public IndoorViewModel(MainViewModel MainView)
         {
             this.MainView = MainView;
-            options = MainView.options;
-            driver = MainView.driver;
-            wait = MainView.wait;
-            
         }
         public async Task InitializeObjects(string projectId)
         {
@@ -220,6 +216,9 @@ namespace GMEPTitle24
         
         public async Task IndoorLighting()
         {
+            options = MainView.options;
+            driver = MainView.driver;
+            wait = MainView.wait;
             MainView.StatusText = "Navigating to Indoor Lighting";
             int result = await Task.Run(int () =>
             {

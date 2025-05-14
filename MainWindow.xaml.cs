@@ -32,6 +32,7 @@ namespace GMEPTitle24
     public partial class MainWindow : Window
     {
         MainViewModel viewModel = new MainViewModel();
+        Indoor indoor;
         public MainWindow()
         {
             string[] args = Environment.GetCommandLineArgs();
@@ -40,6 +41,10 @@ namespace GMEPTitle24
 
             InitializeComponent();
             DataContext = viewModel;
+
+            //setting indoor
+            indoor = new Indoor(viewModel);
+            IndoorTab.Content = indoor;
 
             if (args.Length > 1)
             {
@@ -150,9 +155,7 @@ namespace GMEPTitle24
             if (VersionComboBox.SelectedItem is KeyValuePair<int, string> selectedPair)
             {
                 //Electrical Tab
-                Indoor indoor = new Indoor(viewModel);
                 await indoor.viewModel.InitializeObjects(selectedPair.Value);
-                IndoorTab.Content = indoor;
                 viewModel.ProjectLoaded = true;
             }
         }
