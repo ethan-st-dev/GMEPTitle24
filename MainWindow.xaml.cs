@@ -31,208 +31,7 @@ namespace GMEPTitle24
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        ChromeOptions options;
-        IWebDriver driver;
-        WebDriverWait wait;
-        public Dictionary<int, string> projectIds;
-
-        public Database db = new Database();
-        public Dictionary<int, string> ProjectIds
-        {
-            get { return projectIds; }
-            set
-            {
-                if (projectIds != value)
-                {
-                    projectIds = value;
-                    OnPropertyChanged(nameof(ProjectIds));
-                }
-            }
-        }
-        public string selectedProjectId;
-        public string SelectedProjectId
-        {
-            get { return selectedProjectId; }
-            set
-            {
-                selectedProjectId = value;
-                OnPropertyChanged(nameof(SelectedProjectId));
-            }
-        }
-        public string projectNo = string.Empty;
-        public string ProjectNo
-        {
-            get { return projectNo; }
-            set
-            {
-                projectNo = value;
-                OnPropertyChanged(nameof(ProjectNo));
-            }
-        }
-        public string saveProjectNo = string.Empty;
-        public string SaveProjectNo
-        {
-            get { return saveProjectNo; }
-            set
-            {
-                saveProjectNo = value;
-                OnPropertyChanged(nameof(SaveProjectNo));
-            }
-        }
-        public int ProjectVersion { get; set; }
-
-        public Scope scopeData;
-        public Scope ScopeData
-        {
-            get { return scopeData; }
-            set
-            {
-                if (scopeData != value)
-                {
-                    scopeData = value;
-                    OnPropertyChanged(nameof(ScopeData));
-                }
-            }
-        }
-
-        public ObservableCollection<Lighting> lightingList = new ObservableCollection<Lighting>();
-        public ObservableCollection<Lighting> LightingList
-        {
-            get { return lightingList; }
-            set
-            {
-                if (lightingList != value)
-                {
-                    lightingList = value;
-                    OnPropertyChanged(nameof(LightingList));
-                }
-            }
-        }
-        public ObservableCollection<ControlArea> controlAreaList = new ObservableCollection<ControlArea>();
-        public ObservableCollection<ControlArea> ControlAreaList
-        {
-            get { return controlAreaList; }
-            set
-            {
-                if (controlAreaList != value)
-                {
-                    controlAreaList = value;
-                    OnPropertyChanged(nameof(ControlAreaList));
-                }
-            }
-        }
-        public Dictionary<int, string> Buildings { get; set; } = new Dictionary<int, string>
-        {
-            {1, "Audience Seating Area" },
-            {2, "Auditorium Area" },
-            {3, "Assembly Building" },
-            {4, "Auto Repair Area" },
-            {5, "Barber/Beauty Salon/Spa Area"},
-            {6, "Civic Meeting Place Area" },
-            {7, "Classroom, Lecture, or Training Vocational Area" },
-            {8, "Commercial Industrial Storage Area" },
-            {9, "Commercial Industrial Storage Shipping Area" },
-            {10, "Commercial Industrial Warehouse" },
-            {11, "Concourse and Atria Area" },
-            {12, "Conference, Multipurpose and Meeting Area"},
-            {13, "Convention, Conference, Multipurpose and Meeting Center Areas"},
-            {14, "Copy Room"},
-            {15, "Corridor"},
-            {16, "Corridor (Low Vision)"},
-            {17, "Dining Area - Bar/Fine"},
-            {18, "Dining Area - Family"},
-            {19, "Dining Area - Fast Food"},
-            {20, "Dining Area (Low Vision)"},
-            {21, "Electrical Mechanical Telephone Room"},
-            {22, "Exercise Center Gymnasium Area"},
-            {23, "Exhibit Area - Museum"},
-            {24, "Financial Institution Building" },
-            {25, "Financial Transaction Area"},
-            {26, "General Commercial Industrial Work Area High Bay"},
-            {27, "General Commercial Industrial Work Area Low Bay"},
-            {28, "General Commercial Industrial Work Area Precision"},
-            {29, "Grocery Sales Area"},
-            {30, "Grocery Store Building" },
-            {31, "Gymnasium Building" },
-            {32, "Healthcare / Assisted Living Nurse Station" },
-            {33, "Healthcare / Assisted Living Physical Therapy" },
-            {34, "Hospital Building" },
-            {35, "Hospital Exam/Treatment Area"},
-            {36, "Hospital - Imaging Area"},
-            {37, "Hospital - Medical Supply Area"},
-            {38, "Hospital - Nursery"},
-            {39, "Hospital - Nurse Station"},
-            {40, "Hospital - Operating Room"},
-            {41, "Hospital - Patient Room"},
-            {42, "Hospital - Physical Therapy Area"},
-            {43, "Hospital - Recovery Area"},
-            {44, "Hotel Function Area"},
-            {45, "Kitchen/ Food Preparation Area"},
-            {46, "Scientific Laboratory"},
-            {47, "Laundry Area"},
-            {48, "Library Building" },
-            {49, "Library - Reading Area"},
-            {50, "Library - Stacks"},
-            {51, "Locker/Dressing Room"},
-            {52, "Lounge Area"},
-            {53, "Low Vision Lounge/Waiting Area"},
-            {54, "Main Entry Lobby (Low Vision)"},
-            {55, "Multipurpose Room (Low Vision)"},
-            {56, "Main Entry Lobby"},
-            {57, "Manufacturing Facility Building" },
-            {58, "Medical And Clinical Care Area"},
-            {59, "Motion Picture Building" },
-            {60, "Museum Building" },
-            {61, "Museum Restoration Area"},
-            {62, "Office Building" },
-            {63, "Office ≤250 square feet"},
-            {64, "Office > 250 square feet"},
-            {65, "Parking Garage Building" },
-            {66, "Parking Garage - Daylight Adaptation Zone Area" },
-            {67, "Parking Garage - Parking Area & Ramps" },
-            {68, "Performing Arts Theater Building" },
-            {69, "Pharmacy Area" },
-            {70, "Religious Facility Building" },
-            {71, "Religious Worship Area" },
-            {72, "Religious Worship Area (Low Vision"},
-            {73, "Restaurant Building" },
-            {74, "Restroom" },
-            {75, "Restroom (Low Vision)" },
-            {76, "Retail Store" },
-            {77, "Retail Merchandise Sales Wholesale Showroom" },
-            {78, "Retail Fitting Room" },
-            {79, "School Building" },
-            {80, "Sports Arena Building" },
-            {81, "Sports Arena Class I" },
-            {82, "Sports Arena Class II" },
-            {83, "Sports Arena Class III" },
-            {84, "Sports Arena Class IV" },
-            {85, "Stairwell" },
-            {86, "Stairwell (Low Vision)" },
-            {87, "Storage - MF common areas" },
-            {88, "Theater - Motion Picture Area" },
-            {89, "Theater - Performance Area" },
-            {90, "Transportation - Concourse and Babbage Area" },
-            {91, "Transportation - Ticketing Area" },
-            {92, "Video Conferencing Studio Area" },
-            {93, "All Other Buildings" },
-            {94, "All Other Space Types" }
-        };
-
-        public Dictionary<int, string> filteredBuildings;
-        public Dictionary<int, string> FilteredBuildings
-        {
-            get { return filteredBuildings; }
-            set
-            {
-                if (filteredBuildings != value)
-                {
-                    filteredBuildings = value;
-                    OnPropertyChanged(nameof(FilteredBuildings));
-                }
-            }
-        }
-
+        MainViewModel viewModel = new MainViewModel();
         public MainWindow()
         {
             string[] args = Environment.GetCommandLineArgs();
@@ -240,16 +39,16 @@ namespace GMEPTitle24
             string projectVersion = string.Empty;
 
             InitializeComponent();
-            DataContext = this;
+            DataContext = viewModel;
 
             if (args.Length > 1)
             {
-                ProjectNo = args[1];
-                SaveProjectNo = args[1];
+                viewModel.ProjectNo = args[1];
+                viewModel.SaveProjectNo = args[1];
                 Task.Run(async () =>
                 {
-                    ProjectIds = await db.GetProjectIds(ProjectNo);
-                    if (ProjectIds.Count == 0)
+                    viewModel.ProjectIds = await viewModel.db.GetProjectIds(viewModel.ProjectNo);
+                    if (viewModel.ProjectIds.Count == 0)
                     {
                         Dispatcher.Invoke(() =>
                         {
@@ -260,28 +59,31 @@ namespace GMEPTitle24
                     {
                         Dispatcher.Invoke(() =>
                         {
-                            VersionComboBox.SelectedValue = ProjectIds.Keys.First();
-                            ControlAreaGrid.IsEnabled = true;
+                            VersionComboBox.SelectedValue =  viewModel.ProjectIds.Keys.First();
+                            //ControlAreaGrid.IsEnabled = true;
+                            viewModel.IsProjectLoaded = true;
                         });
                     }
                     else if (args.Length > 2)
                     {
                         if (int.TryParse(args[2], out int versionKey))
                         {
-                            if (ProjectIds.ContainsKey(versionKey))
+                            if (viewModel.ProjectIds.ContainsKey(versionKey))
                             {
                                 Dispatcher.Invoke(() =>
                                 {
                                     VersionComboBox.SelectedValue = versionKey;
-                                    ControlAreaGrid.IsEnabled = true;
+                                    //ControlAreaGrid.IsEnabled = true;
+                                    viewModel.IsProjectLoaded = true;
                                 });
                             }
                             else
                             {
                                 Dispatcher.Invoke(() =>
                                 {
-                                    VersionComboBox.SelectedValue = ProjectIds.Keys.First();
-                                    ControlAreaGrid.IsEnabled = true;
+                                    VersionComboBox.SelectedValue = viewModel.ProjectIds.Keys.First();
+                                    //ControlAreaGrid.IsEnabled = true;
+                                    viewModel.IsProjectLoaded = true;
                                 });
                             }
                         }
@@ -289,8 +91,9 @@ namespace GMEPTitle24
                         {
                             Dispatcher.Invoke(() =>
                             {
-                                VersionComboBox.SelectedValue = ProjectIds.Keys.First();
-                                ControlAreaGrid.IsEnabled = true;
+                                VersionComboBox.SelectedValue = viewModel.ProjectIds.Keys.First();
+                                //ControlAreaGrid.IsEnabled = true;
+                                viewModel.IsProjectLoaded = true;
                             });
                         }
                     }
@@ -298,203 +101,6 @@ namespace GMEPTitle24
                 );
             }
         }
-        public async Task ActivateSelenium()
-        {
-            var service = ChromeDriverService.CreateDefaultService();
-            service.HideCommandPromptWindow = true;
-
-            options = new ChromeOptions();
-            options.AddArgument("headless=new");
-            options.AddArgument("--disable-gpu");
-            options.AddArgument("--window-size=1920,1080");
-            options.AddArgument("--disable-extensions");
-            options.AddArgument("--disable-dev-shm-usage");
-            options.AddArgument("--no-sandbox");
-            driver = new ChromeDriver(service, options);
-
-            StatusText.Text = "Navigating to Site";
-
-            int result = await Task.Run(int () =>
-            {
-                try
-                {
-                    wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
-                    driver.Navigate().GoToUrl("https://energycodeace.com/");
-                }
-                catch (WebDriverTimeoutException ex)
-                {
-                    // Handle timeout exceptions
-                    Dispatcher.Invoke(() =>
-                    {
-                        StatusText.Text = "Navigation timed out. Please try again.";
-                        Loading.Visibility = Visibility.Collapsed;
-                    });
-                    Debug.WriteLine($"Timeout Exception: {ex.Message}");
-                    return 0;
-                }
-                catch (WebDriverException ex)
-                {
-                    // Handle general WebDriver exceptions
-                    Dispatcher.Invoke(() =>
-                    {
-                        StatusText.Text = "An error occurred while navigating to the site.";
-                        Loading.Visibility = Visibility.Collapsed;
-
-                    });
-                    Debug.WriteLine($"WebDriver Exception: {ex.Message}");
-                    return 0;
-                }
-                return 1;
-            });
-            if (result == 0)
-            {
-                return;
-            }
-            await Login();
-
-            //Quitting and launching new window
-            var url = driver.Url;
-            driver.Quit();
-
-            StatusText.Text = "Launching Window.";
-            Loading.Visibility = Visibility.Visible;
-
-            await Task.Run(() =>
-            {
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = url,
-                    UseShellExecute = true // Ensures the default browser is used
-                });
-            });
-            StatusText.Text = "";
-            Loading.Visibility = Visibility.Collapsed;
-        }
-
-        public async Task Login()
-        {
-            StatusText.Text = "Logging In";
-            int result = await Task.Run(int () =>
-            {
-                try
-                {
-                    IWebElement signInButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("a[data-action='signIn']")));
-                    if (signInButton.GetAttribute("data-name") == "Sign In")
-                    {
-                        signInButton.Click();
-
-                        // Wait for the email field to be visible
-                        IWebElement emailBox = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='email']")));
-
-                        // Wait for the password field to be visible
-                        IWebElement passwordBox = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='password']")));
-
-                        // Wait for the second "Sign In" button to be clickable
-                        IWebElement signInButton2 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("input[value='Sign In']")));
-
-                        // Enter credentials and click the second "Sign In" button
-                        emailBox.SendKeys("stevengr@gmepe.com");
-                        passwordBox.SendKeys("eeacf@stSea49");
-                        signInButton2.Click();
-                    }
-                }
-                catch (WebDriverTimeoutException ex)
-                {
-                    // Handle timeout exceptions
-                    Dispatcher.Invoke(() =>
-                    {
-                        StatusText.Text = "Navigation timed out. Please try again.";
-                        Loading.Visibility = Visibility.Collapsed;
-                    });
-                    Debug.WriteLine($"Timeout Exception: {ex.Message}");
-                    return 0;
-                }
-                catch (WebDriverException ex)
-                {
-                    // Handle general WebDriver exceptions
-                    Dispatcher.Invoke(() =>
-                    {
-                        StatusText.Text = "An error occurred while logging in.";
-                        Loading.Visibility = Visibility.Collapsed;
-                    });
-                    Debug.WriteLine($"WebDriver Exception: {ex.Message}");
-                    return 0;
-                }
-                return 1;
-            });
-            if (result == 0)
-            {
-                return;
-            }
-            await GoToProject(SaveProjectNo);
-        }
-        public async Task GoToProject(string projectNo)
-        {
-            StatusText.Text = "Navigating To Project";
-
-            int result = await Task.Run(int () =>
-            {
-                try
-                {
-                    IWebElement hoverElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("a[data-live_click_handler='toggleProfileMenu'")));
-
-                    // Perform the hover action
-                    Actions actions = new Actions(driver);
-                    actions.MoveToElement(hoverElement).Perform();
-
-                    IWebElement projectButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("a[data-name='My Account | My Projects']")));
-                    projectButton.Click();
-
-                    IWebElement projectElement = wait.Until(driver =>
-                    {
-                        var elements = driver.FindElements(By.CssSelector("div[data-filterable-data]"));
-                        foreach (var element in elements)
-                        {
-                            string attributeValue = element.GetAttribute("data-filterable-data");
-                            if (attributeValue != null && attributeValue.Contains(projectNo, StringComparison.OrdinalIgnoreCase))
-                            {
-                                return element; // Return the matching element
-                            }
-                        }
-                        return null; // Return null if no matching element is found
-                    });
-                    if (projectElement != null)
-                    {
-                        projectElement.Click();
-                    }
-                }
-                catch (WebDriverTimeoutException ex)
-                {
-                    // Handle timeout exceptions
-                    Dispatcher.Invoke(() =>
-                    {
-                        StatusText.Text = "Project not loaded or found. Please create a project starting with the project number " + projectNo.ToString() + ".";
-                        Loading.Visibility = Visibility.Collapsed;
-                    });
-                    Debug.WriteLine($"Timeout Exception: {ex.Message}");
-                    return 0;
-                }
-                catch (WebDriverException ex)
-                {
-                    // Handle general WebDriver exceptions
-                    Dispatcher.Invoke(() =>
-                    {
-                        StatusText.Text = "An error occurred while navigating to project.";
-                        Loading.Visibility = Visibility.Collapsed;
-                    });
-                    Debug.WriteLine($"WebDriver Exception: {ex.Message}");
-                    return 0;
-                }
-                return 1;
-            });
-            if (result == 0)
-            {
-                return;
-            }
-            await IndoorLighting();
-
-        }
-        
 
         private async void Export_Click(object sender, RoutedEventArgs e)
         {
