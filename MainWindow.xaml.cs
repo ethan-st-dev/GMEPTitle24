@@ -105,14 +105,15 @@ namespace GMEPTitle24
 
         private async void Export_Click(object sender, RoutedEventArgs e)
         {
-            /*if (LightingList.Count > 0 && VersionComboBox.SelectedItem is KeyValuePair<int, string> selectedPair)
+            if (VersionComboBox.SelectedItem is KeyValuePair<int, string> selectedPair)
             {
-                Loading.Visibility = Visibility.Visible;
-                StatusText.Text = "Saving";
-                await db.UpdateLuminaires(LightingList);
-                await db.UpdateControlAreas(ControlAreaList, selectedPair.Value);
-                await ActivateSelenium();
-            }*/
+                viewModel.ProjectLoading = true;
+                viewModel.StatusText = "Saving";
+                await indoor.viewModel.SaveObjects(selectedPair.Value);
+                await viewModel.ActivateSelenium();
+                await indoor.viewModel.IndoorLighting();
+                await viewModel.LaunchWindow();
+            }
         }
         private async void Download_Click(object sender, RoutedEventArgs e)
         {

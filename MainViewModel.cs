@@ -146,24 +146,7 @@ namespace GMEPTitle24
                 return;
             }
             await Login();
-
-            //Quitting and launching new window
-            var url = driver.Url;
-            driver.Quit();
-
-            StatusText= "Launching Window.";
-            projectLoading = false;
-
-            await Task.Run(() =>
-            {
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = url,
-                    UseShellExecute = true // Ensures the default browser is used
-                });
-            });
-            StatusText = "";
-            projectLoading = false;
+            
         }
 
         public async Task Login()
@@ -271,8 +254,25 @@ namespace GMEPTitle24
             {
                 return;
             }
-            //await IndoorLighting();
+        }
+        public async Task LaunchWindow()
+        {
+            var url = driver.Url;
+            driver.Quit();
 
+            StatusText= "Launching Window.";
+            projectLoading = false;
+
+            await Task.Run(() =>
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true // Ensures the default browser is used
+                });
+            });
+            StatusText = "";
+            projectLoading = false;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
