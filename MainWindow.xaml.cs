@@ -110,9 +110,12 @@ namespace GMEPTitle24
                 viewModel.ProjectLoading = true;
                 viewModel.StatusText = "Saving";
                 await indoor.viewModel.SaveObjects(selectedPair.Value);
-                await viewModel.ActivateSelenium();
-                //await indoor.viewModel.IndoorLighting();
-                //await viewModel.LaunchWindow();
+                bool result = await viewModel.ActivateSelenium();
+                if (result)
+                {
+                    await indoor.viewModel.IndoorLighting();
+                    await viewModel.LaunchWindow();
+                }
             }
         }
         private async void Download_Click(object sender, RoutedEventArgs e)

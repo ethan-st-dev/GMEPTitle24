@@ -101,7 +101,7 @@ namespace GMEPTitle24
         }
 
 
-        public async Task ActivateSelenium()
+        public async Task<bool> ActivateSelenium()
         {
             var service = ChromeDriverService.CreateDefaultService();
             service.HideCommandPromptWindow = true;
@@ -117,7 +117,7 @@ namespace GMEPTitle24
 
             StatusText = "Navigating to Site";
 
-            int result = await Task.Run(int () =>
+            bool result = await Task.Run(bool () =>
             {
                 try
                 {
@@ -130,29 +130,29 @@ namespace GMEPTitle24
                     StatusText = "Navigation timed out. Please try again.";
                     ProjectLoading = false;
                     Debug.WriteLine($"Timeout Exception: {ex.Message}");
-                    return 0;
+                    return false;
                 }
                 catch (WebDriverException ex)
                 {
                     StatusText = "An error occurred while navigating to the site.";
                     ProjectLoading = false;
                     Debug.WriteLine($"WebDriver Exception: {ex.Message}");
-                    return 0;
+                    return false;
                 }
-                return 1;
+                return true;
             });
-            if (result == 0)
+            if (result == false)
             {
-                return;
+                return false;
             }
-            await Login();
-            
+            bool result2 = await Login();
+            return result2;
         }
 
-        public async Task Login()
+        public async Task<bool> Login()
         {
             StatusText = "Logging In";
-            int result = await Task.Run(int () =>
+            bool result = await Task.Run(bool () =>
             {
                 try
                 {
@@ -182,28 +182,29 @@ namespace GMEPTitle24
                     StatusText = "Navigation timed out. Please try again.";
                     ProjectLoading = false;
                     Debug.WriteLine($"Timeout Exception: {ex.Message}");
-                    return 0;
+                    return false;
                 }
                 catch (WebDriverException ex)
                 {
                     StatusText = "An error occurred while logging in.";
                     ProjectLoading = false;
                     Debug.WriteLine($"WebDriver Exception: {ex.Message}");
-                    return 0;
+                    return false;
                 }
-                return 1;
+                return true;
             });
-            if (result == 0)
+            if (result == false)
             {
-                return;
+                return false;
             }
-            await GoToProject(SaveProjectNo);
+            bool result2 = await GoToProject(SaveProjectNo);
+            return result2;
         }
-        public async Task GoToProject(string projectNo)
+        public async Task<bool> GoToProject(string projectNo)
         {
             StatusText = "Navigating To Project";
 
-            int result = await Task.Run(int () =>
+            bool result = await Task.Run(bool () =>
             {
                 try
                 {
@@ -239,21 +240,22 @@ namespace GMEPTitle24
                     StatusText = "Project not loaded or found. Please create a project starting with the project number " + projectNo.ToString() + ".";
                     ProjectLoading = false;
                     Debug.WriteLine($"Timeout Exception: {ex.Message}");
-                    return 0;
+                    return false;
                 }
                 catch (WebDriverException ex)
                 {
                     StatusText = "An error occurred while navigating to project.";
                     ProjectLoading = false;
                     Debug.WriteLine($"WebDriver Exception: {ex.Message}");
-                    return 0;
+                    return false;
                 }
-                return 1;
+                return true;
             });
-            if (result == 0)
+            if (result == false)
             {
-                return;
+                return false;
             }
+            return true;
         }
         public async Task LaunchWindow()
         {
