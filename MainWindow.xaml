@@ -42,8 +42,19 @@
                     </TabItem>
                 </TabControl>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Height="25" Margin="0 0 0 5" VerticalAlignment="Top">
-                    <Image x:Name="Loading" Visibility="Collapsed" VerticalAlignment="Center" gif:ImageBehavior.AnimatedSource="Loading.gif" Width="18" Margin="0 0 5 0"/>
-                    <TextBlock VerticalAlignment="Center" x:Name="StatusText" Text="" FontSize="14" Margin="0 0 10 0" FontStyle="Italic"/>
+                    <Image x:Name="Loading" VerticalAlignment="Center" gif:ImageBehavior.AnimatedSource="Loading.gif" Width="18" Margin="0 0 5 0">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ProjectLoading}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger> 
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                    <TextBlock VerticalAlignment="Center" Text="{Binding StatusText}" FontSize="14" Margin="0 0 10 0" FontStyle="Italic"/>
                     <Rectangle Width="1"  Fill="Black" VerticalAlignment="Stretch" Margin="0 5 10 0"/>
                     <TextBox Width="100" Margin="0 5 0 0" Text="{Binding ProjectNo}"/>
                     <Button Width="25" VerticalAlignment="Top" Height="20" HorizontalAlignment="Right" Margin="0 5 10 0" Click="Download_Click">

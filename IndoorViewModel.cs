@@ -213,6 +213,12 @@ namespace GMEPTitle24
             LightingList = await MainView.db.GetLighting(projectId);
             ControlAreaList = await MainView.db.GetControlAreas(projectId);
         }
+        public async Task SaveObjects(string projectId)
+        {
+            await MainView.db.UpdateLuminaires(LightingList);
+            await MainView.db.UpdateControlAreas(ControlAreaList, projectId);
+            await MainView.db.UpdateScope(ScopeData, projectId);
+        }
         
         public async Task IndoorLighting()
         {

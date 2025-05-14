@@ -116,11 +116,8 @@ namespace GMEPTitle24
         }
         private async void Download_Click(object sender, RoutedEventArgs e)
         {
-            //LightingList.Clear();
-            //ControlAreaList.Clear();
-            //ScopeData = null;
-            //Loading.Visibility = Visibility.Visible;
-            viewModel.statusText = "Downloading";
+            viewModel.ProjectLoading = true;
+            viewModel.StatusText = "Downloading";
             VersionComboBox.SelectedValue = 0;
             viewModel.ProjectIds = await viewModel.db.GetProjectIds(viewModel.ProjectNo);
             if (viewModel.ProjectIds.Count == 0)
@@ -139,16 +136,14 @@ namespace GMEPTitle24
         }
         private async void Save_Click(object sender, RoutedEventArgs e)
         {
-            /*if (LightingList.Count > 0 && VersionComboBox.SelectedItem is KeyValuePair<int, string> selectedPair)
+            if (VersionComboBox.SelectedItem is KeyValuePair<int, string> selectedPair)
             {
-                Loading.Visibility = Visibility.Visible;
-                StatusText.Text = "Saving";
-                await db.UpdateLuminaires(LightingList);
-                await db.UpdateControlAreas(ControlAreaList, selectedPair.Value);
-                await db.UpdateScope(ScopeData, selectedPair.Value);
-                StatusText.Text = String.Empty;
-                Loading.Visibility = Visibility.Collapsed;
-            }*/
+                viewModel.ProjectLoading = true;
+                viewModel.StatusText = "Saving";
+                await indoor.viewModel.SaveObjects(selectedPair.Value);
+                viewModel.StatusText = String.Empty;
+                viewModel.ProjectLoading = false;
+            }
         }
         private async void Version_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
