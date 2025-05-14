@@ -17,7 +17,7 @@ using OpenQA.Selenium.Chrome;
 
 namespace GMEPTitle24
 {
-    public class IndoorViewModel
+    public class IndoorViewModel : INotifyPropertyChanged
     {
         public ChromeOptions options;
         public IWebDriver driver;
@@ -207,7 +207,15 @@ namespace GMEPTitle24
             options = MainView.options;
             driver = MainView.driver;
             wait = MainView.wait;
+            
+        }
+        public async Task InitializeObjects(string projectId)
+        {
+            ScopeData = await MainView.db.GetScope(projectId);
+            ScopeData.PropertyChanged += ScopeData_PropertyChanged;
             FilterBuildings();
+            LightingList = await MainView.db.GetLighting(projectId);
+            ControlAreaList = await MainView.db.GetControlAreas(projectId);
         }
         
         public async Task IndoorLighting()

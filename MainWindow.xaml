@@ -8,15 +8,11 @@
         xmlns:gif="http://wpfanimatedgif.codeplex.com"
         Title="GMEP Title 24 - NRCC/2022" Height="450" Width="800"
         Icon="/gmep.ico">
-    <Window.Resources>
-        <local:BindingProxy x:Key="ScopeProxy" Data="{Binding ScopeData}"/>
-        <local:BindingProxy x:Key="FilteredBuildingsProxy" Data="{Binding FilteredBuildings}"/>
-    </Window.Resources>
     <Grid Background="SlateGray">
         <Border BorderBrush="DarkSlateGray" BorderThickness="2" Margin="10" Background="LightGray">
             <Grid>
                 <TabControl  TabStripPlacement="Left">
-                    <TabItem x:Name="Indoor">
+                    <TabItem x:Name="IndoorTab">
                         <TabItem.Header>
                             <TextBlock Text="LTI Indoor Lighting" FontSize="20" FontWeight="Bold" Margin="0 5 0 5">
                                 <TextBlock.LayoutTransform>
@@ -25,7 +21,7 @@
                             </TextBlock>
                         </TabItem.Header>
                     </TabItem>
-                    <TabItem x:Name="Outdoor">
+                    <TabItem x:Name="OutdoorTab">
                         <TabItem.Header>
                             <TextBlock Text="LTO Outdoor Lighting" FontSize="20" FontWeight="Bold" Margin="0 5 0 5">
                                 <TextBlock.LayoutTransform>

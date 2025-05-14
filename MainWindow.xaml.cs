@@ -97,47 +97,44 @@ namespace GMEPTitle24
                 );
             }
         }
-        
-        
 
-        /*private async void Export_Click(object sender, RoutedEventArgs e)
+        private async void Export_Click(object sender, RoutedEventArgs e)
         {
-            if (LightingList.Count > 0 && VersionComboBox.SelectedItem is KeyValuePair<int, string> selectedPair)
+            /*if (LightingList.Count > 0 && VersionComboBox.SelectedItem is KeyValuePair<int, string> selectedPair)
             {
                 Loading.Visibility = Visibility.Visible;
                 StatusText.Text = "Saving";
                 await db.UpdateLuminaires(LightingList);
                 await db.UpdateControlAreas(ControlAreaList, selectedPair.Value);
                 await ActivateSelenium();
-            }
+            }*/
         }
         private async void Download_Click(object sender, RoutedEventArgs e)
         {
-            LightingList.Clear();
-            ControlAreaList.Clear();
-            ScopeData = null;
-            Loading.Visibility = Visibility.Visible;
-            StatusText.Text = "Downloading";
+            //LightingList.Clear();
+            //ControlAreaList.Clear();
+            //ScopeData = null;
+            //Loading.Visibility = Visibility.Visible;
+            viewModel.statusText = "Downloading";
             VersionComboBox.SelectedValue = 0;
-            ProjectIds = await db.GetProjectIds(ProjectNo);
-            if (ProjectIds.Count == 0)
+            viewModel.ProjectIds = await viewModel.db.GetProjectIds(viewModel.ProjectNo);
+            if (viewModel.ProjectIds.Count == 0)
             {
-                StatusText.Text = "Project Not Found";
-                ControlAreaGrid.IsEnabled = false;
-                Loading.Visibility = Visibility.Collapsed;
-                ProjectCover.Visibility = Visibility.Visible;
+                viewModel.StatusText = "Project Not Found";
+                viewModel.ProjectLoaded = false;
+                viewModel.ProjectLoading = false;
                 return;
             }
-            ControlAreaGrid.IsEnabled = true;
-            VersionComboBox.SelectedValue = ProjectIds.Keys.First();
-            StatusText.Text = String.Empty;
-            Loading.Visibility = Visibility.Collapsed;
-            SaveProjectNo = ProjectNo;
+            viewModel.ProjectLoaded = true;
+            VersionComboBox.SelectedValue = viewModel.ProjectIds.Keys.First();
+            viewModel.StatusText = "";
+            viewModel.ProjectLoading = false;
+            viewModel.SaveProjectNo = viewModel.ProjectNo;
 
         }
         private async void Save_Click(object sender, RoutedEventArgs e)
         {
-            if (LightingList.Count > 0 && VersionComboBox.SelectedItem is KeyValuePair<int, string> selectedPair)
+            /*if (LightingList.Count > 0 && VersionComboBox.SelectedItem is KeyValuePair<int, string> selectedPair)
             {
                 Loading.Visibility = Visibility.Visible;
                 StatusText.Text = "Saving";
@@ -146,21 +143,18 @@ namespace GMEPTitle24
                 await db.UpdateScope(ScopeData, selectedPair.Value);
                 StatusText.Text = String.Empty;
                 Loading.Visibility = Visibility.Collapsed;
-            }
+            }*/
         }
         private async void Version_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (VersionComboBox.SelectedItem is KeyValuePair<int, string> selectedPair)
             {
                 //Electrical Tab
-                string newProjectId = selectedPair.Value;
-                ScopeData = await db.GetScope(newProjectId);
-                ScopeData.PropertyChanged += ScopeData_PropertyChanged;
-                FilterBuildings();
-                LightingList = await db.GetLighting(newProjectId);
-                ControlAreaList = await db.GetControlAreas(newProjectId);
-                ProjectCover.Visibility = Visibility.Collapsed;
+                Indoor indoor = new Indoor(viewModel);
+                await indoor.viewModel.InitializeObjects(selectedPair.Value);
+                IndoorTab.Content = indoor;
+                viewModel.ProjectLoaded = true;
             }
-        }*/
+        }
     }
 }

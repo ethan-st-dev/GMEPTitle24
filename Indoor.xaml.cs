@@ -32,6 +32,7 @@ namespace GMEPTitle24
         {
             viewModel = new IndoorViewModel(mainview);
             InitializeComponent();
+            this.DataContext = viewModel;
         }
        
         public void OptionsGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
