@@ -174,33 +174,10 @@ namespace GMEPTitle24
                 }
             }
         }
-        private GridLength _row1Height = new GridLength(1, GridUnitType.Star);
-        public GridLength Row1Height
-        {
-            get => _row1Height;
-            set { _row1Height = value; OnPropertyChanged(nameof(Row1Height)); }
-        }
 
-        private GridLength _row3Height = new GridLength(1, GridUnitType.Star);
-        public GridLength Row3Height
-        {
-            get => _row3Height;
-            set { _row3Height = value; OnPropertyChanged(nameof(Row3Height)); }
-        }
+        public event EventHandler? ResetRows;
+        public event EventHandler? ResetColumns;
 
-        private GridLength _column1Width = new GridLength(1, GridUnitType.Star);
-        public GridLength Column1Width
-        {
-            get => _column1Width;
-            set { _column1Width = value; OnPropertyChanged(nameof(Column1Width)); }
-        }
-
-        private GridLength _column3Width = new GridLength(2, GridUnitType.Star);
-        public GridLength Column3Width
-        {
-            get => _column3Width;
-            set { _column3Width = value; OnPropertyChanged(nameof(Column3Width)); }
-        }
         public IndoorViewModel(MainViewModel MainView)
         {
             this.MainView = MainView;
@@ -1255,30 +1232,21 @@ namespace GMEPTitle24
                 }
             }
         }
-        private void Reset_RowHeight()
-        {
-            Row1Height = new GridLength(1, GridUnitType.Star);
-            Row3Height = new GridLength(1, GridUnitType.Star);
-        }
-        private void Reset_ColumnWidth()
-        {
-            Column1Width = new GridLength(1, GridUnitType.Star);
-            Column3Width = new GridLength(2, GridUnitType.Star);
-        }
+      
         private void ScopeData_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(Scope.SystemFlag))
             {
                 if (!ScopeData.SystemFlag)
                 {
-                    Reset_RowHeight();
+                    ResetRows?.Invoke(this, EventArgs.Empty);
                 }
             }
             if (e.PropertyName == nameof(Scope.AlteredSystem))
             {
                 if (!ScopeData.AlteredSystem)
                 {
-                    Reset_ColumnWidth();
+                    ResetColumns?.Invoke(this, EventArgs.Empty);
                 }
             }
             if (e.PropertyName == nameof(Scope.CompletePrimaryFunctionList))
