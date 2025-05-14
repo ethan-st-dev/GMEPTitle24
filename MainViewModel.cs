@@ -128,14 +128,14 @@ namespace GMEPTitle24
                 {
 
                     StatusText = "Navigation timed out. Please try again.";
-                    projectLoading = false;
+                    ProjectLoading = false;
                     Debug.WriteLine($"Timeout Exception: {ex.Message}");
                     return 0;
                 }
                 catch (WebDriverException ex)
                 {
                     StatusText = "An error occurred while navigating to the site.";
-                    projectLoading = false;
+                    ProjectLoading = false;
                     Debug.WriteLine($"WebDriver Exception: {ex.Message}");
                     return 0;
                 }
@@ -180,14 +180,14 @@ namespace GMEPTitle24
                 {
 
                     StatusText = "Navigation timed out. Please try again.";
-                    projectLoading = false;
+                    ProjectLoading = false;
                     Debug.WriteLine($"Timeout Exception: {ex.Message}");
                     return 0;
                 }
                 catch (WebDriverException ex)
                 {
                     StatusText = "An error occurred while logging in.";
-                    projectLoading = false;
+                    ProjectLoading = false;
                     Debug.WriteLine($"WebDriver Exception: {ex.Message}");
                     return 0;
                 }
@@ -237,14 +237,14 @@ namespace GMEPTitle24
                 catch (WebDriverTimeoutException ex)
                 {
                     StatusText = "Project not loaded or found. Please create a project starting with the project number " + projectNo.ToString() + ".";
-                    projectLoading = false;
+                    ProjectLoading = false;
                     Debug.WriteLine($"Timeout Exception: {ex.Message}");
                     return 0;
                 }
                 catch (WebDriverException ex)
                 {
                     StatusText = "An error occurred while navigating to project.";
-                    projectLoading = false;
+                    ProjectLoading = false;
                     Debug.WriteLine($"WebDriver Exception: {ex.Message}");
                     return 0;
                 }
@@ -261,7 +261,7 @@ namespace GMEPTitle24
             driver.Quit();
 
             StatusText= "Launching Window.";
-            projectLoading = false;
+            ProjectLoading = false;
 
             await Task.Run(() =>
             {
@@ -272,7 +272,7 @@ namespace GMEPTitle24
                 });
             });
             StatusText = "";
-            projectLoading = false;
+            ProjectLoading = false;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

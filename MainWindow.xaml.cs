@@ -111,8 +111,8 @@ namespace GMEPTitle24
                 viewModel.StatusText = "Saving";
                 await indoor.viewModel.SaveObjects(selectedPair.Value);
                 await viewModel.ActivateSelenium();
-                await indoor.viewModel.IndoorLighting();
-                await viewModel.LaunchWindow();
+                //await indoor.viewModel.IndoorLighting();
+                //await viewModel.LaunchWindow();
             }
         }
         private async void Download_Click(object sender, RoutedEventArgs e)
