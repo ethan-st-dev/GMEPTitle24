@@ -935,7 +935,17 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Control Areas">
-                <DataGrid x:Name="ControlAreaGrid" IsEnabled="False" SelectionChanged="OptionsGrid_SelectionChanged" CanUserAddRows="True" CanUserDeleteRows="True" ItemsSource="{Binding ControlAreaList}" AutoGenerateColumns="False">
+                <DataGrid x:Name="ControlAreaGrid" SelectionChanged="OptionsGrid_SelectionChanged" CanUserAddRows="True" CanUserDeleteRows="True" ItemsSource="{Binding ControlAreaList}" AutoGenerateColumns="False">
+                    <DataGrid.Style>
+                        <Style TargetType="DataGrid">
+                            <Setter Property="IsEnabled" Value="False"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding DataContext.MainView.ProjectLoaded, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                    <Setter Property="IsEnabled" Value="True"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.Style>
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*"/>
                         <DataGridTextColumn Header="Square Footage" Binding="{Binding SquareFootage}" Width="*"/>

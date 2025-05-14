@@ -105,7 +105,7 @@ namespace GMEPTitle24
 
         private async void Export_Click(object sender, RoutedEventArgs e)
         {
-            if (VersionComboBox.SelectedItem is KeyValuePair<int, string> selectedPair)
+            if (indoor.viewModel.scopeData != null && VersionComboBox.SelectedItem is KeyValuePair<int, string> selectedPair)
             {
                 viewModel.ProjectLoading = true;
                 viewModel.StatusText = "Saving";
@@ -126,6 +126,7 @@ namespace GMEPTitle24
                 viewModel.StatusText = "Project Not Found";
                 viewModel.ProjectLoaded = false;
                 viewModel.ProjectLoading = false;
+                indoor.viewModel.ClearObjects();
                 return;
             }
             viewModel.ProjectLoaded = true;
@@ -137,7 +138,7 @@ namespace GMEPTitle24
         }
         private async void Save_Click(object sender, RoutedEventArgs e)
         {
-            if (VersionComboBox.SelectedItem is KeyValuePair<int, string> selectedPair)
+            if (indoor.viewModel.scopeData != null && VersionComboBox.SelectedItem is KeyValuePair<int, string> selectedPair)
             {
                 viewModel.ProjectLoading = true;
                 viewModel.StatusText = "Saving";

@@ -190,13 +190,82 @@ namespace GMEPTitle24
             LightingList = await MainView.db.GetLighting(projectId);
             ControlAreaList = await MainView.db.GetControlAreas(projectId);
         }
+        public void ClearObjects()
+        {
+            ScopeData = null;
+            LightingList.Clear();
+            ControlAreaList.Clear();
+        }
         public async Task SaveObjects(string projectId)
         {
             await MainView.db.UpdateLuminaires(LightingList);
             await MainView.db.UpdateControlAreas(ControlAreaList, projectId);
             await MainView.db.UpdateScope(ScopeData, projectId);
         }
-        
+
+        public void FilterBuildings()
+        {
+            var keysToInclude = new HashSet<int> { 3, 24, 30, 31, 34, 48, 57, 59, 60, 62, 65, 68, 70, 73, 76, 79, 80, 93 };
+            if (!ScopeData.CompletePrimaryFunctionList)
+            {
+                // Include only the specified keys
+                FilteredBuildings = Buildings
+                    .Where(kvp => keysToInclude.Contains(kvp.Key))
+                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            }
+            else
+            {
+                // Exclude the specified keys
+                FilteredBuildings = Buildings
+                    .Where(kvp => !keysToInclude.Contains(kvp.Key))
+                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            }
+        }
+        public void ResetPrimaryFunctionIds()
+        {
+            foreach (var elem in controlAreaList)
+            {
+                if (!ScopeData.CompletePrimaryFunctionList)
+                {
+                    elem.PrimaryFunctionId = 93;
+                }
+                else
+                {
+                    elem.PrimaryFunctionId = 94;
+                }
+            }
+        }
+        private void ScopeData_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Scope.SystemFlag))
+            {
+                if (!ScopeData.SystemFlag)
+                {
+                    ResetRows?.Invoke(this, EventArgs.Empty);
+                }
+            }
+            if (e.PropertyName == nameof(Scope.AlteredSystem))
+            {
+                if (!ScopeData.AlteredSystem)
+                {
+                    ResetColumns?.Invoke(this, EventArgs.Empty);
+                }
+            }
+            if (e.PropertyName == nameof(Scope.CompletePrimaryFunctionList))
+            {
+                FilterBuildings();
+                ResetPrimaryFunctionIds();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        //Selenium Search Functions
         public async Task IndoorLighting()
         {
             options = MainView.options;
@@ -1198,69 +1267,6 @@ namespace GMEPTitle24
             }
             MainView.StatusText = "";
             MainView.ProjectLoading = false;
-        }
-
-        public void FilterBuildings()
-        {
-            var keysToInclude = new HashSet<int> { 3, 24, 30, 31, 34, 48, 57, 59, 60, 62, 65, 68, 70, 73, 76, 79, 80, 93 };
-            if (!ScopeData.CompletePrimaryFunctionList)
-            {
-                // Include only the specified keys
-                FilteredBuildings = Buildings
-                    .Where(kvp => keysToInclude.Contains(kvp.Key))
-                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            }
-            else
-            {
-                // Exclude the specified keys
-                FilteredBuildings = Buildings
-                    .Where(kvp => !keysToInclude.Contains(kvp.Key))
-                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            }
-        }
-        public void ResetPrimaryFunctionIds()
-        {
-            foreach (var elem in controlAreaList)
-            {
-                if (!ScopeData.CompletePrimaryFunctionList)
-                {
-                    elem.PrimaryFunctionId = 93;
-                }
-                else
-                {
-                    elem.PrimaryFunctionId = 94;
-                }
-            }
-        }
-      
-        private void ScopeData_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(Scope.SystemFlag))
-            {
-                if (!ScopeData.SystemFlag)
-                {
-                    ResetRows?.Invoke(this, EventArgs.Empty);
-                }
-            }
-            if (e.PropertyName == nameof(Scope.AlteredSystem))
-            {
-                if (!ScopeData.AlteredSystem)
-                {
-                    ResetColumns?.Invoke(this, EventArgs.Empty);
-                }
-            }
-            if (e.PropertyName == nameof(Scope.CompletePrimaryFunctionList))
-            {
-                FilterBuildings();
-                ResetPrimaryFunctionIds();
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
     public class BindingProxy : Freezable
