@@ -197,24 +197,7 @@ namespace GMEPTitle24
             Column1.ClearValue(ColumnDefinition.WidthProperty);
             Column3.ClearValue(ColumnDefinition.WidthProperty);
         }
-        public void FilterBuildings()
-        {
-            var keysToInclude = new HashSet<int> { 3, 24, 30, 31, 34, 48, 57, 59, 60, 62, 65, 68, 70, 73, 76, 79, 80, 93 };
-            if (!ScopeData.CompletePrimaryFunctionList)
-            {
-                // Include only the specified keys
-                FilteredBuildings = Buildings
-                    .Where(kvp => keysToInclude.Contains(kvp.Key))
-                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            }
-            else
-            {
-                // Exclude the specified keys
-                FilteredBuildings = Buildings
-                    .Where(kvp => !keysToInclude.Contains(kvp.Key))
-                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            }
-        }
+     
         public void ResetPrimaryFunctionIds()
         {
             foreach (var elem in controlAreaList)
