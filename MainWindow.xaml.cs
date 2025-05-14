@@ -59,28 +59,28 @@ namespace GMEPTitle24
                     {
                         Dispatcher.Invoke(() =>
                         {
-                            VersionComboBox.SelectedValue = ProjectIds.Keys.First();
-                            ControlAreaGrid.IsEnabled = true;
+                            VersionComboBox.SelectedValue = viewModel.ProjectIds.Keys.First();
+                            viewModel.ProjectLoaded = true;
                         });
                     }
                     else if (args.Length > 2)
                     {
                         if (int.TryParse(args[2], out int versionKey))
                         {
-                            if (ProjectIds.ContainsKey(versionKey))
+                            if (viewModel.ProjectIds.ContainsKey(versionKey))
                             {
                                 Dispatcher.Invoke(() =>
                                 {
                                     VersionComboBox.SelectedValue = versionKey;
-                                    ControlAreaGrid.IsEnabled = true;
+                                    viewModel.ProjectLoaded = true;
                                 });
                             }
                             else
                             {
                                 Dispatcher.Invoke(() =>
                                 {
-                                    VersionComboBox.SelectedValue = ProjectIds.Keys.First();
-                                    ControlAreaGrid.IsEnabled = true;
+                                    VersionComboBox.SelectedValue = viewModel.ProjectIds.Keys.First();
+                                    viewModel.ProjectLoaded = true;
                                 });
                             }
                         }
@@ -88,8 +88,8 @@ namespace GMEPTitle24
                         {
                             Dispatcher.Invoke(() =>
                             {
-                                VersionComboBox.SelectedValue = ProjectIds.Keys.First();
-                                ControlAreaGrid.IsEnabled = true;
+                                VersionComboBox.SelectedValue = viewModel.ProjectIds.Keys.First();
+                                viewModel.ProjectLoaded = true;
                             });
                         }
                     }
@@ -100,7 +100,7 @@ namespace GMEPTitle24
         
         
 
-        private async void Export_Click(object sender, RoutedEventArgs e)
+        /*private async void Export_Click(object sender, RoutedEventArgs e)
         {
             if (LightingList.Count > 0 && VersionComboBox.SelectedItem is KeyValuePair<int, string> selectedPair)
             {
@@ -161,69 +161,6 @@ namespace GMEPTitle24
                 ControlAreaList = await db.GetControlAreas(newProjectId);
                 ProjectCover.Visibility = Visibility.Collapsed;
             }
-        }
-      
-
-
-        private void ScopeData_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(Scope.SystemFlag))
-            {
-                if (!ScopeData.SystemFlag)
-                {
-                    Reset_RowHeight();
-                }
-            }
-            if (e.PropertyName == nameof(Scope.AlteredSystem))
-            {
-                if (!ScopeData.AlteredSystem)
-                {
-                    Reset_ColumnWidth();
-                }
-            }
-            if (e.PropertyName == nameof(Scope.CompletePrimaryFunctionList))
-            {
-                FilterBuildings();
-                ResetPrimaryFunctionIds();
-            }
-        }
-        private void Reset_RowHeight()
-        {
-            Row1.ClearValue(RowDefinition.HeightProperty);
-            Row3.ClearValue(RowDefinition.HeightProperty);
-        }
-        private void Reset_ColumnWidth()
-        {
-            Column1.ClearValue(ColumnDefinition.WidthProperty);
-            Column3.ClearValue(ColumnDefinition.WidthProperty);
-        }
-     
-        public void ResetPrimaryFunctionIds()
-        {
-            foreach (var elem in controlAreaList)
-            {
-                if (!ScopeData.CompletePrimaryFunctionList)
-                {
-                    elem.PrimaryFunctionId = 93;
-                }
-                else
-                {
-                    elem.PrimaryFunctionId = 94;
-                }
-            }
-        }
-    }
-    public class BindingProxy : Freezable
-    {
-        protected override Freezable CreateInstanceCore() => new BindingProxy();
-
-        public object Data
-        {
-            get { return GetValue(DataProperty); }
-            set { SetValue(DataProperty, value); }
-        }
-
-        public static readonly DependencyProperty DataProperty =
-            DependencyProperty.Register("Data", typeof(object), typeof(BindingProxy), new PropertyMetadata(null));
+        }*/
     }
 }

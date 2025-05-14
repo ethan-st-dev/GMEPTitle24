@@ -12,11 +12,16 @@ using System.Threading.Tasks;
 using System.Windows.Threading;
 using System.Windows;
 using System.ComponentModel;
+using System.Windows.Controls;
+using OpenQA.Selenium.Chrome;
 
 namespace GMEPTitle24
 {
-    class IndoorViewModel
+    public class IndoorViewModel
     {
+        public ChromeOptions options;
+        public IWebDriver driver;
+        public WebDriverWait wait;
         public MainViewModel MainView { get; set; }
         public Scope scopeData;
         public Scope ScopeData
@@ -169,32 +174,45 @@ namespace GMEPTitle24
                 }
             }
         }
+        private GridLength _row1Height = new GridLength(1, GridUnitType.Star);
+        public GridLength Row1Height
+        {
+            get => _row1Height;
+            set { _row1Height = value; OnPropertyChanged(nameof(Row1Height)); }
+        }
+
+        private GridLength _row3Height = new GridLength(1, GridUnitType.Star);
+        public GridLength Row3Height
+        {
+            get => _row3Height;
+            set { _row3Height = value; OnPropertyChanged(nameof(Row3Height)); }
+        }
+
+        private GridLength _column1Width = new GridLength(1, GridUnitType.Star);
+        public GridLength Column1Width
+        {
+            get => _column1Width;
+            set { _column1Width = value; OnPropertyChanged(nameof(Column1Width)); }
+        }
+
+        private GridLength _column3Width = new GridLength(2, GridUnitType.Star);
+        public GridLength Column3Width
+        {
+            get => _column3Width;
+            set { _column3Width = value; OnPropertyChanged(nameof(Column3Width)); }
+        }
         public IndoorViewModel(MainViewModel MainView)
         {
             this.MainView = MainView;
+            options = MainView.options;
+            driver = MainView.driver;
+            wait = MainView.wait;
             FilterBuildings();
         }
-        public void FilterBuildings()
-        {
-            var keysToInclude = new HashSet<int> { 3, 24, 30, 31, 34, 48, 57, 59, 60, 62, 65, 68, 70, 73, 76, 79, 80, 93 };
-            if (!ScopeData.CompletePrimaryFunctionList)
-            {
-                // Include only the specified keys
-                FilteredBuildings = Buildings
-                    .Where(kvp => keysToInclude.Contains(kvp.Key))
-                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            }
-            else
-            {
-                // Exclude the specified keys
-                FilteredBuildings = Buildings
-                    .Where(kvp => !keysToInclude.Contains(kvp.Key))
-                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            }
-        }
+        
         public async Task IndoorLighting()
         {
-            StatusText.Text = "Navigating to Indoor Lighting";
+            MainView.StatusText = "Navigating to Indoor Lighting";
             int result = await Task.Run(int () =>
             {
                 try
@@ -204,23 +222,17 @@ namespace GMEPTitle24
                 }
                 catch (WebDriverTimeoutException ex)
                 {
-                    // Handle timeout exceptions
-                    Dispatcher.Invoke(() =>
-                    {
-                        StatusText.Text = "Indoor Lighting Section not found. Please try again.";
-                        Loading.Visibility = Visibility.Collapsed;
-                    });
+
+                    MainView.StatusText = "Indoor Lighting Section not found. Please try again.";
+                    MainView.ProjectLoading = false;
+
                     Debug.WriteLine($"Timeout Exception: {ex.Message}");
                     return 0;
                 }
                 catch (WebDriverException ex)
                 {
-                    // Handle general WebDriver exceptions
-                    Dispatcher.Invoke(() =>
-                    {
-                        StatusText.Text = "An error occurred while logging in.";
-                        Loading.Visibility = Visibility.Collapsed;
-                    });
+                    MainView.StatusText = "An error occurred while logging in.";
+                    MainView.ProjectLoading = false;
                     Debug.WriteLine($"WebDriver Exception: {ex.Message}");
                     return 0;
                 }
@@ -237,7 +249,7 @@ namespace GMEPTitle24
         }
         public async Task FillOutScope()
         {
-            StatusText.Text = "Filling Out Scope Section";
+            MainView.StatusText = "Filling Out Scope Section";
             int result = await Task.Run(int () =>
             {
                 try
@@ -499,23 +511,16 @@ namespace GMEPTitle24
                 }
                 catch (WebDriverTimeoutException ex)
                 {
-                    // Handle timeout exceptions
-                    Dispatcher.Invoke(() =>
-                    {
-                        StatusText.Text = "Navigation timed out. Please try again.";
-                        Loading.Visibility = Visibility.Collapsed;
-                    });
+
+                    MainView.StatusText = "Navigation timed out. Please try again.";
+                    MainView.ProjectLoading = false;
                     Debug.WriteLine($"Timeout Exception: {ex.Message}");
                     return 0;
                 }
                 catch (WebDriverException ex)
                 {
-                    // Handle general WebDriver exceptions
-                    Dispatcher.Invoke(() =>
-                    {
-                        StatusText.Text = "An error occurred while navigation to scope.";
-                        Loading.Visibility = Visibility.Collapsed;
-                    });
+                    MainView.StatusText = "An error occurred while navigation to scope.";
+                    MainView.ProjectLoading = false;
                     Debug.WriteLine($"WebDriver Exception: {ex.Message}");
                     return 0;
                 }
@@ -529,7 +534,7 @@ namespace GMEPTitle24
         }
         public async Task FillOutLuminaires()
         {
-            StatusText.Text = "Filling Out Luminaires Section";
+            MainView.StatusText = "Filling Out Luminaires Section";
             int result = await Task.Run(int () =>
             {
                 try
@@ -843,23 +848,16 @@ namespace GMEPTitle24
                 }
                 catch (WebDriverTimeoutException ex)
                 {
-                    // Handle timeout exceptions
-                    Dispatcher.Invoke(() =>
-                    {
-                        StatusText.Text = "Navigation timed out. Please try again.";
-                        Loading.Visibility = Visibility.Collapsed;
-                    });
+                    MainView.StatusText = "Navigation timed out. Please try again.";
+                    MainView.ProjectLoading = false;
                     Debug.WriteLine($"Timeout Exception: {ex.Message}");
                     return 0;
                 }
                 catch (WebDriverException ex)
                 {
-                    // Handle general WebDriver exceptions
-                    Dispatcher.Invoke(() =>
-                    {
-                        StatusText.Text = "An error occurred while navigation to luminaires.";
-                        Loading.Visibility = Visibility.Collapsed;
-                    });
+
+                    MainView.StatusText = "An error occurred while navigation to luminaires.";
+                    MainView.ProjectLoading = false;
                     Debug.WriteLine($"WebDriver Exception: {ex.Message}");
                     return 0;
                 }
@@ -873,7 +871,7 @@ namespace GMEPTitle24
         }
         public async Task FillOutControls()
         {
-            StatusText.Text = "Filling Out Controls Section";
+            MainView.StatusText = "Filling Out Controls Section";
             int result = await Task.Run(int () =>
             {
                 try
@@ -1022,23 +1020,15 @@ namespace GMEPTitle24
                 }
                 catch (WebDriverTimeoutException ex)
                 {
-                    // Handle timeout exceptions
-                    Dispatcher.Invoke(() =>
-                    {
-                        StatusText.Text = "Navigation timed out. Please try again.";
-                        Loading.Visibility = Visibility.Collapsed;
-                    });
+                    MainView.StatusText = "Navigation timed out. Please try again.";
+                    MainView.ProjectLoading = false;
                     Debug.WriteLine($"Timeout Exception: {ex.Message}");
                     return 0;
                 }
                 catch (WebDriverException ex)
                 {
-                    // Handle general WebDriver exceptions
-                    Dispatcher.Invoke(() =>
-                    {
-                        StatusText.Text = "An error occurred while navigation to luminaires.";
-                        Loading.Visibility = Visibility.Collapsed;
-                    });
+                    MainView.StatusText= "An error occurred while navigation to luminaires.";
+                    MainView.ProjectLoading = false;
                     Debug.WriteLine($"WebDriver Exception: {ex.Message}");
                     return 0;
                 }
@@ -1051,7 +1041,7 @@ namespace GMEPTitle24
         }
         public async Task FillOutAllowances()
         {
-            StatusText.Text = "Filling Out Allowances Section";
+            MainView.StatusText = "Filling Out Allowances Section";
             int result = await Task.Run(int () =>
             {
                 try
@@ -1197,23 +1187,16 @@ namespace GMEPTitle24
                 }
                 catch (WebDriverTimeoutException ex)
                 {
-                    // Handle timeout exceptions
-                    Dispatcher.Invoke(() =>
-                    {
-                        StatusText.Text = "Navigation timed out. Please try again.";
-                        Loading.Visibility = Visibility.Collapsed;
-                    });
+                    MainView.StatusText = "Navigation timed out. Please try again.";
+                    MainView.ProjectLoading = false;
                     Debug.WriteLine($"Timeout Exception: {ex.Message}");
                     return 0;
                 }
                 catch (WebDriverException ex)
                 {
-                    // Handle general WebDriver exceptions
-                    Dispatcher.Invoke(() =>
-                    {
-                        StatusText.Text = "An error occurred while navigating to luminaires.";
-                        Loading.Visibility = Visibility.Collapsed;
-                    });
+
+                    MainView.StatusText = "An error occurred while navigating to luminaires.";
+                    MainView.ProjectLoading = false;
                     Debug.WriteLine($"WebDriver Exception: {ex.Message}");
                     return 0;
                 }
@@ -1223,8 +1206,73 @@ namespace GMEPTitle24
             {
                 return;
             }
-            StatusText.Text = "";
-            Loading.Visibility = Visibility.Collapsed;
+            MainView.StatusText = "";
+            MainView.ProjectLoading = false;
+        }
+
+        public void FilterBuildings()
+        {
+            var keysToInclude = new HashSet<int> { 3, 24, 30, 31, 34, 48, 57, 59, 60, 62, 65, 68, 70, 73, 76, 79, 80, 93 };
+            if (!ScopeData.CompletePrimaryFunctionList)
+            {
+                // Include only the specified keys
+                FilteredBuildings = Buildings
+                    .Where(kvp => keysToInclude.Contains(kvp.Key))
+                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            }
+            else
+            {
+                // Exclude the specified keys
+                FilteredBuildings = Buildings
+                    .Where(kvp => !keysToInclude.Contains(kvp.Key))
+                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            }
+        }
+        public void ResetPrimaryFunctionIds()
+        {
+            foreach (var elem in controlAreaList)
+            {
+                if (!ScopeData.CompletePrimaryFunctionList)
+                {
+                    elem.PrimaryFunctionId = 93;
+                }
+                else
+                {
+                    elem.PrimaryFunctionId = 94;
+                }
+            }
+        }
+        private void Reset_RowHeight()
+        {
+            Row1Height = new GridLength(1, GridUnitType.Star);
+            Row3Height = new GridLength(1, GridUnitType.Star);
+        }
+        private void Reset_ColumnWidth()
+        {
+            Column1Width = new GridLength(1, GridUnitType.Star);
+            Column3Width = new GridLength(2, GridUnitType.Star);
+        }
+        private void ScopeData_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Scope.SystemFlag))
+            {
+                if (!ScopeData.SystemFlag)
+                {
+                    Reset_RowHeight();
+                }
+            }
+            if (e.PropertyName == nameof(Scope.AlteredSystem))
+            {
+                if (!ScopeData.AlteredSystem)
+                {
+                    Reset_ColumnWidth();
+                }
+            }
+            if (e.PropertyName == nameof(Scope.CompletePrimaryFunctionList))
+            {
+                FilterBuildings();
+                ResetPrimaryFunctionIds();
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -1233,5 +1281,18 @@ namespace GMEPTitle24
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+    }
+    public class BindingProxy : Freezable
+    {
+        protected override Freezable CreateInstanceCore() => new BindingProxy();
+
+        public object Data
+        {
+            get { return GetValue(DataProperty); }
+            set { SetValue(DataProperty, value); }
+        }
+
+        public static readonly DependencyProperty DataProperty =
+            DependencyProperty.Register("Data", typeof(object), typeof(BindingProxy), new PropertyMetadata(null));
     }
 }

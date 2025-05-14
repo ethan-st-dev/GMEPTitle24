@@ -27,9 +27,10 @@ namespace GMEPTitle24
     /// </summary>
     public partial class Indoor : UserControl
     {
-        private IndoorViewModel viewModel;
-        public Indoor()
+        public IndoorViewModel viewModel;
+        public Indoor(MainViewModel mainview)
         {
+            viewModel = new IndoorViewModel(mainview);
             InitializeComponent();
         }
        

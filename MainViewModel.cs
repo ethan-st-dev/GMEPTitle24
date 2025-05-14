@@ -16,11 +16,11 @@ using System.Windows;
 
 namespace GMEPTitle24
 {
-    class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel : INotifyPropertyChanged
     {
-        ChromeOptions options;
-        IWebDriver driver;
-        WebDriverWait wait;
+        public ChromeOptions options;
+        public IWebDriver driver;
+        public WebDriverWait wait;
         public Dictionary<int, string> projectIds;
 
         public Database db = new Database();
