@@ -7,6 +7,15 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            
+        <TabControl>
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="Height" Value="25" />
+                </Style>
+            </TabControl.Resources>
+            <TabItem Header="Scope"/>
+            <TabItem Header="Fixtures"/>
+            <TabItem Header="Control Areas"/>
+        </TabControl>
     </Grid>
 </UserControl>

@@ -20,7 +20,7 @@ namespace GMEPTitle24
     /// </summary>
     public partial class Outdoor : UserControl
     {
-        public Outdoor()
+        public Outdoor(MainViewModel mainView)
         {
             InitializeComponent();
         }
