@@ -168,6 +168,7 @@ namespace GMEPTitle24
             {
                 //Electrical Tab
                 await indoor.viewModel.InitializeObjects(selectedPair.Value);
+                await outdoor.viewModel.InitializeObjects(selectedPair.Value);
                 viewModel.ProjectLoaded = true;
             }
         }
