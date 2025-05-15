@@ -52,6 +52,7 @@ namespace GMEPTitle24
                 viewModel.SaveProjectNo = args[1];
                 Task.Run(async () =>
                 {
+                    viewModel.ProjectLoading = true;
                     viewModel.ProjectIds = await viewModel.db.GetProjectIds(viewModel.ProjectNo);
                     if (viewModel.ProjectIds.Count == 0)
                     {
@@ -98,6 +99,7 @@ namespace GMEPTitle24
                             });
                         }
                     }
+                    viewModel.ProjectLoading = false;
                 }
                 );
             }
