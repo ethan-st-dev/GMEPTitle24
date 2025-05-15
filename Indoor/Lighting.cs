@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GMEPTitle24
+namespace GMEPTitle24.Indoor
 {
     public class Lighting : INotifyPropertyChanged
     {

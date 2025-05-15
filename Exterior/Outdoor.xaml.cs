@@ -18,7 +18,7 @@ namespace GMEPTitle24
     /// <summary>
     /// Interaction logic for Outdoor.xaml
     /// </summary>
-    public partial class Outdoor : UserControl
+    public class Outdoor : UserControl
     {
         public Outdoor(MainViewModel mainView)
         {

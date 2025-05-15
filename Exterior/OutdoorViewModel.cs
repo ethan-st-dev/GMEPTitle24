@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 
-namespace GMEPTitle24
+namespace GMEPTitle24.Outdoor
 {
 
     public class OutdoorViewModel : INotifyPropertyChanged
@@ -17,5 +17,15 @@ namespace GMEPTitle24
         public IWebDriver driver;
         public WebDriverWait wait;
         public MainViewModel MainView { get; set; }
+        public OutdoorViewModel(MainViewModel MainView)
+        {
+            this.MainView = MainView;
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

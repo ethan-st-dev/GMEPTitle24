@@ -15,7 +15,7 @@ using System.ComponentModel;
 using System.Windows.Controls;
 using OpenQA.Selenium.Chrome;
 
-namespace GMEPTitle24
+namespace GMEPTitle24.Indoor
 {
     public class IndoorViewModel : INotifyPropertyChanged
     {
