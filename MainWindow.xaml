@@ -29,16 +29,6 @@
                                 </TextBlock.LayoutTransform>
                             </TextBlock>
                         </TabItem.Header>
-                        <TabControl>
-                            <TabControl.Resources>
-                                <Style TargetType="TabItem">
-                                    <Setter Property="Height" Value="25" />
-                                </Style>
-                            </TabControl.Resources>
-                            <TabItem Header="Scope"/>
-                            <TabItem Header="Fixtures"/>
-                            <TabItem Header="Control Areas"/>
-                        </TabControl>
                     </TabItem>
                 </TabControl>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Height="25" Margin="0 0 0 5" VerticalAlignment="Top">

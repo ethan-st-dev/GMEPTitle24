@@ -7,6 +7,29 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            
+        <TabControl>
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="Height" Value="25" />
+                </Style>
+            </TabControl.Resources>
+            <TabItem Header="Scope">
+                <Grid x:Name="ProjectCover" Background="White">
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding DataContext.MainView.ProjectLoaded, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <Label Content="Load Project to Continue" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40" FontWeight="Bold" Visibility="Visible"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Fixtures"/>
+            <TabItem Header="Control Areas"/>
+        </TabControl>
     </Grid>
 </UserControl>

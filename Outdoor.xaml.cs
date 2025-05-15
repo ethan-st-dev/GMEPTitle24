@@ -20,9 +20,12 @@ namespace GMEPTitle24
     /// </summary>
     public partial class Outdoor : UserControl
     {
-        public Outdoor()
+        public OutdoorViewModel viewModel;
+        public Outdoor(MainViewModel MainView)
         {
+            viewModel = new OutdoorViewModel(MainView);
             InitializeComponent();
+            this.DataContext = viewModel;
         }
     }
 }

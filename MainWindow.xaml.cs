@@ -33,6 +33,7 @@ namespace GMEPTitle24
     {
         MainViewModel viewModel = new MainViewModel();
         Indoor indoor;
+        Outdoor outdoor;
         public MainWindow()
         {
             string[] args = Environment.GetCommandLineArgs();
@@ -45,6 +46,10 @@ namespace GMEPTitle24
             //setting indoor
             indoor = new Indoor(viewModel);
             IndoorTab.Content = indoor;
+
+            //setting outdoor
+            outdoor = new Outdoor(viewModel);
+            OutdoorTab.Content = outdoor;   
 
             if (args.Length > 1)
             {
