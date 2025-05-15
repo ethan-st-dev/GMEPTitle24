@@ -10,9 +10,37 @@ namespace GMEPTitle24.Exterior
     public class OutdoorViewModel: INotifyPropertyChanged
     {
         public MainViewModel MainView { get; set; }
+
+        public ExteriorScope exteriorScopeData;
+        public ExteriorScope ExteriorScopeData
+        {
+            get { return exteriorScopeData; }
+            set
+            {
+                if (exteriorScopeData != value)
+                {
+                    exteriorScopeData = value;
+                    OnPropertyChanged(nameof(ExteriorScopeData));
+                }
+            }
+        }
+
         public OutdoorViewModel(MainViewModel MainView)
         {
             this.MainView = MainView;
+        }
+        public async Task InitializeObjects(string projectId)
+        {
+            //ExteriorScopeData = await MainView.db.GetScope(projectId);
+
+        }
+        public void ClearObjects()
+        {
+            ExteriorScopeData = null;
+        }
+        public async Task SaveObjects(string projectId)
+        {
+            //await MainView.db.UpdateScope(ScopeData, projectId);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
