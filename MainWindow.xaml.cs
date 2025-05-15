@@ -113,9 +113,14 @@ namespace GMEPTitle24
                 bool result = await viewModel.ActivateSelenium();
                 if (result)
                 {
-                    await indoor.viewModel.IndoorLighting();
-                    await viewModel.LaunchWindow();
+                    result = await indoor.viewModel.IndoorLighting();
+                    if (result)
+                    {
+                        await viewModel.LaunchWindow();
+                    }
                 }
+                viewModel.StatusText = String.Empty;
+                viewModel.ProjectLoading = false;
             }
         }
         private async void Download_Click(object sender, RoutedEventArgs e)

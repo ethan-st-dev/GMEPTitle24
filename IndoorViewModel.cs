@@ -266,13 +266,13 @@ namespace GMEPTitle24
         }
 
         //Selenium Search Functions
-        public async Task IndoorLighting()
+        public async Task<bool> IndoorLighting()
         {
             options = MainView.options;
             driver = MainView.driver;
             wait = MainView.wait;
             MainView.StatusText = "Navigating to Indoor Lighting";
-            int result = await Task.Run(int () =>
+            bool result = await Task.Run(bool () =>
             {
                 try
                 {
@@ -286,30 +286,44 @@ namespace GMEPTitle24
                     MainView.ProjectLoading = false;
 
                     Debug.WriteLine($"Timeout Exception: {ex.Message}");
-                    return 0;
+                    return false;
                 }
                 catch (WebDriverException ex)
                 {
                     MainView.StatusText = "An error occurred while logging in.";
                     MainView.ProjectLoading = false;
                     Debug.WriteLine($"WebDriver Exception: {ex.Message}");
-                    return 0;
+                    return false;
                 }
-                return 1;
+                return true;
             });
-            if (result == 0)
+            if (result == false)
             {
-                return;
+                return false;
             }
-            await FillOutScope();
-            await FillOutLuminaires();
-            await FillOutControls();
-            await FillOutAllowances();
+
+            bool result2 = await FillOutScope();
+            if (result2 == false)
+            {
+                return false;
+            }
+            result2 = await FillOutLuminaires();
+            if (result2 == false)
+            {
+                return false;
+            }
+            result2 = await FillOutControls();
+            if (result2 == false)
+            {
+                return false;
+            }
+            result2 = await FillOutAllowances();
+            return result2;
         }
-        public async Task FillOutScope()
+        public async Task<bool> FillOutScope()
         {
             MainView.StatusText = "Filling Out Scope Section";
-            int result = await Task.Run(int () =>
+            bool result = await Task.Run(bool () =>
             {
                 try
                 {
@@ -574,27 +588,23 @@ namespace GMEPTitle24
                     MainView.StatusText = "Navigation timed out. Please try again.";
                     MainView.ProjectLoading = false;
                     Debug.WriteLine($"Timeout Exception: {ex.Message}");
-                    return 0;
+                    return false;
                 }
                 catch (WebDriverException ex)
                 {
                     MainView.StatusText = "An error occurred while navigation to scope.";
                     MainView.ProjectLoading = false;
                     Debug.WriteLine($"WebDriver Exception: {ex.Message}");
-                    return 0;
+                    return false;
                 }
-                return 1;
+                return true;
             });
-            if (result == 0)
-            {
-                Debug.WriteLine("Meow");
-                return;
-            }
+            return result;
         }
-        public async Task FillOutLuminaires()
+        public async Task<bool> FillOutLuminaires()
         {
             MainView.StatusText = "Filling Out Luminaires Section";
-            int result = await Task.Run(int () =>
+            bool result = await Task.Run(bool () =>
             {
                 try
                 {
@@ -910,7 +920,7 @@ namespace GMEPTitle24
                     MainView.StatusText = "Navigation timed out. Please try again.";
                     MainView.ProjectLoading = false;
                     Debug.WriteLine($"Timeout Exception: {ex.Message}");
-                    return 0;
+                    return false;
                 }
                 catch (WebDriverException ex)
                 {
@@ -918,20 +928,16 @@ namespace GMEPTitle24
                     MainView.StatusText = "An error occurred while navigation to luminaires.";
                     MainView.ProjectLoading = false;
                     Debug.WriteLine($"WebDriver Exception: {ex.Message}");
-                    return 0;
+                    return false;
                 }
-                return 1;
+                return true;
             });
-            if (result == 0)
-            {
-                Debug.WriteLine("Meow");
-                return;
-            }
+            return result;
         }
-        public async Task FillOutControls()
+        public async Task<bool> FillOutControls()
         {
             MainView.StatusText = "Filling Out Controls Section";
-            int result = await Task.Run(int () =>
+            bool result = await Task.Run(bool () =>
             {
                 try
                 {
@@ -1082,26 +1088,23 @@ namespace GMEPTitle24
                     MainView.StatusText = "Navigation timed out. Please try again.";
                     MainView.ProjectLoading = false;
                     Debug.WriteLine($"Timeout Exception: {ex.Message}");
-                    return 0;
+                    return false;
                 }
                 catch (WebDriverException ex)
                 {
                     MainView.StatusText= "An error occurred while navigation to luminaires.";
                     MainView.ProjectLoading = false;
                     Debug.WriteLine($"WebDriver Exception: {ex.Message}");
-                    return 0;
+                    return false;
                 }
-                return 1;
+                return true;
             });
-            if (result == 0)
-            {
-                return;
-            }
+            return result;
         }
-        public async Task FillOutAllowances()
+        public async Task<bool> FillOutAllowances()
         {
             MainView.StatusText = "Filling Out Allowances Section";
-            int result = await Task.Run(int () =>
+            bool result = await Task.Run(bool () =>
             {
                 try
                 {
@@ -1249,7 +1252,7 @@ namespace GMEPTitle24
                     MainView.StatusText = "Navigation timed out. Please try again.";
                     MainView.ProjectLoading = false;
                     Debug.WriteLine($"Timeout Exception: {ex.Message}");
-                    return 0;
+                    return false;
                 }
                 catch (WebDriverException ex)
                 {
@@ -1257,16 +1260,11 @@ namespace GMEPTitle24
                     MainView.StatusText = "An error occurred while navigating to luminaires.";
                     MainView.ProjectLoading = false;
                     Debug.WriteLine($"WebDriver Exception: {ex.Message}");
-                    return 0;
+                    return false;
                 }
-                return 1;
+                return true;
             });
-            if (result == 0)
-            {
-                return;
-            }
-            MainView.StatusText = "";
-            MainView.ProjectLoading = false;
+            return result;
         }
     }
     public class BindingProxy : Freezable
