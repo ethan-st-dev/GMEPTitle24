@@ -27,6 +27,14 @@ namespace GMEPTitle24
             viewModel = new OutdoorViewModel(MainView);
             InitializeComponent();
             this.DataContext = viewModel;
+
+            viewModel.ResetRows += ViewModel_ResetRows;
+        }
+
+        private void ViewModel_ResetRows(object? sender, EventArgs e)
+        {
+            Row1.ClearValue(RowDefinition.HeightProperty);
+            Row3.ClearValue(RowDefinition.HeightProperty);
         }
     }
 }

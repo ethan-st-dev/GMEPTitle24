@@ -31,13 +31,15 @@ namespace GMEPTitle24.Exterior
             }
         }
 
+        public event EventHandler? ResetRows;
         public OutdoorViewModel(MainViewModel MainView)
         {
             this.MainView = MainView;
         }
         public async Task InitializeObjects(string projectId)
         {
-            ExteriorScopeData = new ExteriorScope("", "", 4, 1, 0, 0, 0, false, 0, 1, 1, [1, 2]);
+            ExteriorScopeData = new ExteriorScope("", "", 1, 4, 1, 0, 0, false, 0, 1, 1, [1, 2]);
+            ExteriorScopeData.PropertyChanged += ExteriorScopeData_PropertyChanged;
 
         }
         public void ClearObjects()
@@ -48,7 +50,21 @@ namespace GMEPTitle24.Exterior
         {
             //await MainView.db.UpdateScope(ScopeData, projectId);
         }
-
+        private void ExteriorScopeData_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ExteriorScope.SystemTypeId))
+            {
+                if (ExteriorScopeData.SystemTypeId == 2)
+                {
+                    ResetRows?.Invoke(this, EventArgs.Empty);
+                }
+            }
+            /*if (e.PropertyName == nameof(Scope.CompletePrimaryFunctionList))
+            {
+                FilterBuildings();
+                ResetPrimaryFunctionIds();
+            }*/
+        }
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName)

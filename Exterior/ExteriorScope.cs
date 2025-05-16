@@ -56,7 +56,7 @@ namespace GMEPTitle24.Exterior
             string projectId,
             int projectScopeId,
             int outdoorLightingZoneId,
-            int systemType,
+            int systemTypeId,
             float illuminatedHardscapeArea,
             float squareFootage,
             bool alterationIncreasedLoad,
@@ -70,7 +70,7 @@ namespace GMEPTitle24.Exterior
             this.id = id;
             this.projectId = projectId;
             this.projectScopeId = projectScopeId;
-            this.systemTypeId = systemType;
+            this.systemTypeId = systemTypeId;
             this.illuminatedHardscapeArea = illuminatedHardscapeArea;
             this.squareFootage = squareFootage;
             this.alterationIncreasedLoad = alterationIncreasedLoad;
@@ -208,7 +208,19 @@ namespace GMEPTitle24.Exterior
                 }
             }
         }
-     
+        public int OutdoorLightingZoneId
+        {
+            get { return outdoorLightingZoneId; }
+            set
+            {
+                if (outdoorLightingZoneId != value)
+                {
+                    outdoorLightingZoneId = value;
+                    OnPropertyChanged(nameof(OutdoorLightingZoneId));
+                }
+            }
+        }
+
         public ObservableCollection<CheckboxItem> OccupancyTypesList
         {
             get { return OccupancyTypes; }
