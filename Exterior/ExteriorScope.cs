@@ -14,13 +14,14 @@ namespace GMEPTitle24.Exterior
         public string id = Guid.NewGuid().ToString();
         public string projectId = string.Empty;
         public int projectScopeId = 1;
+        public int outdoorLightingZoneId = 4;
         public int systemTypeId = 1;
         public float illuminatedHardscapeArea = 0;
         public float squareFootage = 0;
         public bool alterationIncreasedLoad = false;
         public float luminairesAltered = 0;
         public int alteredLuminairesPercentageId = 1;
-        public int wattageCalculationMethod = 1;
+        public int wattageCalculationMethodId = 1;
         public ObservableCollection<CheckboxItem> OccupancyTypes { get; set; } = new ObservableCollection<CheckboxItem>
         {
             new CheckboxItem { Name = "Auditorium Building", Number = 1, IsSelected = false },
@@ -54,13 +55,14 @@ namespace GMEPTitle24.Exterior
             string id,
             string projectId,
             int projectScopeId,
+            int outdoorLightingZoneId,
             int systemType,
             float illuminatedHardscapeArea,
             float squareFootage,
             bool alterationIncreasedLoad,
             float luminairesAltered,
             int alteredLuminairesPercentageId,
-            int wattageCalculationMethod,
+            int wattageCalculationMethodId,
             List<int> occupancyTypeIds
         )
         {
@@ -74,7 +76,8 @@ namespace GMEPTitle24.Exterior
             this.alterationIncreasedLoad = alterationIncreasedLoad;
             this.luminairesAltered = luminairesAltered;
             this.alteredLuminairesPercentageId = alteredLuminairesPercentageId;
-            this.wattageCalculationMethod = wattageCalculationMethod;
+            this.wattageCalculationMethodId = wattageCalculationMethodId;
+            this.outdoorLightingZoneId = outdoorLightingZoneId;
             foreach (var typeId in occupancyTypeIds)
             {
                 var matchingItem = OccupancyTypes.FirstOrDefault(item => item.Number == typeId);
@@ -193,18 +196,19 @@ namespace GMEPTitle24.Exterior
                 }
             }
         }
-        public int WattageCalculationMethod
+        public int WattageCalculationMethodId
         {
-            get { return wattageCalculationMethod; }
+            get { return wattageCalculationMethodId; }
             set
             {
-                if (wattageCalculationMethod != value)
+                if (wattageCalculationMethodId != value)
                 {
-                    wattageCalculationMethod = value;
-                    OnPropertyChanged(nameof(WattageCalculationMethod));
+                    wattageCalculationMethodId = value;
+                    OnPropertyChanged(nameof(WattageCalculationMethodId));
                 }
             }
         }
+     
         public ObservableCollection<CheckboxItem> OccupancyTypesList
         {
             get { return OccupancyTypes; }
