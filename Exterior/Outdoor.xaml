@@ -6,6 +6,9 @@
              xmlns:local="clr-namespace:GMEPTitle24.Exterior"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <local:IsFiveOrHigherConverter x:Key="IsFiveOrHigherConverter" />
+    </UserControl.Resources>
     <Grid>
         <TabControl>
             <TabControl.Resources>
@@ -164,6 +167,18 @@
                                             <ComboBoxItem Content="40% Reduced Wattage Exception per §141.0(b)2L" Tag="2"/>
                                         </ComboBox>
                                     </StackPanel>
+                                    <CheckBox Content="Does the project have outdoor lighting that is controlled from within a dwelling unit?" Margin="0 20 0 0" IsChecked="{Binding DwellingUnitControl}" FontWeight="Bold">
+                                        <CheckBox.Style>
+                                            <Style TargetType="CheckBox">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding LuminairesAltered, Converter={StaticResource IsFiveOrHigherConverter}}" Value="True">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </CheckBox.Style>
+                                    </CheckBox>
                                 </StackPanel>
                             </StackPanel>
                         </GroupBox>

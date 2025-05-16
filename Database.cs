@@ -540,6 +540,7 @@ namespace GMEPTitle24
                     0,
                     1,
                     1,
+                    false,
                     []
                     );
             string scopeQuery = @"SELECT 
@@ -569,6 +570,7 @@ namespace GMEPTitle24
                     scopeReader.GetFloat("luminaires_altered"),
                     scopeReader.GetInt32("altered_luminaires_percentage_id"),
                     scopeReader.GetInt32("wattage_calculation_method_id"),
+                    scopeReader.GetBoolean("dwelling_unit_control"),
                     occupancyTypeIds
                 );
             }
@@ -583,9 +585,9 @@ namespace GMEPTitle24
             //updating the scope object
             string scopeQuery = @"
                     INSERT INTO electrical_lighting_lto_scope
-                    (id, project_id, project_scope_id, outdoor_lighting_zone_id, system_type_id, illuminated_hardscaped_area, square_footage, alteration_increased_load, luminaires_altered, altered_luminaires_percentage_id, wattage_calculation_method_id, occupancy_type_ids) 
+                    (id, project_id, project_scope_id, outdoor_lighting_zone_id, system_type_id, illuminated_hardscaped_area, square_footage, alteration_increased_load, luminaires_altered, altered_luminaires_percentage_id, wattage_calculation_method_id, occupancy_type_ids, dwelling_unit_control) 
                     VALUES 
-                    (@id, @projectId, @projectScopeId, @outdoorLightingZoneId, @systemTypeId, @illuminatedHardscapedArea, @squareFootage, @alterationIncreasedLoad, @luminairesAltered, @alteredLuminairesPercentageId, @wattageCalculationMethodId, @occupancyTypeIds)
+                    (@id, @projectId, @projectScopeId, @outdoorLightingZoneId, @systemTypeId, @illuminatedHardscapedArea, @squareFootage, @alterationIncreasedLoad, @luminairesAltered, @alteredLuminairesPercentageId, @wattageCalculationMethodId, @occupancyTypeIds, @dwellingUnitControl)
                     ON DUPLICATE KEY UPDATE 
                     project_scope_id = @projectScopeId, 
                     outdoor_lighting_zone_id =  @outdoorLightingZoneId, 
@@ -596,6 +598,7 @@ namespace GMEPTitle24
                     luminaires_altered = @luminairesAltered, 
                     altered_luminaires_percentage_id = @alteredLuminairesPercentageId, 
                     wattage_calculation_method_id = @wattageCalculationMethodId, 
+                    dwelling_unit_control = @dwellingUnitControl,
                     occupancy_type_ids = @occupancyTypeIds
                  ";
 
@@ -612,7 +615,8 @@ namespace GMEPTitle24
             scopeCommand.Parameters.AddWithValue("@alterationIncreasedLoad", scope.AlterationIncreasedLoad);
             scopeCommand.Parameters.AddWithValue("@luminairesAltered", scope.LuminairesAltered);
             scopeCommand.Parameters.AddWithValue("@alteredLuminairesPercentageId", scope.AlteredLuminairesPercentageId);
-            scopeCommand.Parameters.AddWithValue("@wattageCalculationMethodId", scope.WattageCalculationMethodId); 
+            scopeCommand.Parameters.AddWithValue("@wattageCalculationMethodId", scope.WattageCalculationMethodId);
+            scopeCommand.Parameters.AddWithValue("@dwellingUnitControl", scope.DwellingUnitControl);
 
             await scopeCommand.ExecuteNonQueryAsync();
             await CloseConnectionAsync();

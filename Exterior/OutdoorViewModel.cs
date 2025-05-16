@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using SeleniumExtras.WaitHelpers;
 using System.Diagnostics;
+using System.Globalization;
+using System.Windows.Data;
 
 namespace GMEPTitle24.Exterior
 {
@@ -197,7 +199,7 @@ namespace GMEPTitle24.Exterior
                             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
                         }
 
-                        if (placeholderValue != null && placeholderValue.Contains("alteration increasing the connected lighting load (watts", StringComparison.OrdinalIgnoreCase))
+                        if (placeholderValue != null && placeholderValue.Contains("alteration increasing the connected lighting load (watts)", StringComparison.OrdinalIgnoreCase))
                         {
                             var choices = element.FindElements(By.CssSelector("li"));
                             var choice = choices[1];
@@ -206,6 +208,16 @@ namespace GMEPTitle24.Exterior
                                 choice = choices[0];
                             }
                             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("outdoor lighting that is controlled from within a dwelling unit", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            var choice = choices[1];
+                            if (ExteriorScopeData.DwellingUnitControl)
+                            {
+                                choice = choices[0];
+                            }
+                          ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
                         }
                         if (placeholderValue != null && placeholderValue.Contains("occupancy types", StringComparison.OrdinalIgnoreCase))
                         {
@@ -277,6 +289,30 @@ namespace GMEPTitle24.Exterior
                 return true;
             });
             return result;
+        }
+    }
+    public class IsFiveOrHigherConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is float val)
+            {
+                if (val >= 5)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public object ConvertBack(
+            object value,
+            Type targetType,
+            object parameter,
+            CultureInfo culture
+        )
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -22,6 +22,7 @@ namespace GMEPTitle24.Exterior
         public float luminairesAltered = 0;
         public int alteredLuminairesPercentageId = 1;
         public int wattageCalculationMethodId = 1;
+        public bool dwellingUnitControl = false;
         public ObservableCollection<CheckboxItem> OccupancyTypes { get; set; } = new ObservableCollection<CheckboxItem>
         {
             new CheckboxItem { Name = "Auditorium Building", Number = 1, IsSelected = false },
@@ -63,6 +64,7 @@ namespace GMEPTitle24.Exterior
             float luminairesAltered,
             int alteredLuminairesPercentageId,
             int wattageCalculationMethodId,
+            bool dwellingUnitControl,
             List<int> occupancyTypeIds
         )
         {
@@ -78,6 +80,7 @@ namespace GMEPTitle24.Exterior
             this.alteredLuminairesPercentageId = alteredLuminairesPercentageId;
             this.wattageCalculationMethodId = wattageCalculationMethodId;
             this.outdoorLightingZoneId = outdoorLightingZoneId;
+            this.dwellingUnitControl = dwellingUnitControl;
             foreach (var typeId in occupancyTypeIds)
             {
                 var matchingItem = OccupancyTypes.FirstOrDefault(item => item.Number == typeId);
@@ -220,6 +223,19 @@ namespace GMEPTitle24.Exterior
                 }
             }
         }
+        public bool DwellingUnitControl
+        {
+            get { return dwellingUnitControl; }
+            set
+            {
+                if (dwellingUnitControl != value)
+                {
+                    dwellingUnitControl = value;
+                    OnPropertyChanged(nameof(DwellingUnitControl));
+                }
+            }
+        }
+
 
         public ObservableCollection<CheckboxItem> OccupancyTypesList
         {
