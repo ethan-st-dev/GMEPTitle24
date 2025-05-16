@@ -1,4 +1,7 @@
-﻿using System;
+﻿using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -9,6 +12,9 @@ namespace GMEPTitle24.Exterior
 {
     public class OutdoorViewModel: INotifyPropertyChanged
     {
+        public ChromeOptions options;
+        public IWebDriver driver;
+        public WebDriverWait wait;
         public MainViewModel MainView { get; set; }
 
         public ExteriorScope exteriorScopeData;
