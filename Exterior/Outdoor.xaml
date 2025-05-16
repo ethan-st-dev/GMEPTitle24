@@ -235,6 +235,15 @@
                                     </CompositeCollection>
                                 </DataGridComboBoxColumn.ItemsSource>
                             </DataGridComboBoxColumn>
+                            <DataGridComboBoxColumn Header="Mounting Height" SelectedValueBinding="{Binding MountingTypeId}" SelectedValuePath="Tag" Width="*">
+                                <DataGridComboBoxColumn.ItemsSource>
+                                    <CompositeCollection>
+                                        <ComboBoxItem Content="Greater than or equal to 24 ft" Tag="1"/>
+                                        <ComboBoxItem Content="Less than 24 ft" Tag="2"/>
+                                    </CompositeCollection>
+                                </DataGridComboBoxColumn.ItemsSource>
+                            </DataGridComboBoxColumn>
+                            <DataGridCheckBoxColumn Header="Excluded From Wattage Calculation" Binding="{Binding Excluded}" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </GroupBox>

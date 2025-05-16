@@ -27,8 +27,6 @@ namespace GMEPTitle24.Exterior
         private bool excluded = false;
         private bool moreThan6200Lumens = false;
         private int luminaireShieldingExceptionId = 1;
-        private float numLuminairesReplaced = 0;
-
 
         public event PropertyChangedEventHandler PropertyChanged;
         public ExteriorLighting(
@@ -47,7 +45,6 @@ namespace GMEPTitle24.Exterior
             bool excluded,
             bool moreThan6200Lumens,
             int luminaireShieldingExceptionId,
-            float numLuminairesReplaced
         )
         {
             this.id = id;
@@ -65,7 +62,6 @@ namespace GMEPTitle24.Exterior
             this.excluded = excluded;
             this.moreThan6200Lumens = moreThan6200Lumens;
             this.luminaireShieldingExceptionId = luminaireShieldingExceptionId;
-            this.numLuminairesReplaced = numLuminairesReplaced;
         }
 
         //EMpty constructor for testing
@@ -252,18 +248,6 @@ namespace GMEPTitle24.Exterior
                 {
                     luminaireShieldingExceptionId = value;
                     OnPropertyChanged(nameof(LuminaireShieldingExceptionId));
-                }
-            }
-        }
-        public float NumLuminairesReplaced
-        {
-            get => numLuminairesReplaced;
-            set
-            {
-                if (numLuminairesReplaced != value)
-                {
-                    numLuminairesReplaced = value;
-                    OnPropertyChanged(nameof(NumLuminairesReplaced));
                 }
             }
         }
