@@ -11,6 +11,8 @@ using SeleniumExtras.WaitHelpers;
 using System.Diagnostics;
 using System.Globalization;
 using System.Windows.Data;
+using System.Collections.ObjectModel;
+using GMEPTitle24.Interior;
 
 namespace GMEPTitle24.Exterior
 {
@@ -20,6 +22,21 @@ namespace GMEPTitle24.Exterior
         public IWebDriver driver;
         public WebDriverWait wait;
         public MainViewModel MainView { get; set; }
+
+        public ObservableCollection<ExteriorLighting> exteriorLightingList = new ObservableCollection<ExteriorLighting>();
+        public ObservableCollection<ExteriorLighting> ExteriorLightingList
+        {
+            get { return exteriorLightingList; }
+            set
+            {
+                if (exteriorLightingList != value)
+                {
+                    exteriorLightingList = value;
+                    OnPropertyChanged(nameof(ExteriorLightingList));
+                }
+            }
+        }
+
 
         public ExteriorScope exteriorScopeData;
         public ExteriorScope ExteriorScopeData

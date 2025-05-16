@@ -201,7 +201,44 @@
                 </Grid>
 
             </TabItem>
-            <TabItem Header="Fixtures"/>
+            <TabItem Header="Fixtures">
+                <GroupBox Header="Options">
+                    <DataGrid x:Name="OptionsGrid" ItemsSource="{Binding ExteriorLightingList}" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" Width="*"/>
+                            <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*"/>
+                            <DataGridComboBoxColumn Header="Type" SelectedValueBinding="{Binding TypeId}" SelectedValuePath="Tag" Width="*">
+                                <DataGridComboBoxColumn.ItemsSource>
+                                    <CompositeCollection>
+                                        <ComboBoxItem Content="New Luminaire (Replacement)" Tag="1"/>
+                                        <ComboBoxItem Content="Existing Reinstalled" Tag="2"/>
+                                        <ComboBoxItem Content="Existing to Remain" Tag="3"/>
+                                        <ComboBoxItem Content="New Luminaire (Additional)" Tag="4"/>
+                                    </CompositeCollection>
+                                </DataGridComboBoxColumn.ItemsSource>
+                            </DataGridComboBoxColumn>
+                            <DataGridComboBoxColumn Header="Wattage Determined Option" SelectedValueBinding="{Binding WattageDeterminedOptionId}" SelectedValuePath="Tag" Width="*">
+                                <DataGridComboBoxColumn.ItemsSource>
+                                    <CompositeCollection>
+                                        <ComboBoxItem Content="Manufacturer Specification Sheet" Tag="1"/>
+                                        <ComboBoxItem Content="NA8 Default" Tag="2"/>
+                                        <ComboBoxItem Content="Other*" Tag="3"/>
+                                    </CompositeCollection>
+                                </DataGridComboBoxColumn.ItemsSource>
+                            </DataGridComboBoxColumn>
+                            <DataGridComboBoxColumn Header="Description Option" SelectedValueBinding="{Binding DescriptionOptionId}" SelectedValuePath="Tag" Width="*">
+                                <DataGridComboBoxColumn.ItemsSource>
+                                    <CompositeCollection>
+                                        <ComboBoxItem Content="Linear Lighting" Tag="1"/>
+                                        <ComboBoxItem Content="Non-Pole Mounted" Tag="2"/>
+                                        <ComboBoxItem Content="Pole-mounted" Tag="3"/>
+                                    </CompositeCollection>
+                                </DataGridComboBoxColumn.ItemsSource>
+                            </DataGridComboBoxColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+            </TabItem>
             <TabItem Header="Control Areas"/>
         </TabControl>
     </Grid>
