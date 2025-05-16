@@ -223,7 +223,7 @@
                                         </CompositeCollection>
                                     </DataGridComboBoxColumn.ItemsSource>
                                 </DataGridComboBoxColumn>
-                                <DataGridComboBoxColumn Header="Wattage Determined Option" SelectedValueBinding="{Binding WattageDeterminedOptionId}" SelectedValuePath="Tag" Width="*">
+                                <DataGridComboBoxColumn Header="Wattage Determined Option" SelectedValueBinding="{Binding WattageDeterminedOptionId, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Tag" Width="*">
                                     <DataGridComboBoxColumn.ItemsSource>
                                         <CompositeCollection>
                                             <ComboBoxItem Content="Manufacturer Specification Sheet" Tag="1"/>
@@ -258,6 +258,28 @@
                         <DataGrid x:Name="ExteriorOptionsGrid" ItemsSource="{Binding ExteriorLightingList}" AutoGenerateColumns="False">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" Width="*"/>
+                                <DataGridTextColumn Header="Other Wattage Determined Option" Binding="{Binding OtherComplianceMethodDescription}" Width="*">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding WattageDeterminedOptionId}" Value="3">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style TargetType="TextBox">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding WattageDeterminedOptionId}" Value="3">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridCheckBoxColumn Header="More than 6200 Lumens" Binding="{Binding MoreThan6200Lumens, UpdateSourceTrigger=PropertyChanged}" Width="*">
                                     <DataGridCheckBoxColumn.ElementStyle>
                                         <Style TargetType="CheckBox">

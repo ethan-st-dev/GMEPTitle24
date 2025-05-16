@@ -27,6 +27,7 @@ namespace GMEPTitle24.Exterior
         private bool excluded = false;
         private bool moreThan6200Lumens = false;
         private int luminaireShieldingExceptionId = 1;
+        private string otherComplianceMethodDescription = string.Empty;
 
         public event PropertyChangedEventHandler PropertyChanged;
         public ExteriorLighting(
@@ -44,7 +45,8 @@ namespace GMEPTitle24.Exterior
             int mountingTypeId,
             bool excluded,
             bool moreThan6200Lumens,
-            int luminaireShieldingExceptionId
+            int luminaireShieldingExceptionId,
+            string otherComplianceMethodDescription
         )
         {
             this.id = id;
@@ -62,6 +64,7 @@ namespace GMEPTitle24.Exterior
             this.excluded = excluded;
             this.moreThan6200Lumens = moreThan6200Lumens;
             this.luminaireShieldingExceptionId = luminaireShieldingExceptionId;
+            this.otherComplianceMethodDescription = otherComplianceMethodDescription;
         }
 
         //EMpty constructor for testing
@@ -248,6 +251,18 @@ namespace GMEPTitle24.Exterior
                 {
                     luminaireShieldingExceptionId = value;
                     OnPropertyChanged(nameof(LuminaireShieldingExceptionId));
+                }
+            }
+        }
+        public string OtherComplianceMethodDescription
+        {
+            get => otherComplianceMethodDescription;
+            set
+            {
+                if (otherComplianceMethodDescription != value)
+                {
+                    otherComplianceMethodDescription = value;
+                    OnPropertyChanged(nameof(OtherComplianceMethodDescription));
                 }
             }
         }
