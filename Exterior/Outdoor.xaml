@@ -96,7 +96,6 @@
                                         </ComboBox>
                                     </StackPanel>
                                 </StackPanel>
-                            
                             </GroupBox>
                             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="LightGray"/>
                             <GroupBox Grid.Column="2" Header="Occupancy Types">
@@ -123,7 +122,50 @@
                         </Grid>
                         <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Background="LightGray"/>
                         <GroupBox Grid.Row="2" Header="Altered Lighting Options">
-
+                            <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
+                                <CheckBox Content="Is your alteration increasing the connected lighting load (Watts)?" IsChecked="{Binding AlterationIncreasedLoad}" FontWeight="Bold"/>
+                                <StackPanel Orientation="Vertical">
+                                    <StackPanel.Style>
+                                        <Style TargetType="StackPanel">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding AlterationIncreasedLoad}" Value="False">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+                                    <StackPanel Orientation="Vertical" Margin="0 10 0 0">
+                                        <Label Content="Sum Total of Luminaires Being Added or Altered" HorizontalAlignment="Center" FontWeight="Bold"/>
+                                        <TextBox Text="{Binding LuminairesAltered}"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" Margin="0 10 0 0">
+                                        <Label Content="Sum Total of Luminaires Being Added or Altered" HorizontalAlignment="Center" FontWeight="Bold"/>
+                                        <ComboBox SelectedValue="{Binding AlteredLuminairesPercentageId}" SelectedValuePath="Tag">
+                                            <ComboBoxItem Content="Greater than or equal to 10% and less then 50%" Tag="1"/>
+                                            <ComboBoxItem Content="Greater then or equal to 50%" Tag="2"/>
+                                            <ComboBoxItem Content="Less than 10%" Tag="3"/>
+                                        </ComboBox>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" Margin="0 10 0 0">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding AlteredLuminairesPercentageId}" Value="2">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <Label Content="Sum Total of Luminaires Being Added or Altered" HorizontalAlignment="Center" FontWeight="Bold"/>
+                                        <ComboBox SelectedValue="{Binding WattageCalculationMethodId}" SelectedValuePath="Tag">
+                                            <ComboBoxItem Content="Calculated Allowance per §140.7 " Tag="1"/>
+                                            <ComboBoxItem Content="40% Reduced Wattage Exception per §141.0(b)2L" Tag="2"/> >
+                                        </ComboBox>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
                         </GroupBox>
                       
                     </Grid>
