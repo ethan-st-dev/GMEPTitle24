@@ -44,7 +44,7 @@ namespace GMEPTitle24.Exterior
             int mountingTypeId,
             bool excluded,
             bool moreThan6200Lumens,
-            int luminaireShieldingExceptionId,
+            int luminaireShieldingExceptionId
         )
         {
             this.id = id;

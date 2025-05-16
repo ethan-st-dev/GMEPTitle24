@@ -202,51 +202,158 @@
 
             </TabItem>
             <TabItem Header="Fixtures">
-                <GroupBox Header="Options">
-                    <DataGrid x:Name="OptionsGrid" ItemsSource="{Binding ExteriorLightingList}" AutoGenerateColumns="False">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" Width="*"/>
-                            <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*"/>
-                            <DataGridComboBoxColumn Header="Type" SelectedValueBinding="{Binding TypeId}" SelectedValuePath="Tag" Width="*">
-                                <DataGridComboBoxColumn.ItemsSource>
-                                    <CompositeCollection>
-                                        <ComboBoxItem Content="New Luminaire (Replacement)" Tag="1"/>
-                                        <ComboBoxItem Content="Existing Reinstalled" Tag="2"/>
-                                        <ComboBoxItem Content="Existing to Remain" Tag="3"/>
-                                        <ComboBoxItem Content="New Luminaire (Additional)" Tag="4"/>
-                                    </CompositeCollection>
-                                </DataGridComboBoxColumn.ItemsSource>
-                            </DataGridComboBoxColumn>
-                            <DataGridComboBoxColumn Header="Wattage Determined Option" SelectedValueBinding="{Binding WattageDeterminedOptionId}" SelectedValuePath="Tag" Width="*">
-                                <DataGridComboBoxColumn.ItemsSource>
-                                    <CompositeCollection>
-                                        <ComboBoxItem Content="Manufacturer Specification Sheet" Tag="1"/>
-                                        <ComboBoxItem Content="NA8 Default" Tag="2"/>
-                                        <ComboBoxItem Content="Other*" Tag="3"/>
-                                    </CompositeCollection>
-                                </DataGridComboBoxColumn.ItemsSource>
-                            </DataGridComboBoxColumn>
-                            <DataGridComboBoxColumn Header="Description Option" SelectedValueBinding="{Binding DescriptionOptionId}" SelectedValuePath="Tag" Width="*">
-                                <DataGridComboBoxColumn.ItemsSource>
-                                    <CompositeCollection>
-                                        <ComboBoxItem Content="Linear Lighting" Tag="1"/>
-                                        <ComboBoxItem Content="Non-Pole Mounted" Tag="2"/>
-                                        <ComboBoxItem Content="Pole-mounted" Tag="3"/>
-                                    </CompositeCollection>
-                                </DataGridComboBoxColumn.ItemsSource>
-                            </DataGridComboBoxColumn>
-                            <DataGridComboBoxColumn Header="Mounting Height" SelectedValueBinding="{Binding MountingTypeId}" SelectedValuePath="Tag" Width="*">
-                                <DataGridComboBoxColumn.ItemsSource>
-                                    <CompositeCollection>
-                                        <ComboBoxItem Content="Greater than or equal to 24 ft" Tag="1"/>
-                                        <ComboBoxItem Content="Less than 24 ft" Tag="2"/>
-                                    </CompositeCollection>
-                                </DataGridComboBoxColumn.ItemsSource>
-                            </DataGridComboBoxColumn>
-                            <DataGridCheckBoxColumn Header="Excluded From Wattage Calculation" Binding="{Binding Excluded}" Width="*"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </GroupBox>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Grid.Row="0" Header="Options">
+                        <DataGrid x:Name="OptionsGrid" ItemsSource="{Binding ExteriorLightingList}" AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" Width="*"/>
+                                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*"/>
+                                <DataGridComboBoxColumn Header="Type" SelectedValueBinding="{Binding TypeId, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Tag" Width="*">
+                                    <DataGridComboBoxColumn.ItemsSource>
+                                        <CompositeCollection>
+                                            <ComboBoxItem Content="New Luminaire (Replacement)" Tag="1"/>
+                                            <ComboBoxItem Content="Existing Reinstalled" Tag="2"/>
+                                            <ComboBoxItem Content="Existing to Remain" Tag="3"/>
+                                            <ComboBoxItem Content="New Luminaire (Additional)" Tag="4"/>
+                                        </CompositeCollection>
+                                    </DataGridComboBoxColumn.ItemsSource>
+                                </DataGridComboBoxColumn>
+                                <DataGridComboBoxColumn Header="Wattage Determined Option" SelectedValueBinding="{Binding WattageDeterminedOptionId}" SelectedValuePath="Tag" Width="*">
+                                    <DataGridComboBoxColumn.ItemsSource>
+                                        <CompositeCollection>
+                                            <ComboBoxItem Content="Manufacturer Specification Sheet" Tag="1"/>
+                                            <ComboBoxItem Content="NA8 Default" Tag="2"/>
+                                            <ComboBoxItem Content="Other*" Tag="3"/>
+                                        </CompositeCollection>
+                                    </DataGridComboBoxColumn.ItemsSource>
+                                </DataGridComboBoxColumn>
+                                <DataGridComboBoxColumn Header="Description Option" SelectedValueBinding="{Binding DescriptionOptionId}" SelectedValuePath="Tag" Width="*">
+                                    <DataGridComboBoxColumn.ItemsSource>
+                                        <CompositeCollection>
+                                            <ComboBoxItem Content="Linear Lighting" Tag="1"/>
+                                            <ComboBoxItem Content="Non-Pole Mounted" Tag="2"/>
+                                            <ComboBoxItem Content="Pole-mounted" Tag="3"/>
+                                        </CompositeCollection>
+                                    </DataGridComboBoxColumn.ItemsSource>
+                                </DataGridComboBoxColumn>
+                                <DataGridComboBoxColumn Header="Mounting Height" SelectedValueBinding="{Binding MountingTypeId}" SelectedValuePath="Tag" Width="*">
+                                    <DataGridComboBoxColumn.ItemsSource>
+                                        <CompositeCollection>
+                                            <ComboBoxItem Content="Greater than or equal to 24 ft" Tag="1"/>
+                                            <ComboBoxItem Content="Less than 24 ft" Tag="2"/>
+                                        </CompositeCollection>
+                                    </DataGridComboBoxColumn.ItemsSource>
+                                </DataGridComboBoxColumn>
+                                <DataGridCheckBoxColumn Header="Excluded From Wattage Calculation" Binding="{Binding Excluded}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </GroupBox>
+                    <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Background="LightGray"/>
+                    <GroupBox Grid.Row="2" Header="Options">
+                        <DataGrid x:Name="ExteriorOptionsGrid" ItemsSource="{Binding ExteriorLightingList}" AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" Width="*"/>
+                                <DataGridCheckBoxColumn Header="More than 6200 Lumens" Binding="{Binding MoreThan6200Lumens, UpdateSourceTrigger=PropertyChanged}" Width="*">
+                                    <DataGridCheckBoxColumn.ElementStyle>
+                                        <Style TargetType="CheckBox">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding TypeId}" Value="1">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding TypeId}" Value="4">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGridCheckBoxColumn.ElementStyle>
+                                    <DataGridCheckBoxColumn.EditingElementStyle>
+                                        <Style TargetType="CheckBox">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding TypeId}" Value="1">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding TypeId}" Value="4">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGridCheckBoxColumn.EditingElementStyle>
+                                </DataGridCheckBoxColumn>
+                                <DataGridComboBoxColumn Header="Shielding (BUG) Exceptions" SelectedValueBinding="{Binding LuminaireShieldingExceptionId, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Tag" Width="*">
+                                    <DataGridComboBoxColumn.ElementStyle>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding TypeId}" Value="1"/>
+                                                        <Condition Binding="{Binding MoreThan6200Lumens}" Value="True"/>
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </MultiDataTrigger>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding TypeId}" Value="4"/>
+                                                        <Condition Binding="{Binding MoreThan6200Lumens}" Value="True"/>
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGridComboBoxColumn.ElementStyle>
+                                    <DataGridComboBoxColumn.EditingElementStyle>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding TypeId}" Value="1"/>
+                                                        <Condition Binding="{Binding MoreThan6200Lumens}" Value="True"/>
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </MultiDataTrigger>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding TypeId}" Value="4"/>
+                                                        <Condition Binding="{Binding MoreThan6200Lumens}" Value="True"/>
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGridComboBoxColumn.EditingElementStyle>
+                                    <DataGridComboBoxColumn.ItemsSource>
+                                        <CompositeCollection>
+                                            <ComboBoxItem Content="No" Tag="1"/>
+                                            <ComboBoxItem Content="NA: Controlled by dwelling unit/quest rm" Tag="2"/>
+                                            <ComboBoxItem Content="NA: Facade, monment, statue, bridge" Tag="3"/>
+                                            <ComboBoxItem Content="NA: Illuminate public right-of-way" Tag="4"/>
+                                            <ComboBoxItem Content="NA: Not permitted by H&amp;LS" Tag="5"/>
+                                            <ComboBoxItem Content="NA: Replacement of pole-mounted per §130.2(b)/§160.5(c)" Tag="6"/>
+                                            <ComboBoxItem Content="NA: Signage" Tag="7"/>
+                                            <ComboBoxItem Content="NA: Temporary Lighting" Tag="8"/>
+                                            <ComboBoxItem Content="NA: Exception in Section 5.106.8 of Part 11" Tag="9"/>
+                                            <ComboBoxItem Content="NA: Exception in Section 140.7(a)" Tag="10"/>
+                                        </CompositeCollection>
+                                    </DataGridComboBoxColumn.ItemsSource>
+                                </DataGridComboBoxColumn>
+                                <DataGridTextColumn Header="Watts Per Linear Foot" Binding="{Binding WattagePerLinearFoot}" Width="*"/>
+                                <DataGridTextColumn Header="Total linear feet" Binding="{Binding TotalLinearFeet}" Width="*"/>
+                                <DataGridTextColumn Header="Wattage Per Luminaire" Binding="{Binding WattagePerLuminaire}" Width="*"/>
+                                <DataGridTextColumn Header="Number of Luminaires" Binding="{Binding NumLuminaires}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </GroupBox>
+                </Grid>
             </TabItem>
             <TabItem Header="Control Areas"/>
         </TabControl>
