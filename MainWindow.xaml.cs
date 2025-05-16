@@ -117,6 +117,7 @@ namespace GMEPTitle24
                 viewModel.ProjectLoading = true;
                 viewModel.StatusText = "Saving";
                 await indoor.viewModel.SaveObjects(selectedPair.Value);
+                await outdoor.viewModel.SaveObjects(selectedPair.Value);
                 bool result = await viewModel.ActivateSelenium();
                 if (result)
                 {
@@ -159,6 +160,7 @@ namespace GMEPTitle24
                 viewModel.ProjectLoading = true;
                 viewModel.StatusText = "Saving";
                 await indoor.viewModel.SaveObjects(selectedPair.Value);
+                await outdoor.viewModel.SaveObjects(selectedPair.Value);
                 viewModel.StatusText = String.Empty;
                 viewModel.ProjectLoading = false;
             }

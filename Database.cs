@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using GMEPTitle24.Interior;
+using GMEPTitle24.Exterior;
 using MySql.Data.MySqlClient;
 
 namespace GMEPTitle24
@@ -520,5 +521,102 @@ namespace GMEPTitle24
             await scopeCommand.ExecuteNonQueryAsync();
             await CloseConnectionAsync();
         }
+        public async Task<ExteriorScope> GetExteriorScope(
+            string projectId
+        )
+        {
+            await OpenConnectionAsync();
+
+            //Getting the scope
+            ExteriorScope scope = new ExteriorScope(
+                    Guid.NewGuid().ToString(),
+                    projectId,
+                    1,
+                    4,
+                    1,
+                    0,
+                    0,
+                    false,
+                    0,
+                    1,
+                    1,
+                    []
+                    );
+            string scopeQuery = @"SELECT 
+                *
+                FROM 
+                    electrical_lighting_lto_scope
+                WHERE 
+                    project_id = @projectId
+                LIMIT 1";
+            MySqlCommand scopeCommand = new MySqlCommand(scopeQuery, Connection);
+            scopeCommand.Parameters.AddWithValue("@projectId", projectId);
+            MySqlDataReader scopeReader = (MySqlDataReader)await scopeCommand.ExecuteReaderAsync();
+
+
+            while (await scopeReader.ReadAsync())
+            {
+                List<int> occupancyTypeIds = JsonSerializer.Deserialize<List<int>>(scopeReader.GetString("occupancy_type_ids"));
+                scope = new ExteriorScope(
+                    scopeReader.GetString("id"),
+                    projectId,
+                    scopeReader.GetInt32("project_scope_id"),
+                    scopeReader.GetInt32("outdoor_lighting_zone_id"),
+                    scopeReader.GetInt32("system_type_id"),
+                    scopeReader.GetFloat("illuminated_hardscaped_area"),
+                    scopeReader.GetFloat("square_footage"),
+                    scopeReader.GetBoolean("alteration_increased_load"),
+                    scopeReader.GetFloat("luminaires_altered"),
+                    scopeReader.GetInt32("altered_luminaires_percentage_id"),
+                    scopeReader.GetInt32("wattage_calculation_method_id"),
+                    occupancyTypeIds
+                );
+            }
+
+            await scopeReader.CloseAsync();
+            return scope;
+        }
+        public async Task UpdateExteriorScope(ExteriorScope scope, string projectId)
+        {
+            await OpenConnectionAsync();
+
+            //updating the scope object
+            string scopeQuery = @"
+                    INSERT INTO electrical_lighting_lto_scope
+                    (id, project_id, project_scope_id, outdoor_lighting_zone_id, system_type_id, illuminated_hardscaped_area, square_footage, alteration_increased_load, luminaires_altered, altered_luminaires_percentage_id, wattage_calculation_method_id, occupancy_type_ids) 
+                    VALUES 
+                    (@id, @projectId, @projectScopeId, @outdoorLightingZoneId, @systemTypeId, @illuminatedHardscapedArea, @squareFootage, @alterationIncreasedLoad, @luminairesAltered, @alteredLuminairesPercentageId, @wattageCalculationMethodId, @occupancyTypeIds)
+                    ON DUPLICATE KEY UPDATE 
+                    project_scope_id = @projectScopeId, 
+                    outdoor_lighting_zone_id =  @outdoorLightingZoneId, 
+                    system_type_id = @systemTypeId, 
+                    illuminated_hardscaped_area = @illuminatedHardscapedArea, 
+                    square_footage = @squareFootage, 
+                    alteration_increased_load = @alterationIncreasedLoad, 
+                    luminaires_altered = @luminairesAltered, 
+                    altered_luminaires_percentage_id = @alteredLuminairesPercentageId, 
+                    wattage_calculation_method_id = @wattageCalculationMethodId, 
+                    occupancy_type_ids = @occupancyTypeIds
+                 ";
+
+            string occupancyTypeIdsJson = JsonSerializer.Serialize(scope.OccupancyTypes.Where(o => o.IsSelected).Select(o => o.Number).ToList());
+            MySqlCommand scopeCommand = new MySqlCommand(scopeQuery, Connection);
+            scopeCommand.Parameters.AddWithValue("@id", scope.Id);
+            scopeCommand.Parameters.AddWithValue("@projectId", projectId);
+            scopeCommand.Parameters.AddWithValue("@projectScopeId", scope.ProjectScopeId);
+            scopeCommand.Parameters.AddWithValue("@occupancyTypeIds", occupancyTypeIdsJson);
+            scopeCommand.Parameters.AddWithValue("@outdoorLightingZoneId", scope.OutdoorLightingZoneId);
+            scopeCommand.Parameters.AddWithValue("@systemTypeId", scope.SystemTypeId);
+            scopeCommand.Parameters.AddWithValue("@illuminatedHardscapedArea", scope.IlluminatedHardscapeArea);
+            scopeCommand.Parameters.AddWithValue("@squareFootage", scope.SquareFootage);
+            scopeCommand.Parameters.AddWithValue("@alterationIncreasedLoad", scope.AlterationIncreasedLoad);
+            scopeCommand.Parameters.AddWithValue("@luminairesAltered", scope.LuminairesAltered);
+            scopeCommand.Parameters.AddWithValue("@alteredLuminairesPercentageId", scope.AlteredLuminairesPercentageId);
+            scopeCommand.Parameters.AddWithValue("@wattageCalculationMethodId", scope.WattageCalculationMethodId); 
+
+            await scopeCommand.ExecuteNonQueryAsync();
+            await CloseConnectionAsync();
+        }
     }
 }
+
