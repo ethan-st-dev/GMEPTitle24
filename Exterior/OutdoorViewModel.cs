@@ -37,7 +37,7 @@ namespace GMEPTitle24.Exterior
         }
         public async Task InitializeObjects(string projectId)
         {
-            ExteriorScopeData = new ExteriorScope("", "", 1, 0, 0, 0, false, 0, 1, 1, [1, 2]);
+            ExteriorScopeData = new ExteriorScope("", "", 4, 1, 0, 0, 0, false, 0, 1, 1, [1, 2]);
 
         }
         public void ClearObjects()
