@@ -232,7 +232,7 @@
                                         </CompositeCollection>
                                     </DataGridComboBoxColumn.ItemsSource>
                                 </DataGridComboBoxColumn>
-                                <DataGridComboBoxColumn Header="Description Option" SelectedValueBinding="{Binding DescriptionOptionId}" SelectedValuePath="Tag" Width="*">
+                                <DataGridComboBoxColumn Header="Description Option" SelectedValueBinding="{Binding DescriptionOptionId, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Tag" Width="*">
                                     <DataGridComboBoxColumn.ItemsSource>
                                         <CompositeCollection>
                                             <ComboBoxItem Content="Linear Lighting" Tag="1"/>
@@ -346,10 +346,94 @@
                                         </CompositeCollection>
                                     </DataGridComboBoxColumn.ItemsSource>
                                 </DataGridComboBoxColumn>
-                                <DataGridTextColumn Header="Watts Per Linear Foot" Binding="{Binding WattagePerLinearFoot}" Width="*"/>
-                                <DataGridTextColumn Header="Total linear feet" Binding="{Binding TotalLinearFeet}" Width="*"/>
-                                <DataGridTextColumn Header="Wattage Per Luminaire" Binding="{Binding WattagePerLuminaire}" Width="*"/>
-                                <DataGridTextColumn Header="Number of Luminaires" Binding="{Binding NumLuminaires}" Width="*"/>
+                                <DataGridTextColumn Header="Watts Per Linear Foot" Binding="{Binding WattagePerLinearFoot}" Width="*">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DescriptionOptionId}" Value="1">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style TargetType="TextBox">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DescriptionOptionId}" Value="1">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Total linear feet" Binding="{Binding TotalLinearFeet}" Width="*">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DescriptionOptionId}" Value="1">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style TargetType="TextBox">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DescriptionOptionId}" Value="1">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Wattage Per Luminaire" Binding="{Binding WattagePerLuminaire}" Width="*">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DescriptionOptionId}" Value="1">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style TargetType="TextBox">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DescriptionOptionId}" Value="1">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Number of Luminaires" Binding="{Binding NumLuminaires}" Width="*">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DescriptionOptionId}" Value="1">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style TargetType="TextBox">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DescriptionOptionId}" Value="1">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </GroupBox>
