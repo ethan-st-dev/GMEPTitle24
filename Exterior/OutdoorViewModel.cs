@@ -60,6 +60,7 @@ namespace GMEPTitle24.Exterior
         public async Task InitializeObjects(string projectId)
         {
             ExteriorScopeData = await MainView.db.GetExteriorScope(projectId);
+            ExteriorLightingList = await MainView.db.GetExteriorLighting(projectId);
             ExteriorScopeData.PropertyChanged += ExteriorScopeData_PropertyChanged;
 
         }
@@ -70,6 +71,7 @@ namespace GMEPTitle24.Exterior
         public async Task SaveObjects(string projectId)
         {
             await MainView.db.UpdateExteriorScope(ExteriorScopeData, projectId);
+            await MainView.db.UpdateExteriorLuminaires(ExteriorLightingList);
         }
         private void ExteriorScopeData_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {

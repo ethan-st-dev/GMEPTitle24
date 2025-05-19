@@ -641,15 +641,15 @@ namespace GMEPTitle24
                             ellum.fixture_id,
                             ellum.type_id,
                             ellum.wattage_determined_option_id,
-                            ellum.wattage_per_linear_foot,
                             ellum.total_linear_feet,
                             ellum.luminaire_qty,
                             ellum.mounting_type_id,
                             ellum.is_excluded,
                             ellum.more_than_6200_lumens,
                             ellum.luminaire_shielding_exception_id,
+                            ellum.description_option_id,
                             ellum.other_compliance_method_description,
-                            ellum.fixture_id,
+                            ellum.fixture_id
                             FROM 
                                 electrical_lighting el
                             LEFT JOIN 
@@ -746,7 +746,7 @@ namespace GMEPTitle24
             await OpenConnectionAsync();
             foreach (var lighting in lightings)
             {
-                string query = "UPDATE electrical_lighting_lto_luminaires SET type_id = @typeId, wattage_determined_option_id = @wattageDeterminedOptionId, total_linear_feet = @totalLinearFeet, luminaire_qty = luminaireQty, mounting_type_id = @mountingTypeId, is_excluded = @isExcluded, more_than_6200_lumens = @moreThan6200Lumens, luminaire_shielding_exception_id = @luminaireShieldingExceptionId, other_compliance_method_description = @otherComplianceMethodDescription, description_option_id = @descriptionOptionId WHERE fixture_id = @id";
+                string query = "UPDATE electrical_lighting_lto_luminaires SET type_id = @typeId, wattage_determined_option_id = @wattageDeterminedOptionId, total_linear_feet = @totalLinearFeet, luminaire_qty = @luminaireQty, mounting_type_id = @mountingTypeId, is_excluded = @isExcluded, more_than_6200_lumens = @moreThan6200Lumens, luminaire_shielding_exception_id = @luminaireShieldingExceptionId, other_compliance_method_description = @otherComplianceMethodDescription, description_option_id = @descriptionOptionId WHERE fixture_id = @id";
                 MySqlCommand command = new MySqlCommand(query, Connection);
                 command.Parameters.AddWithValue("@id", lighting.Id);
                 command.Parameters.AddWithValue("@typeId", lighting.TypeId);

@@ -368,7 +368,7 @@
                                         </CompositeCollection>
                                     </DataGridComboBoxColumn.ItemsSource>
                                 </DataGridComboBoxColumn>
-                                <DataGridTextColumn Header="Watts Per Linear Foot" Binding="{Binding WattagePerLinearFoot}" Width="*">
+                                <!--<DataGridTextColumn Header="Watts Per Linear Foot" Binding="{Binding WattagePerLinearFoot}" Width="*">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style TargetType="TextBlock">
                                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -389,7 +389,7 @@
                                             </Style.Triggers>
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
-                                </DataGridTextColumn>
+                                </DataGridTextColumn>-->
                                 <DataGridTextColumn Header="Total linear feet" Binding="{Binding TotalLinearFeet}" Width="*">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style TargetType="TextBlock">
@@ -412,7 +412,7 @@
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Header="Wattage Per Luminaire" Binding="{Binding WattagePerLuminaire}" Width="*">
+                               <!-- <DataGridTextColumn Header="Wattage Per Luminaire" Binding="{Binding WattagePerLuminaire}" Width="*">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style TargetType="TextBlock">
                                             <Setter Property="Visibility" Value="Visible"/>
@@ -433,8 +433,8 @@
                                             </Style.Triggers>
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
-                                </DataGridTextColumn>
-                                <DataGridTextColumn Header="Number of Luminaires" Binding="{Binding NumLuminaires}" Width="*">
+                                </DataGridTextColumn>-->
+                                <DataGridTextColumn Header="Number of Luminaires" Binding="{Binding LuminaireQty}" Width="*">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style TargetType="TextBlock">
                                             <Setter Property="Visibility" Value="Visible"/>

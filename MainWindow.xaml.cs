@@ -144,6 +144,7 @@ namespace GMEPTitle24
                 viewModel.ProjectLoaded = false;
                 viewModel.ProjectLoading = false;
                 indoor.viewModel.ClearObjects();
+                outdoor.viewModel.ClearObjects();
                 return;
             }
             viewModel.ProjectLoaded = true;

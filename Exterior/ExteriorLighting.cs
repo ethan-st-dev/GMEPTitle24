@@ -64,11 +64,6 @@ namespace GMEPTitle24.Exterior
             this.otherComplianceMethodDescription = otherComplianceMethodDescription;
         }
 
-        //EMpty constructor for testing
-        public ExteriorLighting()
-        {
-            //:3
-        }
         public string Id
         {
             get => id;
