@@ -37,7 +37,6 @@ namespace GMEPTitle24.Exterior
             }
         }
 
-
         public ExteriorScope exteriorScopeData;
         public ExteriorScope ExteriorScopeData
         {
@@ -48,6 +47,20 @@ namespace GMEPTitle24.Exterior
                 {
                     exteriorScopeData = value;
                     OnPropertyChanged(nameof(ExteriorScopeData));
+                }
+            }
+        }
+
+        public ExteriorControls exteriorControlsData;
+        public ExteriorControls ExteriorControlsData
+        {
+            get { return exteriorControlsData; }
+            set
+            {
+                if (exteriorControlsData != value)
+                {
+                    exteriorControlsData = value;
+                    OnPropertyChanged(nameof(ExteriorControlsData));
                 }
             }
         }
