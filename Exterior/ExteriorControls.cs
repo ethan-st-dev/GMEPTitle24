@@ -200,6 +200,19 @@ namespace GMEPTitle24.Exterior
                 }
             }
         }
+        public bool areaFlag = false;
+        public bool AreaFlag
+        {
+            get { return areaFlag; }
+            set
+            {
+                if (areaFlag != value)
+                {
+                    areaFlag = value;
+                    OnPropertyChanged(nameof(AreaFlag));
+                }
+            }
+        }
 
         public void DetermineCheckedApplicationTypes()
         {
@@ -217,23 +230,25 @@ namespace GMEPTitle24.Exterior
         }
         public void DetermineEnabledTypes()
         {
+            bool hardScapeTemp = false;
+            bool useOrLoseTemp = false;
+
             if (ApplicationTypes[0].IsSelected)
             {
-                Hardscape = true;
+                hardScapeTemp = true;
             }
-            else
-            {
-                Hardscape = false;
-            }
+
             for (int i = 1; i < ApplicationTypes.Count; i++)
             {
                 if (ApplicationTypes[i].IsSelected)
                 {
-                    Hardscape = true;
-                    return;
+                    useOrLoseTemp = true;
                 }
             }
-            Hardscape = false;
+
+            Hardscape = hardScapeTemp;
+            UseOrLose = useOrLoseTemp;
+            AreaFlag = useOrLoseTemp || hardScapeTemp;
         }
 
 
