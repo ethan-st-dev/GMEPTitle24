@@ -213,6 +213,7 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" Width="*"/>
                                 <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*"/>
+                                <DataGridTextColumn Header="Wattage" Binding="{Binding Wattage}" Width="*"/>
                                 <DataGridComboBoxColumn Header="Type" SelectedValueBinding="{Binding TypeId, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Tag" Width="*">
                                     <DataGridComboBoxColumn.ItemsSource>
                                         <CompositeCollection>
