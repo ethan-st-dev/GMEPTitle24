@@ -422,7 +422,7 @@ namespace GMEPTitle24.Exterior
                                 arguments[0].dispatchEvent(new Event('change'));
                                 ", element, ExteriorLightingList[row].LuminaireQty);
                             }
-                            if (attributeValue != null && attributeValue.Contains("number of luminaires", StringComparison.OrdinalIgnoreCase))
+                            if (attributeValue != null && attributeValue.Contains("number of luminiares", StringComparison.OrdinalIgnoreCase))
                             {
                                 ((IJavaScriptExecutor)driver).ExecuteScript(@"
                                 arguments[0].value = arguments[1];
