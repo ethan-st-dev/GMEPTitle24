@@ -211,9 +211,9 @@
                     <GroupBox Grid.Row="0" Header="Options">
                         <DataGrid x:Name="OptionsGrid" ItemsSource="{Binding ExteriorLightingList}" AutoGenerateColumns="False">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" Width="*"/>
-                                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*"/>
-                                <DataGridTextColumn Header="Wattage" Binding="{Binding Wattage}" Width="*"/>
+                                <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" IsReadOnly="True" Width="*"/>
+                                <DataGridTextColumn Header="Description" Binding="{Binding Description}" IsReadOnly="True" Width="*"/>
+                                <DataGridTextColumn Header="Wattage" Binding="{Binding Wattage}" IsReadOnly="True" Width="*"/>
                                 <DataGridComboBoxColumn Header="Type" SelectedValueBinding="{Binding TypeId, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Tag" Width="*">
                                     <DataGridComboBoxColumn.ItemsSource>
                                         <CompositeCollection>
@@ -255,10 +255,10 @@
                         </DataGrid>
                     </GroupBox>
                     <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Background="LightGray"/>
-                    <GroupBox Grid.Row="2" Header="Options">
+                    <GroupBox Grid.Row="2" Header="Additional Options">
                         <DataGrid x:Name="ExteriorOptionsGrid" ItemsSource="{Binding ExteriorLightingList}" AutoGenerateColumns="False">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" Width="*"/>
+                                <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" IsReadOnly="True" Width="*"/>
                                 <DataGridTextColumn Header="Other Wattage Determined Option" Binding="{Binding OtherComplianceMethodDescription}" Width="*">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style TargetType="TextBlock">
