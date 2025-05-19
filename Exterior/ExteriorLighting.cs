@@ -19,10 +19,9 @@ namespace GMEPTitle24.Exterior
         private int typeId = 1;
         private int wattageDeterminedOptionId = 1;
         private int descriptionOptionId = 1;
-        private float wattagePerLuminaire = 0;
-        private float wattagePerLinearFoot = 0;
+        private float wattage = 0;
         private float totalLinearFeet = 0;
-        private float numLuminaires = 0;
+        private float luminaireQty = 0;
         private int mountingTypeId = 1;
         private bool excluded = false;
         private bool moreThan6200Lumens = false;
@@ -38,10 +37,9 @@ namespace GMEPTitle24.Exterior
             int typeId,
             int wattageDeterminedOptionId,
             int descriptionOptionId,
-            float wattagePerLuminaire,
-            float wattagePerLinearFoot,
+            float wattage,
             float totalLinearFeet,
-            float numLuminaires,
+            float luminaireQty,
             int mountingTypeId,
             bool excluded,
             bool moreThan6200Lumens,
@@ -56,10 +54,9 @@ namespace GMEPTitle24.Exterior
             this.typeId = typeId;
             this.wattageDeterminedOptionId = wattageDeterminedOptionId;
             this.descriptionOptionId = descriptionOptionId;
-            this.wattagePerLuminaire = wattagePerLuminaire;
-            this.wattagePerLinearFoot = wattagePerLinearFoot;
+            this.wattage = wattage;
             this.totalLinearFeet = totalLinearFeet;
-            this.numLuminaires = numLuminaires;
+            this.luminaireQty= luminaireQty;
             this.mountingTypeId = mountingTypeId;
             this.excluded = excluded;
             this.moreThan6200Lumens = moreThan6200Lumens;
@@ -158,30 +155,19 @@ namespace GMEPTitle24.Exterior
                 }
             }
         }
-        public float WattagePerLuminaire
+        public float Wattage
         {
-            get => wattagePerLuminaire;
+            get => wattage;
             set
             {
-                if (wattagePerLuminaire != value)
+                if (wattage != value)
                 {
-                    wattagePerLuminaire = value;
-                    OnPropertyChanged(nameof(WattagePerLuminaire));
+                    wattage = value;
+                    OnPropertyChanged(nameof(Wattage));
                 }
             }
         }
-        public float WattagePerLinearFoot
-        {
-            get => wattagePerLinearFoot;
-            set
-            {
-                if (wattagePerLinearFoot != value)
-                {
-                    wattagePerLinearFoot = value;
-                    OnPropertyChanged(nameof(WattagePerLinearFoot));
-                }
-            }
-        }
+
         public float TotalLinearFeet
         {
             get => totalLinearFeet;
@@ -194,15 +180,15 @@ namespace GMEPTitle24.Exterior
                 }
             }
         }
-        public float NumLuminaires
+        public float LuminaireQty
         {
-            get => numLuminaires;
+            get => luminaireQty;
             set
             {
-                if (numLuminaires != value)
+                if (luminaireQty != value)
                 {
-                    numLuminaires = value;
-                    OnPropertyChanged(nameof(NumLuminaires));
+                    luminaireQty = value;
+                    OnPropertyChanged(nameof(LuminaireQty));
                 }
             }
         }

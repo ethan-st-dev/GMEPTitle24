@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using GMEPTitle24.Interior;
 using GMEPTitle24.Exterior;
 using MySql.Data.MySqlClient;
+using Mysqlx.Crud;
 
 namespace GMEPTitle24
 {
@@ -619,6 +620,147 @@ namespace GMEPTitle24
             scopeCommand.Parameters.AddWithValue("@dwellingUnitControl", scope.DwellingUnitControl);
 
             await scopeCommand.ExecuteNonQueryAsync();
+            await CloseConnectionAsync();
+        }
+        public async Task<ObservableCollection<ExteriorLighting>> GetExteriorLighting(
+            string projectId
+        )
+        {
+            // Get the lighting data from the database
+            ObservableCollection<ExteriorLighting> lightings =
+                new ObservableCollection<ExteriorLighting>();
+            string query = @"SELECT 
+                            el.id AS lighting_id,
+                            el.project_id,
+                            el.tag,
+                            el.description,
+                            el.wattage,
+                            el.qty,
+                            ell.outdoor,
+                            ellum.id AS luminaire_id,
+                            ellum.fixture_id,
+                            ellum.type_id,
+                            ellum.wattage_determined_option_id,
+                            ellum.wattage_per_linear_foot,
+                            ellum.total_linear_feet,
+                            ellum.luminaire_qty,
+                            ellum.mounting_type_id,
+                            ellum.is_excluded,
+                            ellum.more_than_6200_lumens,
+                            ellum.luminaire_shielding_exception_id,
+                            ellum.other_compliance_method_description,
+                            ellum.fixture_id,
+                            FROM 
+                                electrical_lighting el
+                            LEFT JOIN 
+                                electrical_lighting_locations ell 
+                            ON 
+                                ell.id = el.location_id
+                            LEFT JOIN 
+                                electrical_lighting_lto_luminaires ellum 
+                            ON 
+                                ellum.fixture_id = el.id
+                            WHERE 
+                                el.project_id = @projectId 
+                                AND ell.outdoor = 1;";
+
+            await OpenConnectionAsync();
+            MySqlCommand command = new MySqlCommand(query, Connection);
+            command.Parameters.AddWithValue("@projectId", projectId);
+            MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync();
+
+            List<string> newLuminaireIds = new List<string>();
+
+            while (await reader.ReadAsync())
+            {
+                lightings.Add(
+                    new ExteriorLighting(
+                        reader.GetString("lighting_id"),
+                        reader.GetString("project_id"),
+                        reader.GetString("tag"),
+                        reader.GetString("description"),
+                        !reader.IsDBNull(reader.GetOrdinal("type_id")) ? reader.GetInt32("type_id") : 1,
+                        !reader.IsDBNull(reader.GetOrdinal("wattage_determined_option_id")) ? reader.GetInt32("wattage_determined_option_id") : 1,
+                        !reader.IsDBNull(reader.GetOrdinal("description_option_id")) ? reader.GetInt32("description_option_id") : 1,
+                        !reader.IsDBNull(reader.GetOrdinal("wattage")) ? reader.GetFloat("wattage") : 0,
+                        !reader.IsDBNull(reader.GetOrdinal("total_linear_feet")) ? reader.GetFloat("total_linear_feet") : 0,
+                        !reader.IsDBNull(reader.GetOrdinal("luminaire_qty")) ? reader.GetInt32("luminaire_qty") : 0,
+                        !reader.IsDBNull(reader.GetOrdinal("mounting_type_id")) ? reader.GetInt32("mounting_type_id") : 1,
+                        !reader.IsDBNull(reader.GetOrdinal("is_excluded")) && reader.GetBoolean("is_excluded"),
+                        !reader.IsDBNull(reader.GetOrdinal("more_than_6200_lumens")) && reader.GetBoolean("more_than_6200_lumens"),
+                        !reader.IsDBNull(reader.GetOrdinal("luminaire_shielding_exception_id")) ? reader.GetInt32("luminaire_shielding_exception_id") : 1,
+                        !reader.IsDBNull(reader.GetOrdinal("other_compliance_method_description")) ? reader.GetString("other_compliance_method_description") : ""
+                    )
+                );
+                if (reader.IsDBNull(reader.GetOrdinal("luminaire_id")))
+                {
+                    newLuminaireIds.Add(reader.GetString("lighting_id"));
+                }
+            }
+            await reader.CloseAsync();
+
+            //Adding Luminaires for lighting that doesn't have one
+            query = @"INSERT INTO electrical_lighting_lto_luminaires 
+                     (id, project_id, fixture_id, type_id, wattage_determined_option_id, description_option_id, total_linear_feet, luminaire_qty, mounting_type_id, is_excluded, more_than_6200_lumens, luminaire_shielding_exception_id, other_compliance_method_description) 
+                     VALUES 
+                     (@id, @projectId, @fixtureId, @typeId, @wattageDeterminedOptionId, @descriptionOptionId, @totalLinearFeet, @luminaireQty, @mountingTypeId, @isExcluded, @moreThan6200Lumens, @luminaireShieldingExceptionId, @otherComplianceMethodDescription)";
+
+
+            foreach (var luminaireId in newLuminaireIds)
+            {
+                command = new MySqlCommand(query, Connection);
+                command.Parameters.AddWithValue("@id", Guid.NewGuid().ToString());
+                command.Parameters.AddWithValue("@fixtureId", luminaireId);
+                command.Parameters.AddWithValue("@typeId", 1);
+                command.Parameters.AddWithValue("@wattageDeterminedOptionId", 1);
+                command.Parameters.AddWithValue("@descriptionOptionId", 1);
+                command.Parameters.AddWithValue("@totalLinearFeet", 1);
+                command.Parameters.AddWithValue("@luminaireQty", 0);
+                command.Parameters.AddWithValue("@mountingTypeId", 1);
+                command.Parameters.AddWithValue("@isExcluded", false);
+                command.Parameters.AddWithValue("@projectId", projectId);
+                command.Parameters.AddWithValue("@moreThan6200Lumens", 1);
+                command.Parameters.AddWithValue("@luminaireShieldingExceptionId", 1);
+                command.Parameters.AddWithValue("@otherComplianceMethodDescription", "");
+                await command.ExecuteNonQueryAsync();
+            }
+
+            //Deleting Luminaires whose lightingfixture ids are not in the lighting table
+            query = @" DELETE FROM electrical_lighting_lto_luminaires
+                        WHERE project_id = @projectId
+                        AND fixture_id NOT IN (
+                            SELECT id FROM electrical_lighting WHERE project_id = @projectId
+                        )";
+            command = new MySqlCommand(query, Connection);
+            command.Parameters.AddWithValue("@projectId", projectId);
+            await command.ExecuteNonQueryAsync();
+
+
+            await CloseConnectionAsync();
+            return lightings;
+        }
+        public async Task UpdateExteriorLuminaires(
+            ObservableCollection<ExteriorLighting> lightings
+        )
+        {
+            await OpenConnectionAsync();
+            foreach (var lighting in lightings)
+            {
+                string query = "UPDATE electrical_lighting_lto_luminaires SET type_id = @typeId, wattage_determined_option_id = @wattageDeterminedOptionId, total_linear_feet = @totalLinearFeet, luminaire_qty = luminaireQty, mounting_type_id = @mountingTypeId, is_excluded = @isExcluded, more_than_6200_lumens = @moreThan6200Lumens, luminaire_shielding_exception_id = @luminaireShieldingExceptionId, other_compliance_method_description = @otherComplianceMethodDescription, description_option_id = @descriptionOptionId WHERE fixture_id = @id";
+                MySqlCommand command = new MySqlCommand(query, Connection);
+                command.Parameters.AddWithValue("@id", lighting.Id);
+                command.Parameters.AddWithValue("@typeId", lighting.TypeId);
+                command.Parameters.AddWithValue("@wattageDeterminedOptionId", lighting.WattageDeterminedOptionId);
+                command.Parameters.AddWithValue("@descriptionOptionId", lighting.DescriptionOptionId);
+                command.Parameters.AddWithValue("@totalLinearFeet", lighting.TotalLinearFeet);
+                command.Parameters.AddWithValue("@luminaireQty", lighting.LuminaireQty);
+                command.Parameters.AddWithValue("@mountingTypeId", lighting.MountingTypeId);
+                command.Parameters.AddWithValue("@isExcluded", lighting.Excluded);
+                command.Parameters.AddWithValue("@moreThan6200Lumens", lighting.MoreThan6200Lumens);
+                command.Parameters.AddWithValue("@luminaireShieldingExceptionId", lighting.LuminaireShieldingExceptionId);
+                command.Parameters.AddWithValue("@otherComplianceMethodDescription", lighting.OtherComplianceMethodDescription);
+                await command.ExecuteNonQueryAsync();
+            }
             await CloseConnectionAsync();
         }
     }
