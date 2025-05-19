@@ -51,7 +51,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="5"/>
-                                <ColumnDefinition Width="4"/>
+                                <ColumnDefinition Width="4*"/>
                             </Grid.ColumnDefinitions>
                             <GroupBox Grid.Column="0" Header="Main Options">
                                 <StackPanel Orientation="Vertical">
@@ -474,7 +474,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="5"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
                         <GroupBox Grid.Column="0" Header="Control Options">
                             <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top">
