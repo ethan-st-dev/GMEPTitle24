@@ -174,10 +174,13 @@ namespace GMEPTitle24.Exterior
         }
         public void DetermineCheckedApplicationTypes()
         {
-            CheckedApplicationTypes.Clear();
             foreach (var item in ApplicationTypes)
             {
-                if (item.IsSelected)
+                if (!item.IsSelected && CheckedApplicationTypes.Contains(item))
+                {
+                    CheckedApplicationTypes.Remove(item);
+                }
+                if (item.IsSelected && !CheckedApplicationTypes.Contains(item))
                 {
                     CheckedApplicationTypes.Add(item);
                 }

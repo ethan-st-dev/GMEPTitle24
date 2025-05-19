@@ -544,7 +544,7 @@
                             <DataGrid ItemsSource="{Binding UseOrLoseAreas}" AutoGenerateColumns="False">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Description}"/>
-                                    <DataGridComboBoxColumn Width="*" Header="Application Type" ItemsSource="{Binding Data.CheckedApplicationTypes, Source={StaticResource ExteriorControlsProxy}}" DisplayMemberPath="Name" SelectedValueBinding="{Binding ApplicationTypeId}"/>
+                                    <DataGridComboBoxColumn Width="*" Header="Application Type" ItemsSource="{Binding Data.CheckedApplicationTypes, Source={StaticResource ExteriorControlsProxy}}" DisplayMemberPath="Name" SelectedValueBinding="{Binding ApplicationTypeId, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Number"/>
                                     <DataGridTextColumn Width="*" Header="Area" Binding="{Binding Area}"/>
                                 </DataGrid.Columns>
                             </DataGrid>
