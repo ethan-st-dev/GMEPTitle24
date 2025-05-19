@@ -127,6 +127,10 @@ namespace GMEPTitle24
                         await viewModel.LaunchWindow();
                     }*/
                     result = await outdoor.viewModel.OutdoorLighting();
+                    if (result)
+                    {
+                        await viewModel.LaunchWindow();
+                    }
                 }
                 viewModel.StatusText = String.Empty;
                 viewModel.ProjectLoading = false;

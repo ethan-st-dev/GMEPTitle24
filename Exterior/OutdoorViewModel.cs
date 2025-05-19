@@ -133,17 +133,17 @@ namespace GMEPTitle24.Exterior
             }
 
             bool result2 = await FillOutScope();
-            /*if (result2 == false)
-            {
-                return false;
-            }*/
-
-            /*result2 = await FillOutLuminaires();
             if (result2 == false)
             {
                 return false;
             }
-            result2 = await FillOutControls();
+
+            result2 = await FillOutLuminaires();
+            /*if (result2 == false)
+            {
+                return false;
+            }*/
+           /* result2 = await FillOutControls();
             if (result2 == false)
             {
                 return false;
@@ -422,6 +422,14 @@ namespace GMEPTitle24.Exterior
                                 arguments[0].dispatchEvent(new Event('change'));
                                 ", element, ExteriorLightingList[row].LuminaireQty);
                             }
+                            if (attributeValue != null && attributeValue.Contains("number of luminaires", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                                arguments[0].value = arguments[1];
+                                arguments[0].dispatchEvent(new Event('input'));
+                                arguments[0].dispatchEvent(new Event('change'));
+                                ", element, ExteriorLightingList[row].LuminaireQty);
+                            }
                             if (attributeValue != null && attributeValue.Contains("total linear feet", StringComparison.OrdinalIgnoreCase))
                             {
                                 ((IJavaScriptExecutor)driver).ExecuteScript(@"
@@ -508,8 +516,6 @@ namespace GMEPTitle24.Exterior
                         var formElement = driver.FindElement(By.Id("matForm"));
                         return !formElement.GetAttribute("class").Contains("mod_submitting");
                     });
-
-
 
                 }
                 catch (WebDriverTimeoutException ex)
