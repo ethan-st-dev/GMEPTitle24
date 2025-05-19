@@ -60,6 +60,10 @@ namespace GMEPTitle24.Exterior
                 }
             }
         }
+        public ExteriorControls()
+        {
+            // :3
+        }
 
         public string id = Guid.NewGuid().ToString();
         public string Id

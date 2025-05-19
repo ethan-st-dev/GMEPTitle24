@@ -74,6 +74,7 @@ namespace GMEPTitle24.Exterior
         {
             ExteriorScopeData = await MainView.db.GetExteriorScope(projectId);
             ExteriorLightingList = await MainView.db.GetExteriorLighting(projectId);
+            ExteriorControlsData = new ExteriorControls();
             ExteriorScopeData.PropertyChanged += ExteriorScopeData_PropertyChanged;
 
         }
