@@ -309,6 +309,228 @@ namespace GMEPTitle24.Exterior
             });
             return result;
         }
+
+        public async Task<bool> FillOutLuminaires()
+        {
+            MainView.StatusText = "Filling Out Luminaires Section";
+            bool result = await Task.Run(bool () =>
+            {
+                try
+                {
+                    IWebElement luminaires = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Luminaires']")));
+                    luminaires.Click();
+                    try
+                    {
+                        WebDriverWait continueWait = new WebDriverWait(driver, TimeSpan.FromSeconds(2));
+                        IWebElement continueAnyway = continueWait.Until(driver =>
+                        {
+                            try
+                            {
+                                return driver.FindElement(By.XPath("//div[text()='Continue Anyway']"));
+                            }
+                            catch (NoSuchElementException)
+                            {
+                                return null;
+                            }
+                        });
+
+                        if (continueAnyway != null)
+                        {
+                            continueAnyway.Click();
+                        }
+                    }
+                    catch (WebDriverTimeoutException)
+                    {
+                        // If the "continue anyway" div is not found within the timeout, proceed
+                        Debug.WriteLine("The 'continue anyway' div was not found. Proceeding...");
+                    }
+
+                    //Grabbing Container For All Lighting Entries
+                    IWebElement AddLuminaireButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Add Luminaire']")));
+
+                    IWebElement lightingContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[name='organism_wufmffESvduAkDmTkpmftBXKkRZerUUP']")));
+                    var Lightings = lightingContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
+
+                    //Removing all entries and adding new ones
+                    foreach (var lighting in Lightings)
+                    {
+                        var delete = lighting.FindElement(By.CssSelector("div[class='mod_supportControl']"));
+                        var deleteIcon = delete.FindElement(By.CssSelector("i"));
+                        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", deleteIcon);
+                    }
+
+                    foreach (var lighting in ExteriorLightingList)
+                    {
+                        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AddLuminaireButton);
+
+                        // Wait for the DOM to reflect the addition of the new luminaire
+                        wait.Until(driver =>
+                        {
+                            var updatedLightings = lightingContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
+                            return updatedLightings.Count >= ExteriorLightingList.IndexOf(lighting) + 1;
+                        });
+                    }
+
+
+                    Lightings = lightingContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
+                    //Editing Boxes
+                    int row = 0;
+                    foreach (var lighting in Lightings)
+                    {
+                        //iterating through text entries
+                        var elements = lighting.FindElements(By.CssSelector("input[type='text']"));
+                        foreach (var element in elements)
+                        {
+                            string attributeValue = element.GetAttribute("placeholder");
+                            if (attributeValue != null && attributeValue.Contains("tag name", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                                arguments[0].value = arguments[1];
+                                arguments[0].dispatchEvent(new Event('input'));
+                                arguments[0].dispatchEvent(new Event('change'));
+                                ", element, ExteriorLightingList[row].Tag);
+                            }
+                            if (attributeValue != null && attributeValue.Contains("luminaire description", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                                arguments[0].value = arguments[1];
+                                arguments[0].dispatchEvent(new Event('input'));
+                                arguments[0].dispatchEvent(new Event('change'));
+                                ", element, ExteriorLightingList[row].Description);
+                            }
+                            if (attributeValue != null && attributeValue.Contains("watts per linear foot", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                                arguments[0].value = arguments[1];
+                                arguments[0].dispatchEvent(new Event('input'));
+                                arguments[0].dispatchEvent(new Event('change'));
+                                ", element, ExteriorLightingList[row].Wattage);
+                            }
+                            if (attributeValue != null && attributeValue.Contains("watts per luminaire", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                                arguments[0].value = arguments[1];
+                                arguments[0].dispatchEvent(new Event('input'));
+                                arguments[0].dispatchEvent(new Event('change'));
+                                ", element, ExteriorLightingList[row].Wattage);
+                            }
+                            if (attributeValue != null && attributeValue.Contains("how many luminaires are being replaced", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                                arguments[0].value = arguments[1];
+                                arguments[0].dispatchEvent(new Event('input'));
+                                arguments[0].dispatchEvent(new Event('change'));
+                                ", element, ExteriorLightingList[row].LuminaireQty);
+                            }
+                            if (attributeValue != null && attributeValue.Contains("total linear feet", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                                arguments[0].value = arguments[1];
+                                arguments[0].dispatchEvent(new Event('input'));
+                                arguments[0].dispatchEvent(new Event('change'));
+                                ", element, ExteriorLightingList[row].TotalLinearFeet);
+                            }
+                            if (attributeValue != null && attributeValue.Contains("other method of determining compliance", StringComparison.OrdinalIgnoreCase))
+                            {
+                                ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                                arguments[0].value = arguments[1];
+                                arguments[0].dispatchEvent(new Event('input'));
+                                arguments[0].dispatchEvent(new Event('change'));
+                                ", element, ExteriorLightingList[row].OtherComplianceMethodDescription);
+                            }
+                        }
+                        //Iterating Through dropdown entries
+                        var dropdownElements = lighting.FindElements(By.CssSelector("div[class='selectWrapper']"));
+                        foreach (var element in dropdownElements)
+                        {
+                            var textbox = element.FindElement(By.CssSelector("input"));
+                            string placeholderValue = textbox.GetAttribute("placeholder");
+                            if (placeholderValue != null && placeholderValue.Contains("luminaire type.", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var choices = element.FindElements(By.CssSelector("li"));
+                                var choice = choices[ExteriorLightingList[row].TypeId - 1];
+                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                            }
+                            if (placeholderValue != null && placeholderValue.Contains("wattage determined", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var choices = element.FindElements(By.CssSelector("li"));
+                                var choice = choices[ExteriorLightingList[row].WattageDeterminedOptionId - 1];
+                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                            }
+                            if (placeholderValue != null && placeholderValue.Contains("which option describes this luminaire", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var choices = element.FindElements(By.CssSelector("li"));
+                                var choice = choices[ExteriorLightingList[row].DescriptionOptionId - 1];
+                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                            }
+                            if (placeholderValue != null && placeholderValue.Contains("mounting height", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var choices = element.FindElements(By.CssSelector("li"));
+                                var choice = choices[ExteriorLightingList[row].MountingTypeId - 1];
+                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                            }
+                            if (placeholderValue != null && placeholderValue.Contains("luminaire type excluded", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var choices = element.FindElements(By.CssSelector("li"));
+                                var choice = choices[0];
+                                if (ExteriorLightingList[row].Excluded)
+                                {
+                                    choice = choices[1];
+                                }
+                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                            }
+                            if (placeholderValue != null && placeholderValue.Contains("is this linear lighting", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var choices = element.FindElements(By.CssSelector("li"));
+                                var choice = choices[1];
+                                if (ExteriorLightingList[row].DescriptionOptionId == 1)
+                                {
+                                    choice = choices[0];
+                                }
+                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                            }
+                        }
+                        row++;
+                    }
+                    IWebElement SaveButton = driver.FindElement(By.XPath("//div[text()='Save']"));
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", SaveButton);
+
+                    WebDriverWait wait2 = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+                    wait2.Until(driver =>
+                    {
+                        var formElement = driver.FindElement(By.Id("matForm"));
+                        return formElement.GetAttribute("class").Contains("mod_submitting");
+                    });
+
+                    // Wait for the "mod_submitting" class to be removed
+                    wait2.Until(driver =>
+                    {
+                        var formElement = driver.FindElement(By.Id("matForm"));
+                        return !formElement.GetAttribute("class").Contains("mod_submitting");
+                    });
+
+
+
+                }
+                catch (WebDriverTimeoutException ex)
+                {
+                    MainView.StatusText = "Navigation timed out. Please try again.";
+                    MainView.ProjectLoading = false;
+                    Debug.WriteLine($"Timeout Exception: {ex.Message}");
+                    return false;
+                }
+                catch (WebDriverException ex)
+                {
+
+                    MainView.StatusText = "An error occurred while navigation to luminaires.";
+                    MainView.ProjectLoading = false;
+                    Debug.WriteLine($"WebDriver Exception: {ex.Message}");
+                    return false;
+                }
+                return true;
+            });
+            return result;
+        }
     }
     public class IsFiveOrHigherConverter : IValueConverter
     {
