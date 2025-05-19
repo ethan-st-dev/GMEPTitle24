@@ -8,6 +8,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <local:IsFiveOrHigherConverter x:Key="IsFiveOrHigherConverter" />
+        <local:BindingProxy x:Key="ExteriorControlsProxy" Data="{Binding ExteriorControlsData}"/>
     </UserControl.Resources>
     <Grid>
         <TabControl>
@@ -50,7 +51,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="5"/>
-                                <ColumnDefinition Width="4*"/>
+                                <ColumnDefinition Width="4"/>
                             </Grid.ColumnDefinitions>
                             <GroupBox Grid.Column="0" Header="Main Options">
                                 <StackPanel Orientation="Vertical">
@@ -464,58 +465,91 @@
             </TabItem>
             <TabItem Header="Control Areas" DataContext="{Binding ExteriorControlsData}">
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="5"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <GroupBox Grid.Column="0" Header="Control Options">
-                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top">
-                            <Label Margin="0 10 0 0" FontWeight="Bold">
-                                <TextBlock TextWrapping="Wrap" Text="How will you be handling you Shut-Off controls?"/>
-                            </Label>
-                            <ComboBox SelectedValue="{Binding ShutOffControlHandlerId}" SelectedValuePath="Tag">
-                                <ComboBox.Items>
-                                    <ComboBoxItem Content="Site Level Astronomical Timer" Tag="1"/>
-                                    <ComboBoxItem Content="Task Level Controls" Tag="2"/>
-                                </ComboBox.Items>
-                            </ComboBox>
-                            <Label Margin="0 10 0 0" FontWeight="Bold">
-                                <TextBlock TextWrapping="Wrap" Text="Will lighting be controlled with a site level time-based lighting control (Auto-Scheduling)?"/>
-                            </Label>
-                            <ComboBox  SelectedValue="{Binding TimeBasedLightingControlId}" SelectedValuePath="Tag">
-                                <ComboBox.Items>
-                                    <ComboBoxItem Content="Site Level Astronomical Timer" Tag="1"/>
-                                    <ComboBoxItem Content="Task Level Controls" Tag="2"/>
-                                </ComboBox.Items>
-                            </ComboBox>
-                            <CheckBox Margin="0 20 0 0" IsChecked="{Binding Luminaires20OrLess}" FontWeight="Bold">
-                                <TextBlock TextWrapping="Wrap" Text="Does the project only include altered lighting systems where controls are being added to &lt; 20 luminaires?"/>
-                            </CheckBox>
-                        </StackPanel>
-                    </GroupBox>
-                    <GridSplitter HorizontalAlignment="Stretch" Grid.Column="1" Background="LightGray"/>
-                    <GroupBox Grid.Column="2" Header="Application Types">
-                        <ListBox ItemsSource="{Binding ApplicationTypes}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                            <ListBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel Orientation="Horizontal" />
-                                </ItemsPanelTemplate>
-                            </ListBox.ItemsPanel>
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" Height="20">
-                                            <CheckBox.LayoutTransform>
-                                                <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
-                                            </CheckBox.LayoutTransform>
-                                        </CheckBox>
-                                        <TextBlock Text="|" Margin="15 5 5 15" VerticalAlignment="Center" FontSize="25" Foreground="SlateGray"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                    </GroupBox>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <GroupBox Grid.Column="0" Header="Control Options">
+                            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top">
+                                <Label Margin="0 10 0 0" FontWeight="Bold">
+                                    <TextBlock TextWrapping="Wrap" Text="How will you be handling you Shut-Off controls?"/>
+                                </Label>
+                                <ComboBox SelectedValue="{Binding ShutOffControlHandlerId}" SelectedValuePath="Tag">
+                                    <ComboBox.Items>
+                                        <ComboBoxItem Content="Site Level Astronomical Timer" Tag="1"/>
+                                        <ComboBoxItem Content="Task Level Controls" Tag="2"/>
+                                    </ComboBox.Items>
+                                </ComboBox>
+                                <Label Margin="0 10 0 0" FontWeight="Bold">
+                                    <TextBlock TextWrapping="Wrap" Text="Will lighting be controlled with a site level time-based lighting control (Auto-Scheduling)?"/>
+                                </Label>
+                                <ComboBox  SelectedValue="{Binding TimeBasedLightingControlId}" SelectedValuePath="Tag">
+                                    <ComboBox.Items>
+                                        <ComboBoxItem Content="Site Level Astronomical Timer" Tag="1"/>
+                                        <ComboBoxItem Content="Task Level Controls" Tag="2"/>
+                                    </ComboBox.Items>
+                                </ComboBox>
+                                <CheckBox Margin="0 20 0 0" IsChecked="{Binding Luminaires20OrLess}" FontWeight="Bold">
+                                    <TextBlock TextWrapping="Wrap" Text="Does the project only include altered lighting systems where controls are being added to &lt; 20 luminaires?"/>
+                                </CheckBox>
+                            </StackPanel>
+                        </GroupBox>
+                        <GridSplitter HorizontalAlignment="Stretch" Grid.Column="1" Background="LightGray"/>
+                        <GroupBox Grid.Column="2" Header="Application Types">
+                            <ListBox ItemsSource="{Binding ApplicationTypes}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" Height="20">
+                                                <CheckBox.LayoutTransform>
+                                                    <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                                                </CheckBox.LayoutTransform>
+                                            </CheckBox>
+                                            <TextBlock Text="|" Margin="15 5 5 15" VerticalAlignment="Center" FontSize="25" Foreground="SlateGray"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </GroupBox>
+                    </Grid>
+                    <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Background="LightGray"/>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <GroupBox Grid.Column="0" Header="Hardscape Areas">
+                            <DataGrid ItemsSource="{Binding HardscapeAreas}" AutoGenerateColumns="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Width="*" Header="Description" Binding="{Binding Description}"/>
+                                    <DataGridTextColumn Width="*" Header="Area" Binding="{Binding Area}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </GroupBox>
+                        <GridSplitter Background="LightGray" HorizontalAlignment="Stretch" Grid.Column="1"/>
+                        <GroupBox Grid.Column="2" Header="Use or Lose Areas">
+                            <DataGrid ItemsSource="{Binding UseOrLoseAreas}" AutoGenerateColumns="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Description}"/>
+                                    <DataGridComboBoxColumn Width="*" Header="Application Type" ItemsSource="{Binding Data.CheckedApplicationTypes, Source={StaticResource ExteriorControlsProxy}}" DisplayMemberPath="Name" SelectedValueBinding="{Binding ApplicationTypeId}"/>
+                                    <DataGridTextColumn Width="*" Header="Area" Binding="{Binding Area}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </GroupBox>
+                    </Grid>
                 </Grid>
             </TabItem>
         </TabControl>

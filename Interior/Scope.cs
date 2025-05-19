@@ -490,11 +490,31 @@ namespace GMEPTitle24.Interior
         }
 
     }
-    public class CheckboxItem
+    public class CheckboxItem : INotifyPropertyChanged
     {
-        public string Name { get; set; }
-        public int Number { get; set; }
-        public bool IsSelected { get; set; }
+        private string name;
+        private int number;
+        private bool isSelected;
+
+        public string Name
+        {
+            get => name;
+            set { if (name != value) { name = value; OnPropertyChanged(nameof(Name)); } }
+        }
+        public int Number
+        {
+            get => number;
+            set { if (number != value) { number = value; OnPropertyChanged(nameof(Number)); } }
+        }
+        public bool IsSelected
+        {
+            get => isSelected;
+            set { if (isSelected != value) { isSelected = value; OnPropertyChanged(nameof(IsSelected)); } }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
     public class AlteredSystemEntry : INotifyPropertyChanged
     {

@@ -13,7 +13,7 @@ namespace GMEPTitle24.Exterior
 {
     public class ExteriorControls : INotifyPropertyChanged
     {
-        public ObservableCollection<CheckboxItem> ApplicationTypes { get; set; } = new ObservableCollection<CheckboxItem>
+        public ObservableCollection<CheckboxItem> applicationTypes = new ObservableCollection<CheckboxItem>
         {
             new CheckboxItem { Name = "General Hardscape", Number = 1, IsSelected = false },
             new CheckboxItem { Name = "ATM Machine Lighting", Number = 2, IsSelected = false },
@@ -25,7 +25,7 @@ namespace GMEPTitle24.Exterior
             new CheckboxItem { Name = "Non-Sales Canopies and Tunnels", Number = 8, IsSelected = false },
             new CheckboxItem { Name = "Outdoor Dining", Number = 9, IsSelected = false },
             new CheckboxItem { Name = "Outdoor Sales Lots", Number = 10, IsSelected = false },
-            new CheckboxItem { Name = "Primary Entrances to Senior Care Facilities, Police Stations, Hospitals, Fire Stations, and Emergency Vehicle Facilites", Number = 11, IsSelected = false },
+            new CheckboxItem { Name = "Primary Entrances to Senior Care Facilities, Police Stations, Hospitals, Fire Stations, and Emergency Vehicle Facilities", Number = 11, IsSelected = false },
             new CheckboxItem { Name = "Sales Canopies", Number = 12, IsSelected = false },
             new CheckboxItem { Name = "Security Camera in General Hardscape > 10ft from Bldg", Number = 13, IsSelected = false },
             new CheckboxItem { Name = "Student Pick-up/Drop-off", Number = 14, IsSelected = false },
@@ -33,6 +33,34 @@ namespace GMEPTitle24.Exterior
             new CheckboxItem { Name = "Vehicle Service Station Hardscape", Number = 16, IsSelected = false },
             new CheckboxItem { Name = "Vehicle Service Station Uncovered Fuel Dispenser", Number = 17, IsSelected = false },
         };
+    
+        public ObservableCollection<CheckboxItem> ApplicationTypes
+        {
+            get { return applicationTypes; }
+            set
+            {
+                if (applicationTypes != value)
+                {
+                    applicationTypes = value;
+                    OnPropertyChanged(nameof(ApplicationTypes));
+                }
+            }
+        }
+
+
+        public ObservableCollection<CheckboxItem> checkedApplicationTypes = new ObservableCollection<CheckboxItem>();
+        public ObservableCollection<CheckboxItem> CheckedApplicationTypes
+        {
+            get { return checkedApplicationTypes; }
+            set
+            {
+                if (checkedApplicationTypes != value)
+                {
+                    checkedApplicationTypes = value;
+                    OnPropertyChanged(nameof(CheckedApplicationTypes));
+                }
+            }
+        }
         public ObservableCollection<UseOrLoseArea> useOrLoseAreas = new ObservableCollection<UseOrLoseArea>();
         public ObservableCollection<UseOrLoseArea> UseOrLoseAreas
         {
@@ -62,7 +90,20 @@ namespace GMEPTitle24.Exterior
         }
         public ExteriorControls()
         {
-            // :3
+            foreach (var item in ApplicationTypes)
+            {
+                item.PropertyChanged += CheckboxItem_PropertyChanged; ;
+            }
+            DetermineCheckedApplicationTypes();
+            
+        }
+
+        private void CheckboxItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(CheckboxItem.IsSelected))
+            {
+                DetermineCheckedApplicationTypes();
+            }
         }
 
         public string id = Guid.NewGuid().ToString();
@@ -128,6 +169,17 @@ namespace GMEPTitle24.Exterior
                 {
                     luminaires20OrLess = value;
                     OnPropertyChanged(nameof(Luminaires20OrLess));
+                }
+            }
+        }
+        public void DetermineCheckedApplicationTypes()
+        {
+            CheckedApplicationTypes.Clear();
+            foreach (var item in ApplicationTypes)
+            {
+                if (item.IsSelected)
+                {
+                    CheckedApplicationTypes.Add(item);
                 }
             }
         }
