@@ -103,6 +103,7 @@ namespace GMEPTitle24.Exterior
             if (e.PropertyName == nameof(CheckboxItem.IsSelected))
             {
                 DetermineCheckedApplicationTypes();
+                DetermineEnabledTypes();
             }
         }
 
@@ -172,6 +173,34 @@ namespace GMEPTitle24.Exterior
                 }
             }
         }
+
+        public bool hardscape = false;
+        public bool Hardscape
+        {
+            get { return hardscape; }
+            set
+            {
+                if (hardscape != value)
+                {
+                    hardscape = value;
+                    OnPropertyChanged(nameof(Hardscape));
+                }
+            }
+        }
+        public bool useOrLose = false;
+        public bool UseOrLose
+        {
+            get { return useOrLose; }
+            set
+            {
+                if (useOrLose != value)
+                {
+                    useOrLose = value;
+                    OnPropertyChanged(nameof(UseOrLose));
+                }
+            }
+        }
+
         public void DetermineCheckedApplicationTypes()
         {
             foreach (var item in ApplicationTypes)
@@ -185,6 +214,26 @@ namespace GMEPTitle24.Exterior
                     CheckedApplicationTypes.Add(item);
                 }
             }
+        }
+        public void DetermineEnabledTypes()
+        {
+            if (ApplicationTypes[0].IsSelected)
+            {
+                Hardscape = true;
+            }
+            else
+            {
+                Hardscape = false;
+            }
+            for (int i = 1; i < ApplicationTypes.Count; i++)
+            {
+                if (ApplicationTypes[i].IsSelected)
+                {
+                    Hardscape = true;
+                    return;
+                }
+            }
+            Hardscape = false;
         }
 
 
