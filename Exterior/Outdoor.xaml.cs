@@ -30,12 +30,24 @@ namespace GMEPTitle24
             this.DataContext = viewModel;
 
             viewModel.ResetRows += ViewModel_ResetRows;
+            viewModel.ResetControlRows += ViewModel_ResetControlRows;
+            viewModel.ResetControlColumns += ViewModel_ResetControlColumns;
         }
 
         private void ViewModel_ResetRows(object? sender, EventArgs e)
         {
             Row1.ClearValue(RowDefinition.HeightProperty);
             Row3.ClearValue(RowDefinition.HeightProperty);
+        }
+        private void ViewModel_ResetControlRows(object? sender, EventArgs e)
+        {
+            ControlRow1.ClearValue(RowDefinition.HeightProperty);
+            ControlRow3.ClearValue(RowDefinition.HeightProperty);
+        }
+        private void ViewModel_ResetControlColumns(object? sender, EventArgs e)
+        {
+            ControlColumn1.ClearValue(ColumnDefinition.WidthProperty);
+            ControlColumn3.ClearValue(ColumnDefinition.WidthProperty);
         }
     }
 }

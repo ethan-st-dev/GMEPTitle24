@@ -466,7 +466,7 @@
             <TabItem Header="Control Areas" DataContext="{Binding ExteriorControlsData}">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition x:Name="ControlRow1" Height="*"/>
                         <RowDefinition>
                             <RowDefinition.Style>
                                 <Style TargetType="RowDefinition">
@@ -479,7 +479,7 @@
                                 </Style>
                             </RowDefinition.Style>
                         </RowDefinition>
-                        <RowDefinition>
+                        <RowDefinition x:Name="ControlRow3">
                             <RowDefinition.Style>
                                 <Style TargetType="RowDefinition">
                                     <Setter Property="Height" Value="*"/>
@@ -549,7 +549,7 @@
                     <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Background="LightGray"/>
                     <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition>
+                            <ColumnDefinition x:Name="ControlColumn1">
                                 <ColumnDefinition.Style>
                                     <Style TargetType="ColumnDefinition">
                                         <Setter Property="Width" Value="*"/>
@@ -576,7 +576,7 @@
                                     </Style>
                                 </ColumnDefinition.Style>
                             </ColumnDefinition>
-                            <ColumnDefinition>
+                            <ColumnDefinition x:Name="ControlColumn3">
                                 <ColumnDefinition.Style>
                                     <Style TargetType="ColumnDefinition">
                                         <Setter Property="Width" Value="*"/>

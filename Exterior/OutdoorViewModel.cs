@@ -67,6 +67,9 @@ namespace GMEPTitle24.Exterior
         }
 
         public event EventHandler? ResetRows;
+
+        public event EventHandler? ResetControlRows;
+        public event EventHandler? ResetControlColumns;
         public OutdoorViewModel(MainViewModel MainView)
         {
             this.MainView = MainView;
@@ -77,8 +80,28 @@ namespace GMEPTitle24.Exterior
             ExteriorLightingList = await MainView.db.GetExteriorLighting(projectId);
             ExteriorControlsData = new ExteriorControls();
             ExteriorScopeData.PropertyChanged += ExteriorScopeData_PropertyChanged;
+            ExteriorControlsData.PropertyChanged += ExteriorControlsData_PropertyChanged;
+
 
         }
+
+        private void ExteriorControlsData_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ExteriorControls.AreaFlag))
+            {
+                if (!ExteriorControlsData.AreaFlag) {
+                    ResetControlRows?.Invoke(this, EventArgs.Empty);
+                }
+            }
+            if (e.PropertyName == nameof(ExteriorControls.Hardscape) || e.PropertyName == nameof(ExteriorControls.UseOrLose))
+            {
+                if (!ExteriorControlsData.Hardscape || !ExteriorControlsData.UseOrLose)
+                {
+                    ResetControlColumns?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
+
         public void ClearObjects()
         {
             ExteriorScopeData = null;
