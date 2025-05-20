@@ -763,6 +763,205 @@ namespace GMEPTitle24
             }
             await CloseConnectionAsync();
         }
+
+        public async Task<ExteriorControls> GetExteriorControls(
+            string projectId
+        )
+        {
+            await OpenConnectionAsync();
+
+
+            // Retrieve the altered systems
+            ObservableCollection<HardscapeArea> hardscapeAreas = new ObservableCollection<HardscapeArea>();
+            ObservableCollection<UseOrLoseArea> useOrLoseAreas = new ObservableCollection<UseOrLoseArea>();
+            string query = @"SELECT 
+                            *
+                            FROM 
+                                electrical_lighting_lto_hardscape_areas
+                            WHERE 
+                                project_id = @projectId";
+
+
+            MySqlCommand command = new MySqlCommand(query, Connection);
+            command.Parameters.AddWithValue("@projectId", projectId);
+            MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync();
+
+
+            while (await reader.ReadAsync())
+            {
+                hardscapeAreas.Add(
+                    new HardscapeArea(
+                        reader.GetString("id"),
+                        reader.GetString("project_id"),
+                        reader.GetString("description"),
+                        reader.GetFloat("area")
+                        )
+                    );
+            }
+            await reader.CloseAsync();
+
+            query = @"SELECT 
+                            *
+                            FROM 
+                                electrical_lighting_lto_use_or_lose_areas
+                            WHERE 
+                                project_id = @projectId";
+            command = new MySqlCommand(query, Connection);
+            command.Parameters.AddWithValue("@projectId", projectId);
+            reader = (MySqlDataReader)await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync()) {
+                useOrLoseAreas.Add(
+                    new UseOrLoseArea(
+                        reader.GetString("id"),
+                        reader.GetString("project_id"),
+                        reader.GetString("description"),
+                        reader.GetInt32("application_type_id"),
+                        reader.GetFloat("area")
+                        )
+                    );
+            }
+            await reader.CloseAsync();
+
+
+            //Getting the controls
+            ExteriorControls controls = new ExteriorControls(
+                    Guid.NewGuid().ToString(),
+                    projectId,
+                    1,
+                    1,
+                    false,
+                    hardscapeAreas,
+                    useOrLoseAreas,
+                    []
+                    );
+            string scopeQuery = @"SELECT 
+                *
+                FROM 
+                    electrical_lighting_lto_exterior_controls
+                WHERE 
+                    project_id = @projectId
+                LIMIT 1";
+            MySqlCommand scopeCommand = new MySqlCommand(scopeQuery, Connection);
+            scopeCommand.Parameters.AddWithValue("@projectId", projectId);
+            MySqlDataReader scopeReader = (MySqlDataReader)await scopeCommand.ExecuteReaderAsync();
+
+
+            while (await scopeReader.ReadAsync())
+            {
+                List<int> applicationTypeIds = JsonSerializer.Deserialize<List<int>>(scopeReader.GetString("application_type_ids"));
+                controls = new ExteriorControls(
+                    scopeReader.GetString("id"),
+                    projectId,
+                    scopeReader.GetInt32("shutoff_control_handler_id"),
+                    scopeReader.GetInt32("time_based_lighting_control_id"),
+                    scopeReader.GetBoolean("luminaires_20_or_less"),
+                    hardscapeAreas,
+                    useOrLoseAreas,
+                    applicationTypeIds
+                );
+            }
+
+            await scopeReader.CloseAsync();
+            return controls;
+        }
+        public async Task UpdateExteriorControls(ExteriorControls controls, string projectId)
+        {
+            await OpenConnectionAsync();
+
+            var hardscapeIds = string.Join(",", controls.HardscapeAreas.Select(a => $"'{a.Id}'"));
+            if (!string.IsNullOrEmpty(hardscapeIds))
+            {
+                string deleteHardscapeQuery = $@"
+                    DELETE FROM electrical_lighting_lto_hardscape_areas
+                    WHERE project_id = @projectId
+                    AND id NOT IN ({hardscapeIds})";
+                MySqlCommand deleteHardscapeCommand = new MySqlCommand(deleteHardscapeQuery, Connection);
+                deleteHardscapeCommand.Parameters.AddWithValue("@projectId", projectId);
+                await deleteHardscapeCommand.ExecuteNonQueryAsync();
+            }
+
+            // For UseOrLoseArea
+            var useOrLoseIds = string.Join(",", controls.UseOrLoseAreas.Select(a => $"'{a.Id}'"));
+            if (!string.IsNullOrEmpty(useOrLoseIds))
+            {
+                string deleteUseOrLoseQuery = $@"
+                    DELETE FROM electrical_lighting_lto_use_or_lose_areas
+                    WHERE project_id = @projectId
+                    AND id NOT IN ({useOrLoseIds})";
+                MySqlCommand deleteUseOrLoseCommand = new MySqlCommand(deleteUseOrLoseQuery, Connection);
+                deleteUseOrLoseCommand.Parameters.AddWithValue("@projectId", projectId);
+                await deleteUseOrLoseCommand.ExecuteNonQueryAsync();
+            }
+
+            foreach (var area in controls.HardscapeAreas)
+            {
+                string query = @"
+                    INSERT INTO electrical_lighting_lto_hardscape_areas
+                    (id, project_id, description, area)
+                    VALUES
+                    (@id, @projectId, @description, @area)
+                    ON DUPLICATE KEY UPDATE
+                    description = @description,
+                    area = @area";
+
+                MySqlCommand command = new MySqlCommand(query, Connection);
+                command.Parameters.AddWithValue("@id", area.Id);
+                command.Parameters.AddWithValue("@projectId", projectId);
+                command.Parameters.AddWithValue("@description", area.Description);
+                command.Parameters.AddWithValue("@area", area.Area);
+                await command.ExecuteNonQueryAsync();
+            }
+
+            foreach (var area in controls.UseOrLoseAreas)
+            {
+                string query = @"
+                    INSERT INTO electrical_lighting_lto_use_or_lose_areas
+                    (id, project_id, description, application_type_id, area)
+                    VALUES
+                    (@id, @projectId, @description, @applicationTypeId, @area)
+                    ON DUPLICATE KEY UPDATE
+                    description = @description,
+                    application_type_id = @applicationTypeId,
+                    area = @area";
+
+                MySqlCommand command = new MySqlCommand(query, Connection);
+                command.Parameters.AddWithValue("@id", area.Id);
+                command.Parameters.AddWithValue("@projectId", projectId);
+                command.Parameters.AddWithValue("@description", area.Description);
+                command.Parameters.AddWithValue("@applicationTypeId", area.ApplicationTypeId);
+                command.Parameters.AddWithValue("@area", area.Area);
+                await command.ExecuteNonQueryAsync();
+            }
+
+            string controlsQuery = @"
+                INSERT INTO electrical_lighting_lto_exterior_controls
+                (id, project_id, shutoff_control_handler_id, time_based_lighting_control_id, luminaires_20_or_less, application_type_ids)
+                VALUES
+                (@id, @projectId, @shutoffControlHandlerId, @timeBasedLightingControlId, @luminaires20OrLess, @applicationTypeIds)
+                ON DUPLICATE KEY UPDATE
+                    shutoff_control_handler_id = @shutoffControlHandlerId,
+                    time_based_lighting_control_id = @timeBasedLightingControlId,
+                    luminaires_20_or_less = @luminaires20OrLess,
+                    application_type_ids = @applicationTypeIds
+            ";
+
+            // Serialize selected application type IDs to JSON
+            string applicationTypeIdsJson = JsonSerializer.Serialize(
+                controls.applicationTypes.Where(a => a.IsSelected).Select(a => a.Number).ToList()
+            );
+
+            MySqlCommand controlsCommand = new MySqlCommand(controlsQuery, Connection);
+            controlsCommand.Parameters.AddWithValue("@id", controls.Id);
+            controlsCommand.Parameters.AddWithValue("@projectId", projectId);
+            controlsCommand.Parameters.AddWithValue("@shutoffControlHandlerId", controls.ShutOffControlHandlerId);
+            controlsCommand.Parameters.AddWithValue("@timeBasedLightingControlId", controls.TimeBasedLightingControlId);
+            controlsCommand.Parameters.AddWithValue("@luminaires20OrLess", controls.Luminaires20OrLess);
+            controlsCommand.Parameters.AddWithValue("@applicationTypeIds", applicationTypeIdsJson);
+
+            await controlsCommand.ExecuteNonQueryAsync();
+
+            await CloseConnectionAsync();
+        }
     }
 }
 

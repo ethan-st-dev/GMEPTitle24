@@ -78,7 +78,7 @@ namespace GMEPTitle24.Exterior
         {
             ExteriorScopeData = await MainView.db.GetExteriorScope(projectId);
             ExteriorLightingList = await MainView.db.GetExteriorLighting(projectId);
-            ExteriorControlsData = new ExteriorControls();
+            ExteriorControlsData = await MainView.db.GetExteriorControls(projectId);
             ExteriorScopeData.PropertyChanged += ExteriorScopeData_PropertyChanged;
             ExteriorControlsData.PropertyChanged += ExteriorControlsData_PropertyChanged;
             ExteriorControlsData.FilterApplicationTypes(ExteriorScopeData.OutdoorLightingZoneId);
@@ -104,11 +104,14 @@ namespace GMEPTitle24.Exterior
         public void ClearObjects()
         {
             ExteriorScopeData = null;
+            ExteriorLightingList.Clear();
+            ExteriorControlsData = null;
         }
         public async Task SaveObjects(string projectId)
         {
             await MainView.db.UpdateExteriorScope(ExteriorScopeData, projectId);
             await MainView.db.UpdateExteriorLuminaires(ExteriorLightingList);
+            await MainView.db.UpdateExteriorControls(ExteriorControlsData, projectId);
         }
         private void ExteriorScopeData_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {

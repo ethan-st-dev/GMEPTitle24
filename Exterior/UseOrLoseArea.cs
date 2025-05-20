@@ -9,6 +9,32 @@ namespace GMEPTitle24.Exterior
 {
     public class UseOrLoseArea: INotifyPropertyChanged
     {
+        private string id = Guid.NewGuid().ToString();
+        public string Id
+        {
+            get { return id; }
+            set
+            {
+                if (id != value)
+                {
+                    id = value;
+                    OnPropertyChanged(nameof(Id));
+                }
+            }
+        }
+        private string projectId = string.Empty;
+        public string ProjectId
+        {
+            get { return projectId; }
+            set
+            {
+                if (projectId != value)
+                {
+                    projectId = value;
+                    OnPropertyChanged(nameof(ProjectId));
+                }
+            }
+        }
         public string description = string.Empty;
         public string Description
         {
@@ -49,8 +75,10 @@ namespace GMEPTitle24.Exterior
                 }
             }
         }
-        public UseOrLoseArea(string description, int applicationTypeId, float area)
+        public UseOrLoseArea(string id, string projectId, string description, int applicationTypeId, float area)
         {
+            this.id = id;
+            this.projectId = projectId;
             this.description=description;
             this.applicationTypeId=applicationTypeId;
             this.area=area;

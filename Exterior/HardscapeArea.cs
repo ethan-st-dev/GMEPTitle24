@@ -9,6 +9,32 @@ namespace GMEPTitle24.Exterior
 {
     public class HardscapeArea: INotifyPropertyChanged
     {
+        private string id = Guid.NewGuid().ToString();
+        public string Id
+        {
+            get { return id; }
+            set
+            {
+                if (id != value)
+                {
+                    id = value;
+                    OnPropertyChanged(nameof(Id));
+                }
+            }
+        }
+        private string projectId = string.Empty;
+        public string ProjectId
+        {
+            get { return projectId; }
+            set
+            {
+                if (projectId != value)
+                {
+                    projectId = value;
+                    OnPropertyChanged(nameof(ProjectId));
+                }
+            }
+        }
         public string description = string.Empty;
         public string Description
         {
@@ -35,11 +61,14 @@ namespace GMEPTitle24.Exterior
                 }
             }
         }
-        public HardscapeArea(string description, float area)
+        public HardscapeArea(string id, string projectId, string description, float area)
         {
             this.description = description;
             this.area = area;
-        }public HardscapeArea()
+            this.id = id;
+            this.projectId = projectId;
+        }
+        public HardscapeArea()
         {
             // :3
         }
