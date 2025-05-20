@@ -105,12 +105,46 @@ namespace GMEPTitle24.Exterior
                 }
             }
         }
-        public ExteriorControls()
+        /*public ExteriorControls()
         {
             foreach (var item in ApplicationTypes)
             {
                 item.PropertyChanged += CheckboxItem_PropertyChanged;
             }
+        }*/
+        public ExteriorControls(
+            string id, 
+            string projectId,
+            int shutOffControlHandlerId,
+            int timeBasedLightingControlId,
+            bool luminaires20OrLess,
+            ObservableCollection<HardscapeArea> hardscapeAreas,
+            ObservableCollection<UseOrLoseArea> useOrLoseAreas,
+            List<int> applicationTypeIds
+
+        )
+        {
+            this.id = id;
+            this.projectId = projectId;
+            this.shutOffControlHandlerId = shutOffControlHandlerId;
+            this.timeBasedLightingControlId = timeBasedLightingControlId;
+            this.luminaires20OrLess = luminaires20OrLess;
+            this.hardscapeAreas = hardscapeAreas;
+            this.useOrLoseAreas = useOrLoseAreas;
+
+            foreach (var typeId in applicationTypeIds)
+            {
+                var matchingItem = ApplicationTypes.FirstOrDefault(item => item.Number == typeId);
+                if (matchingItem != null)
+                {
+                    matchingItem.IsSelected = true;
+                }
+            }
+            foreach (var item in ApplicationTypes)
+            {
+                item.PropertyChanged += CheckboxItem_PropertyChanged;
+            }
+
         }
 
         private void CheckboxItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -258,6 +292,7 @@ namespace GMEPTitle24.Exterior
                 }
             }
             DetermineCheckedApplicationTypes();
+            DetermineEnabledTypes();
         }
 
         public void DetermineCheckedApplicationTypes()
