@@ -218,13 +218,16 @@ namespace GMEPTitle24.Exterior
         {
             foreach (var item in ApplicationTypes)
             {
-                if (!item.IsSelected && CheckedApplicationTypes.Contains(item))
+                if (item.Number != 1)
                 {
-                    CheckedApplicationTypes.Remove(item);
-                }
-                if (item.IsSelected && !CheckedApplicationTypes.Contains(item))
-                {
-                    CheckedApplicationTypes.Add(item);
+                    if (!item.IsSelected && CheckedApplicationTypes.Contains(item))
+                    {
+                        CheckedApplicationTypes.Remove(item);
+                    }
+                    if (item.IsSelected && !CheckedApplicationTypes.Contains(item))
+                    {
+                        CheckedApplicationTypes.Add(item);
+                    }
                 }
             }
         }

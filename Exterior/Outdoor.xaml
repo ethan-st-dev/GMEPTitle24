@@ -514,8 +514,9 @@
                                 </Label>
                                 <ComboBox  SelectedValue="{Binding TimeBasedLightingControlId}" SelectedValuePath="Tag">
                                     <ComboBox.Items>
-                                        <ComboBoxItem Content="Site Level Astronomical Timer" Tag="1"/>
-                                        <ComboBoxItem Content="Task Level Controls" Tag="2"/>
+                                        <ComboBoxItem Content="Yes" Tag="1"/>
+                                        <ComboBoxItem Content="Yes - EMCS" Tag="2"/>
+                                        <ComboBoxItem Content="No" Tag="3"/>
                                     </ComboBox.Items>
                                 </ComboBox>
                                 <CheckBox Margin="0 20 0 0" IsChecked="{Binding Luminaires20OrLess}" FontWeight="Bold">
