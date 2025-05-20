@@ -123,11 +123,6 @@ namespace GMEPTitle24.Exterior
             {
                 ExteriorControlsData.FilterApplicationTypes(ExteriorScopeData.OutdoorLightingZoneId);
             }
-            /*if (e.PropertyName == nameof(Scope.CompletePrimaryFunctionList))
-            {
-                FilterBuildings();
-                ResetPrimaryFunctionIds();
-            }*/
         }
         public event PropertyChangedEventHandler PropertyChanged;
 

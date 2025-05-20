@@ -109,7 +109,7 @@ namespace GMEPTitle24.Exterior
         {
             foreach (var item in ApplicationTypes)
             {
-                item.PropertyChanged += CheckboxItem_PropertyChanged; ;
+                item.PropertyChanged += CheckboxItem_PropertyChanged;
             }
         }
 
