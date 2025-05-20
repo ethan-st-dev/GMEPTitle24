@@ -28,11 +28,14 @@ namespace GMEPTitle24.Exterior
             new CheckboxItem { Name = "Primary Entrances to Senior Care Facilities, Police Stations, Hospitals, Fire Stations, and Emergency Vehicle Facilities", Number = 11, IsSelected = false },
             new CheckboxItem { Name = "Sales Canopies", Number = 12, IsSelected = false },
             new CheckboxItem { Name = "Security Camera in General Hardscape > 10ft from Bldg", Number = 13, IsSelected = false },
-            new CheckboxItem { Name = "Student Pick-up/Drop-off", Number = 14, IsSelected = false },
-            new CheckboxItem { Name = "Vehicle Service Station Canopies", Number = 15, IsSelected = false },
-            new CheckboxItem { Name = "Vehicle Service Station Hardscape", Number = 16, IsSelected = false },
-            new CheckboxItem { Name = "Vehicle Service Station Uncovered Fuel Dispenser", Number = 17, IsSelected = false },
+            new CheckboxItem { Name = "Security for Retail Parking & Pedestrian Hardscape", Number = 14, IsSelected = false },
+            new CheckboxItem { Name = "Student Pick-up/Drop-off", Number = 15, IsSelected = false },
+            new CheckboxItem { Name = "Vehicle Service Station Canopies", Number = 16, IsSelected = false },
+            new CheckboxItem { Name = "Vehicle Service Station Hardscape", Number = 17, IsSelected = false },
+            new CheckboxItem { Name = "Vehicle Service Station Uncovered Fuel Dispenser", Number = 18, IsSelected = false },
         };
+
+
     
         public ObservableCollection<CheckboxItem> ApplicationTypes
         {
@@ -46,6 +49,20 @@ namespace GMEPTitle24.Exterior
                 }
             }
         }
+        public ObservableCollection<CheckboxItem> filteredApplicationTypes = new ObservableCollection<CheckboxItem>();
+        public ObservableCollection<CheckboxItem> FilteredApplicationTypes
+        {
+            get { return filteredApplicationTypes; }
+            set
+            {
+                if (filteredApplicationTypes != value)
+                {
+                    filteredApplicationTypes = value;
+                    OnPropertyChanged(nameof(FilteredApplicationTypes));
+                }
+            }
+        }
+
 
 
         public ObservableCollection<CheckboxItem> checkedApplicationTypes = new ObservableCollection<CheckboxItem>();
@@ -94,8 +111,6 @@ namespace GMEPTitle24.Exterior
             {
                 item.PropertyChanged += CheckboxItem_PropertyChanged; ;
             }
-            DetermineCheckedApplicationTypes();
-            
         }
 
         private void CheckboxItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -214,9 +229,40 @@ namespace GMEPTitle24.Exterior
             }
         }
 
+        public void FilterApplicationTypes(int lightingZoneId)
+        {
+            List<int> nonUrbanTypes = new List<int> { 1, 2, 3, 5, 6, 8, 9, 10, 11, 14, 16, 17, 18 };
+            FilteredApplicationTypes.Clear();
+            foreach (var item in ApplicationTypes)
+            {
+                switch (lightingZoneId)
+                {
+
+                    case 1:
+                        if (item.Number == 1)
+                        {
+                            FilteredApplicationTypes.Add(item);
+                        }
+                        break;
+                    case 2:
+                        if (nonUrbanTypes.Contains(item.Number))
+                        {
+                            FilteredApplicationTypes.Add(item);
+                        }
+                        break;
+                    case 3:
+                    case 4:
+                    case 5:
+                        FilteredApplicationTypes.Add(item);
+                        break;
+                }
+            }
+            DetermineCheckedApplicationTypes();
+        }
+
         public void DetermineCheckedApplicationTypes()
         {
-            foreach (var item in ApplicationTypes)
+            foreach (var item in FilteredApplicationTypes)
             {
                 if (item.Number != 1)
                 {
@@ -230,20 +276,27 @@ namespace GMEPTitle24.Exterior
                     }
                 }
             }
+            foreach(var item in checkedApplicationTypes.ToList())
+            {
+                if (!filteredApplicationTypes.Contains(item))
+                {
+                    checkedApplicationTypes.Remove(item);
+                }
+            }
         }
         public void DetermineEnabledTypes()
         {
             bool hardScapeTemp = false;
             bool useOrLoseTemp = false;
 
-            if (ApplicationTypes[0].IsSelected)
+            if (FilteredApplicationTypes[0].IsSelected)
             {
                 hardScapeTemp = true;
             }
 
-            for (int i = 1; i < ApplicationTypes.Count; i++)
+            for (int i = 1; i < FilteredApplicationTypes.Count; i++)
             {
-                if (ApplicationTypes[i].IsSelected)
+                if (FilteredApplicationTypes[i].IsSelected)
                 {
                     useOrLoseTemp = true;
                 }

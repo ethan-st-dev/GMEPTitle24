@@ -526,7 +526,7 @@
                         </GroupBox>
                         <GridSplitter HorizontalAlignment="Stretch" Grid.Column="1" Background="LightGray"/>
                         <GroupBox Grid.Column="2" Header="Application Types">
-                            <ListBox ItemsSource="{Binding ApplicationTypes}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            <ListBox ItemsSource="{Binding FilteredApplicationTypes}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <WrapPanel Orientation="Horizontal" />

@@ -81,8 +81,7 @@ namespace GMEPTitle24.Exterior
             ExteriorControlsData = new ExteriorControls();
             ExteriorScopeData.PropertyChanged += ExteriorScopeData_PropertyChanged;
             ExteriorControlsData.PropertyChanged += ExteriorControlsData_PropertyChanged;
-
-
+            ExteriorControlsData.FilterApplicationTypes(ExteriorScopeData.OutdoorLightingZoneId);
         }
 
         private void ExteriorControlsData_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -119,6 +118,10 @@ namespace GMEPTitle24.Exterior
                 {
                     ResetRows?.Invoke(this, EventArgs.Empty);
                 }
+            }
+            if (e.PropertyName == nameof(ExteriorScope.OutdoorLightingZoneId))
+            {
+                ExteriorControlsData.FilterApplicationTypes(ExteriorScopeData.OutdoorLightingZoneId);
             }
             /*if (e.PropertyName == nameof(Scope.CompletePrimaryFunctionList))
             {
