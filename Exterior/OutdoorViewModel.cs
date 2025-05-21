@@ -708,12 +708,13 @@ namespace GMEPTitle24.Exterior
                         }
                     }
 
-                   /* if (ExteriorControlsData.UseOrLose)
+                    if (ExteriorControlsData.UseOrLose)
                     {
                         //Grabbing Container For All Lighting Entries
-                        IWebElement AddAreaButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Add Area']")));
+                        
 
-                        IWebElement areaContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[name='organism_BnBlWWETmlDfHnEefGrGxhgrJPBGusgV']")));
+                        IWebElement areaContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[name='organism_cAokAkxqRgDUauVnvDswdzDTgTlhgLVV']")));
+                        IWebElement AddAreaButton = areaContainer.FindElement(By.XPath("//div[text()='Add Area']"));
                         var UseOrLoseAreas = areaContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
 
                         foreach (var area in UseOrLoseAreas)
@@ -766,7 +767,7 @@ namespace GMEPTitle24.Exterior
                             }
                             row++;
                         }
-                    }*/
+                    }
 
 
                     IWebElement SaveButton = driver.FindElement(By.XPath("//div[text()='Save']"));
