@@ -763,7 +763,16 @@ namespace GMEPTitle24.Exterior
                                 {
                                     var choices = element.FindElements(By.CssSelector("li"));
                                     Debug.WriteLine("Choices: " + choices.Count);
-                                    var choice = choices[ExteriorControlsData.UseOrLoseAreas[row].ApplicationTypeId - 2];
+                                    IWebElement choice;
+                                    if (ExteriorControlsData.UseOrLoseAreas[row].ApplicationTypeId > 7)
+                                    {
+                                        choice = choices[ExteriorControlsData.UseOrLoseAreas[row].ApplicationTypeId - 3];
+                                    }
+                                    else
+                                    {
+                                        choice = choices[ExteriorControlsData.UseOrLoseAreas[row].ApplicationTypeId - 2];
+
+                                    }
                                     ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
                                 }
                             }

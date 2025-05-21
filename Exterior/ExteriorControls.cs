@@ -24,15 +24,16 @@ namespace GMEPTitle24.Exterior
             new CheckboxItem { Name = "Hardscape Ornamental Lighting", Number = 7, IsSelected = false },
             new CheckboxItem { Name = "Non-Sales Canopies and Tunnels", Number = 8, IsSelected = false },
             new CheckboxItem { Name = "Outdoor Dining", Number = 9, IsSelected = false },
-            new CheckboxItem { Name = "Outdoor Sales Lots", Number = 10, IsSelected = false },
-            new CheckboxItem { Name = "Primary Entrances to Senior Care Facilities, Police Stations, Hospitals, Fire Stations, and Emergency Vehicle Facilities", Number = 11, IsSelected = false },
-            new CheckboxItem { Name = "Sales Canopies", Number = 12, IsSelected = false },
-            new CheckboxItem { Name = "Security Camera in General Hardscape > 10ft from Bldg", Number = 13, IsSelected = false },
-            new CheckboxItem { Name = "Security for Retail Parking & Pedestrian Hardscape", Number = 14, IsSelected = false },
-            new CheckboxItem { Name = "Student Pick-up/Drop-off", Number = 15, IsSelected = false },
-            new CheckboxItem { Name = "Vehicle Service Station Canopies", Number = 16, IsSelected = false },
-            new CheckboxItem { Name = "Vehicle Service Station Hardscape", Number = 17, IsSelected = false },
-            new CheckboxItem { Name = "Vehicle Service Station Uncovered Fuel Dispenser", Number = 18, IsSelected = false },
+            new CheckboxItem { Name = "Outdoor Sales Frontage", Number = 10, IsSelected = false },
+            new CheckboxItem { Name = "Outdoor Sales Lots", Number = 11, IsSelected = false },
+            new CheckboxItem { Name = "Primary Entrances to Senior Care Facilities, Police Stations, Hospitals, Fire Stations, and Emergency Vehicle Facilities", Number = 12, IsSelected = false },
+            new CheckboxItem { Name = "Sales Canopies", Number = 13, IsSelected = false },
+            new CheckboxItem { Name = "Security Camera in General Hardscape > 10ft from Bldg", Number = 14, IsSelected = false },
+            new CheckboxItem { Name = "Security for Retail Parking & Pedestrian Hardscape", Number = 15, IsSelected = false },
+            new CheckboxItem { Name = "Student Pick-up/Drop-off", Number = 16, IsSelected = false },
+            new CheckboxItem { Name = "Vehicle Service Station Canopies", Number = 17, IsSelected = false },
+            new CheckboxItem { Name = "Vehicle Service Station Hardscape", Number = 18, IsSelected = false },
+            new CheckboxItem { Name = "Vehicle Service Station Uncovered Fuel Dispenser", Number = 19, IsSelected = false },
         };
 
 
@@ -265,7 +266,7 @@ namespace GMEPTitle24.Exterior
 
         public void FilterApplicationTypes(int lightingZoneId)
         {
-            List<int> nonUrbanTypes = new List<int> { 1, 2, 3, 5, 6, 8, 9, 10, 11, 14, 16, 17, 18 };
+            List<int> nonUrbanTypes = new List<int> { 1, 2, 3, 5, 6, 8, 9, 11, 12, 15, 17, 18, 19 };
             FilteredApplicationTypes.Clear();
             foreach (var item in ApplicationTypes)
             {
@@ -299,7 +300,7 @@ namespace GMEPTitle24.Exterior
         {
             foreach (var item in FilteredApplicationTypes)
             {
-                if (item.Number != 1)
+                if (item.Number != 1 && item.Number != 7)
                 {
                     if (!item.IsSelected && CheckedApplicationTypes.Contains(item))
                     {
