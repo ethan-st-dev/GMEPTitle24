@@ -9,6 +9,8 @@
     <UserControl.Resources>
         <local:IsFiveOrHigherConverter x:Key="IsFiveOrHigherConverter" />
         <local:BindingProxy x:Key="ExteriorControlsProxy" Data="{Binding ExteriorControlsData}"/>
+        <local:BindingProxy x:Key="ExteriorScopeProxy" Data="{Binding ExteriorScopeData}"/>
+        <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </UserControl.Resources>
     <Grid>
         <TabControl>
@@ -611,6 +613,7 @@
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Width="*" Header="Description" Binding="{Binding Description}"/>
                                         <DataGridTextColumn Width="*" Header="Area" Binding="{Binding Area}"/>
+                                        <DataGridTextColumn Width="*" Header="Perimeter Length" Binding="{Binding PerimeterLength}" Visibility="{Binding Data.MultiFamily, Source={StaticResource ExteriorScopeProxy}, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </GroupBox>

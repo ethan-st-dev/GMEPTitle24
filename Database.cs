@@ -794,7 +794,8 @@ namespace GMEPTitle24
                         reader.GetString("id"),
                         reader.GetString("project_id"),
                         reader.GetString("description"),
-                        reader.GetFloat("area")
+                        reader.GetFloat("area"),
+                        reader.GetFloat("perimeter_length")
                         )
                     );
             }
@@ -899,18 +900,20 @@ namespace GMEPTitle24
             {
                 string query = @"
                     INSERT INTO electrical_lighting_lto_hardscape_areas
-                    (id, project_id, description, area)
+                    (id, project_id, description, area, perimeter_length)
                     VALUES
-                    (@id, @projectId, @description, @area)
+                    (@id, @projectId, @description, @area, @perimeterLength)
                     ON DUPLICATE KEY UPDATE
                     description = @description,
-                    area = @area";
+                    area = @area,
+                    perimeter_length = @perimeterLength";
 
                 MySqlCommand command = new MySqlCommand(query, Connection);
                 command.Parameters.AddWithValue("@id", area.Id);
                 command.Parameters.AddWithValue("@projectId", projectId);
                 command.Parameters.AddWithValue("@description", area.Description);
                 command.Parameters.AddWithValue("@area", area.Area);
+                command.Parameters.AddWithValue("@perimeterLength", area.PerimeterLength);
                 await command.ExecuteNonQueryAsync();
             }
 
