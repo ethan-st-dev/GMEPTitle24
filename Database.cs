@@ -816,7 +816,9 @@ namespace GMEPTitle24
                         reader.GetString("project_id"),
                         reader.GetString("description"),
                         reader.GetInt32("application_type_id"),
-                        reader.GetFloat("area")
+                        reader.GetFloat("area"),
+                        reader.GetInt32("location_qty"),
+                        reader.GetFloat("linear_feet")
                         )
                     );
             }
@@ -916,13 +918,15 @@ namespace GMEPTitle24
             {
                 string query = @"
                     INSERT INTO electrical_lighting_lto_use_or_lose_areas
-                    (id, project_id, description, application_type_id, area)
+                    (id, project_id, description, application_type_id, area, location_qty, linear_feet)
                     VALUES
-                    (@id, @projectId, @description, @applicationTypeId, @area)
+                    (@id, @projectId, @description, @applicationTypeId, @area, @locationQty, @linearFeet)
                     ON DUPLICATE KEY UPDATE
                     description = @description,
                     application_type_id = @applicationTypeId,
-                    area = @area";
+                    area = @area,
+                    linear_feet = @linearFeet,
+                    location_qty = @locationQty";
 
                 MySqlCommand command = new MySqlCommand(query, Connection);
                 command.Parameters.AddWithValue("@id", area.Id);
@@ -930,6 +934,8 @@ namespace GMEPTitle24
                 command.Parameters.AddWithValue("@description", area.Description);
                 command.Parameters.AddWithValue("@applicationTypeId", area.ApplicationTypeId);
                 command.Parameters.AddWithValue("@area", area.Area);
+                command.Parameters.AddWithValue("@locationQty", area.LocationQty);
+                command.Parameters.AddWithValue("@linearFeet", area.LinearFeet);
                 await command.ExecuteNonQueryAsync();
             }
 

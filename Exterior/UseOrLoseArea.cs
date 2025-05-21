@@ -75,13 +75,41 @@ namespace GMEPTitle24.Exterior
                 }
             }
         }
-        public UseOrLoseArea(string id, string projectId, string description, int applicationTypeId, float area)
+        public int locationQty = 0;
+        public int LocationQty
+        {
+            get { return locationQty; }
+            set
+            {
+                if (locationQty != value)
+                {
+                    locationQty = value;
+                    OnPropertyChanged(nameof(LocationQty));
+                }
+            }
+        }
+        public float linearFeet = 0;
+        public float LinearFeet
+        {
+            get { return linearFeet; }
+            set
+            {
+                if (linearFeet != value)
+                {
+                    linearFeet = value;
+                    OnPropertyChanged(nameof(LinearFeet));
+                }
+            }
+        }
+        public UseOrLoseArea(string id, string projectId, string description, int applicationTypeId, float area, int locationQty, float linearFeet)
         {
             this.id = id;
             this.projectId = projectId;
             this.description=description;
             this.applicationTypeId=applicationTypeId;
             this.area=area;
+            this.locationQty=locationQty;
+            this.linearFeet=linearFeet;
         }
         public UseOrLoseArea()
         {

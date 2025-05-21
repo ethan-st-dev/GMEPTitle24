@@ -621,6 +621,8 @@
                                         <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Description}"/>
                                         <DataGridComboBoxColumn Width="*" Header="Application Type" ItemsSource="{Binding Data.CheckedApplicationTypes, Source={StaticResource ExteriorControlsProxy}}" DisplayMemberPath="Name" SelectedValueBinding="{Binding ApplicationTypeId, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Number"/>
                                         <DataGridTextColumn Width="*" Header="Area" Binding="{Binding Area}"/>
+                                        <DataGridTextColumn Width="*" Header="Location Qty" Binding="{Binding LocationQty}"/>
+                                        <DataGridTextColumn Width="*" Header="Linear Feet" Binding="{Binding LinearFeet}"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </GroupBox>
