@@ -753,6 +753,31 @@ namespace GMEPTitle24.Exterior
                                         arguments[0].dispatchEvent(new Event('change'));
                                         ", element, ExteriorControlsData.UseOrLoseAreas[row].Description);
                                 }
+                                if (attributeValue != null && attributeValue.Contains("linear feet of sales frontage", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                                        arguments[0].value = arguments[1];
+                                        arguments[0].dispatchEvent(new Event('input'));
+                                        arguments[0].dispatchEvent(new Event('change'));
+                                        ", element, ExteriorControlsData.UseOrLoseAreas[row].LinearFeet);
+                                }
+                                if (attributeValue != null && attributeValue.Contains("specific area's square footage", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                                        arguments[0].value = arguments[1];
+                                        arguments[0].dispatchEvent(new Event('input'));
+                                        arguments[0].dispatchEvent(new Event('change'));
+                                        ", element, ExteriorControlsData.UseOrLoseAreas[row].Area);
+                                }
+                                if (attributeValue != null && attributeValue.Contains("number of locations", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                                        arguments[0].value = arguments[1];
+                                        arguments[0].dispatchEvent(new Event('input'));
+                                        arguments[0].dispatchEvent(new Event('change'));
+                                        ", element, ExteriorControlsData.UseOrLoseAreas[row].LocationQty);
+                                }
+
                             }
                             var dropdownElements = area.FindElements(By.CssSelector("div[class='selectWrapper']"));
                             foreach (var element in dropdownElements)
