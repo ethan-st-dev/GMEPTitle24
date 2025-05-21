@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,7 @@ namespace GMEPTitle24.Exterior
         public int alteredLuminairesPercentageId = 1;
         public int wattageCalculationMethodId = 1;
         public bool dwellingUnitControl = false;
+        public bool multiFamily = false;
         public ObservableCollection<CheckboxItem> OccupancyTypes { get; set; } = new ObservableCollection<CheckboxItem>
         {
             new CheckboxItem { Name = "Auditorium Building", Number = 1, IsSelected = false },
@@ -88,6 +90,11 @@ namespace GMEPTitle24.Exterior
                     matchingItem.IsSelected = true;
                 }
             }
+            foreach(var type in OccupancyTypes)
+            {
+                type.PropertyChanged += OccupancyType_PropertyChanged;
+            }
+            DetermineMultiFamily();
         }
         public string Id
         {
@@ -122,6 +129,18 @@ namespace GMEPTitle24.Exterior
                 {
                     projectScopeId = value;
                     OnPropertyChanged(nameof(ProjectScopeId));
+                }
+            }
+        }
+        public bool MultiFamily
+        {
+            get { return multiFamily; }
+            set
+            {
+                if (multiFamily != value)
+                {
+                    multiFamily = value;
+                    OnPropertyChanged(nameof(MultiFamily));
                 }
             }
         }
@@ -248,7 +267,26 @@ namespace GMEPTitle24.Exterior
                 }
             }
         }
-
+        public void DetermineMultiFamily()
+        {
+            if (OccupancyTypes[12].IsSelected)
+            {
+                MultiFamily = true;
+            }
+            else
+            {
+                MultiFamily = false;
+            }
+            Debug.WriteLine("moew" + MultiFamily.ToString());
+        }
+        private void OccupancyType_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(CheckboxItem.IsSelected))
+            {
+                DetermineMultiFamily();
+            }
+        
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
