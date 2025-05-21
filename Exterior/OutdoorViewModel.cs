@@ -764,16 +764,28 @@ namespace GMEPTitle24.Exterior
                                     var choices = element.FindElements(By.CssSelector("li"));
 
                                     IWebElement choice;
-                                    if (ExteriorControlsData.UseOrLoseAreas[row].ApplicationTypeId > 7)
+                                    int applicationTypeId = ExteriorControlsData.UseOrLoseAreas[row].ApplicationTypeId;
+
+                                    //Le Switcheroo (Sales Frontage & Dining)
+                                    if (applicationTypeId == 9)
                                     {
-                                        choice = choices[ExteriorControlsData.UseOrLoseAreas[row].ApplicationTypeId - 3];
+                                        applicationTypeId = 10;
+                                    }
+                                    else if (applicationTypeId == 10)
+                                    {
+                                        applicationTypeId = 9;
+                                    }
+
+                                    if (applicationTypeId > 7)
+                                    {
+                                        choice = choices[applicationTypeId - 3];
                                     }
                                     else
                                     {
-                                        choice = choices[ExteriorControlsData.UseOrLoseAreas[row].ApplicationTypeId - 2];
+                                        choice = choices[applicationTypeId - 2];
 
                                     }
-                                        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
                                 }
                             }
                             row++;
