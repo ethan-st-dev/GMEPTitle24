@@ -647,10 +647,14 @@ namespace GMEPTitle24.Exterior
                     if (ExteriorControlsData.Hardscape)
                     {
                         //Grabbing Container For All Lighting Entries
-                        IWebElement hardscapeContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[name='organism_Section_I_TableGeneralPowerAllowance']")));
+                        IWebElement hardscapeContainer;
                         if (ExteriorScopeData.MultiFamily)
                         {
                             hardscapeContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[name='organism_NRCCLTO01E_GeneralAllowanceMF']")));
+                        }
+                        else
+                        {
+                            hardscapeContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[name='organism_Section_I_TableGeneralPowerAllowance']")));
                         }
 
                         IWebElement AddHardscapeButton = hardscapeContainer.FindElement(By.XPath(".//div[text()='Add General Hardscape Area']"));
