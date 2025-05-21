@@ -917,7 +917,7 @@ namespace GMEPTitle24.Exterior
                             IWebElement choice = choices[ExteriorControlsData.TimeBasedLightingControlId - 1];
                             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
                         }
-                        if (placeholderValue != null && placeholderValue.Contains("will lighting be controlled with a site level time-based lighting control", StringComparison.OrdinalIgnoreCase))
+                        if (placeholderValue != null && placeholderValue.Contains("does the project only include altered lighting systems", StringComparison.OrdinalIgnoreCase))
                         {
                             var choices = element.FindElements(By.CssSelector("li"));
                             IWebElement choice = choices[1];
