@@ -703,6 +703,14 @@ namespace GMEPTitle24.Exterior
                                         arguments[0].dispatchEvent(new Event('change'));
                                         ", element, ExteriorControlsData.HardscapeAreas[row].Area);
                                 }
+                                if (attributeValue != null && attributeValue.Contains("perimeter length", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                                        arguments[0].value = arguments[1];
+                                        arguments[0].dispatchEvent(new Event('input'));
+                                        arguments[0].dispatchEvent(new Event('change'));
+                                        ", element, ExteriorControlsData.HardscapeAreas[row].PerimeterLength);
+                                }
                             }
                             row++;
                         }
@@ -898,14 +906,14 @@ namespace GMEPTitle24.Exterior
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is bool b)
-                return b ? Visibility.Visible : Visibility.Collapsed;
-            return Visibility.Collapsed;
+                return b ? Visibility.Collapsed: Visibility.Visible;
+            return Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is Visibility v)
-                return v == Visibility.Visible;
+                return v == Visibility.Collapsed;
             return false;
         }
     }
