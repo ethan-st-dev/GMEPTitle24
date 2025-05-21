@@ -117,10 +117,16 @@ namespace GMEPTitle24
                 viewModel.ProjectLoading = true;
                 viewModel.StatusText = "Saving";
                 await indoor.viewModel.SaveObjects(selectedPair.Value);
+                await outdoor.viewModel.SaveObjects(selectedPair.Value);
                 bool result = await viewModel.ActivateSelenium();
                 if (result)
                 {
-                    result = await indoor.viewModel.IndoorLighting();
+                    /*result = await indoor.viewModel.IndoorLighting();
+                    if (result)
+                    {
+                        await viewModel.LaunchWindow();
+                    }*/
+                    result = await outdoor.viewModel.OutdoorLighting();
                     if (result)
                     {
                         await viewModel.LaunchWindow();
@@ -142,6 +148,7 @@ namespace GMEPTitle24
                 viewModel.ProjectLoaded = false;
                 viewModel.ProjectLoading = false;
                 indoor.viewModel.ClearObjects();
+                outdoor.viewModel.ClearObjects();
                 return;
             }
             viewModel.ProjectLoaded = true;
@@ -158,6 +165,7 @@ namespace GMEPTitle24
                 viewModel.ProjectLoading = true;
                 viewModel.StatusText = "Saving";
                 await indoor.viewModel.SaveObjects(selectedPair.Value);
+                await outdoor.viewModel.SaveObjects(selectedPair.Value);
                 viewModel.StatusText = String.Empty;
                 viewModel.ProjectLoading = false;
             }
@@ -168,6 +176,7 @@ namespace GMEPTitle24
             {
                 //Electrical Tab
                 await indoor.viewModel.InitializeObjects(selectedPair.Value);
+                await outdoor.viewModel.InitializeObjects(selectedPair.Value);
                 viewModel.ProjectLoaded = true;
             }
         }
