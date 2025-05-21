@@ -64,7 +64,7 @@ namespace GMEPTitle24.Exterior
         public float perimeterLength = 0;
         public float PerimeterLength
         {
-            get { return area; }
+            get { return perimeterLength; }
             set
             {
                 if (perimeterLength != value)
