@@ -647,9 +647,9 @@ namespace GMEPTitle24.Exterior
                     if (ExteriorControlsData.Hardscape)
                     {
                         //Grabbing Container For All Lighting Entries
-                        IWebElement AddHardscapeButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Add General Hardscape Area']")));
 
-                        IWebElement hardscapeContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[name='organism_NRCCLTO01E_TableAllowanceMF_Row']")));
+                        IWebElement hardscapeContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[name='organism_NRCCLTO01E_GeneralAllowanceMF']")));
+                        IWebElement AddHardscapeButton = hardscapeContainer.FindElement(By.XPath(".//div[text()='Add General Hardscape Area']"));
                         var HardscapeAreas = hardscapeContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
 
                         foreach (var area in HardscapeAreas)
@@ -700,7 +700,7 @@ namespace GMEPTitle24.Exterior
                         }
                     }
 
-                    if (ExteriorControlsData.UseOrLose)
+                   /* if (ExteriorControlsData.UseOrLose)
                     {
                         //Grabbing Container For All Lighting Entries
                         IWebElement AddAreaButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Add Area']")));
@@ -758,7 +758,7 @@ namespace GMEPTitle24.Exterior
                             }
                             row++;
                         }
-                    }
+                    }*/
 
 
                     IWebElement SaveButton = driver.FindElement(By.XPath("//div[text()='Save']"));
