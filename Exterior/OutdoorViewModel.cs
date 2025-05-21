@@ -762,7 +762,8 @@ namespace GMEPTitle24.Exterior
                                 if (placeholderValue != null && placeholderValue.Contains("application type is in this area", StringComparison.OrdinalIgnoreCase))
                                 {
                                     var choices = element.FindElements(By.CssSelector("li"));
-                                    var choice = choices[ExteriorControlsData.UseOrLoseAreas[row].ApplicationTypeId - 1];
+                                    Debug.WriteLine("Choices: " + choices.Count);
+                                    var choice = choices[ExteriorControlsData.UseOrLoseAreas[row].ApplicationTypeId - 2];
                                     ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
                                 }
                             }
