@@ -277,7 +277,6 @@ namespace GMEPTitle24.Exterior
             {
                 MultiFamily = false;
             }
-            Debug.WriteLine("moew" + MultiFamily.ToString());
         }
         private void OccupancyType_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {

@@ -762,7 +762,7 @@ namespace GMEPTitle24.Exterior
                                 if (placeholderValue != null && placeholderValue.Contains("application type is in this area", StringComparison.OrdinalIgnoreCase))
                                 {
                                     var choices = element.FindElements(By.CssSelector("li"));
-                                    Debug.WriteLine("Choices: " + choices.Count);
+
                                     IWebElement choice;
                                     if (ExteriorControlsData.UseOrLoseAreas[row].ApplicationTypeId > 7)
                                     {
@@ -773,7 +773,7 @@ namespace GMEPTitle24.Exterior
                                         choice = choices[ExteriorControlsData.UseOrLoseAreas[row].ApplicationTypeId - 2];
 
                                     }
-                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                                        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
                                 }
                             }
                             row++;
