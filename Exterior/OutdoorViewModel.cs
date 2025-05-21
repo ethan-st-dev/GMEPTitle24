@@ -713,13 +713,14 @@ namespace GMEPTitle24.Exterior
                         //Grabbing Container For All Lighting Entries
                         
 
-                        IWebElement areaContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[name='organism_cAokAkxqRgDUauVnvDswdzDTgTlhgLVV']")));
-                        IWebElement AddAreaButton = areaContainer.FindElement(By.XPath("//div[text()='Add Area']"));
-                        var UseOrLoseAreas = areaContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
+                        IWebElement areaContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[name='organism_BnBlWWETmlDfHnEefGrGxhgrJPBGusgV']")));
+                        IWebElement areaChildContainer = areaContainer.FindElement(By.CssSelector(":scope > div.molecule_children"));
+                        IWebElement AddAreaButton = areaContainer.FindElement(By.XPath(".//div[text()='Add Area']"));
+                        var UseOrLoseAreas = areaChildContainer.FindElements(By.CssSelector(":scope > div.mod_multiField"));
 
                         foreach (var area in UseOrLoseAreas)
                         {
-                            var delete = area.FindElement(By.CssSelector("div[class='mod_supportControl']"));
+                            var delete = area.FindElement(By.CssSelector(":scope > div.mod_supportControl"));
                             var deleteIcon = delete.FindElement(By.CssSelector("i"));
                             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", deleteIcon);
                         }
@@ -729,12 +730,12 @@ namespace GMEPTitle24.Exterior
 
                             wait.Until(driver =>
                             {
-                                var updatedUseOrLoseAreas = areaContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
+                                var updatedUseOrLoseAreas = areaChildContainer.FindElements(By.CssSelector(":scope > div.mod_multiField"));
                                 return updatedUseOrLoseAreas.Count >= ExteriorControlsData.UseOrLoseAreas.IndexOf(area) + 1;
                             });
                         }
 
-                        UseOrLoseAreas = areaContainer.FindElements(By.CssSelector("div[class='mod_multiField']"));
+                        UseOrLoseAreas = areaChildContainer.FindElements(By.CssSelector(":scope > div.mod_multiField"));
                         //Editing Boxes
                         int row = 0;
                         foreach (var area in UseOrLoseAreas)
