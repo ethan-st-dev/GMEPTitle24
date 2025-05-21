@@ -184,12 +184,13 @@ namespace GMEPTitle24.Exterior
             }
             
             result2 = await FillOutAllowances();
-            return result2;
-            /*result2 = await FillOutControls();
             if (result2 == false)
             {
                 return false;
-            }*/
+            }
+
+            result2 = await FillOutControls();
+            return result2;
         }
 
         public async Task<bool> FillOutScope()
@@ -863,7 +864,113 @@ namespace GMEPTitle24.Exterior
             });
             return result;
         }
+
+        public async Task<bool> FillOutControls()
+        {
+            MainView.StatusText = "Filling Out Controls Section";
+            bool result = await Task.Run(bool () =>
+            {
+                try
+                {
+                    IWebElement controls = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Controls']")));
+                    controls.Click();
+                    try
+                    {
+                        WebDriverWait continueWait = new WebDriverWait(driver, TimeSpan.FromSeconds(2));
+                        IWebElement continueAnyway = continueWait.Until(driver =>
+                        {
+                            try
+                            {
+                                return driver.FindElement(By.XPath("//div[text()='Continue Anyway']"));
+                            }
+                            catch (NoSuchElementException)
+                            {
+                                return null;
+                            }
+                        });
+
+                        if (continueAnyway != null)
+                        {
+                            continueAnyway.Click();
+                        }
+                    }
+                    catch (WebDriverTimeoutException)
+                    {
+                        // If the "continue anyway" div is not found within the timeout, proceed
+                        Debug.WriteLine("The 'continue anyway' div was not found. Proceeding...");
+                    }
+
+                    var systemDropdownElements = driver.FindElements(By.CssSelector("div[class='selectWrapper']"));
+                    foreach (var element in systemDropdownElements)
+                    {
+                        var textbox = element.FindElement(By.CssSelector("input"));
+                        string placeholderValue = textbox.GetAttribute("placeholder");
+                        if (placeholderValue != null && placeholderValue.Contains("handling your shut-off controls", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            IWebElement choice = choices[ExteriorControlsData.ShutOffControlHandlerId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("will lighting be controlled with a site level time-based lighting control", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            IWebElement choice = choices[ExteriorControlsData.TimeBasedLightingControlId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("will lighting be controlled with a site level time-based lighting control", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            IWebElement choice = choices[1];
+                            if (ExteriorControlsData.Luminaires20OrLess)
+                            {
+                                choice = choices[0];
+                            }
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                    }
+                    
+
+
+                    IWebElement SaveButton = driver.FindElement(By.XPath("//div[text()='Save']"));
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", SaveButton);
+
+                    WebDriverWait wait2 = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+                    wait2.Until(driver =>
+                    {
+                        var formElement = driver.FindElement(By.Id("matForm"));
+                        return formElement.GetAttribute("class").Contains("mod_submitting");
+                    });
+
+                    // Wait for the "mod_submitting" class to be removed
+                    wait2.Until(driver =>
+                    {
+                        var formElement = driver.FindElement(By.Id("matForm"));
+                        return !formElement.GetAttribute("class").Contains("mod_submitting");
+                    });
+
+                }
+                catch (WebDriverTimeoutException ex)
+                {
+                    MainView.StatusText = "Navigation timed out. Please try again.";
+                    MainView.ProjectLoading = false;
+                    Debug.WriteLine($"Timeout Exception: {ex.Message}");
+                    return false;
+                }
+                catch (WebDriverException ex)
+                {
+
+                    MainView.StatusText = "An error occurred while navigation to luminaires.";
+                    MainView.ProjectLoading = false;
+                    Debug.WriteLine($"WebDriver Exception: {ex.Message}");
+                    return false;
+                }
+                return true;
+            });
+            return result;
+        }
     }
+
+
     public class IsFiveOrHigherConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
