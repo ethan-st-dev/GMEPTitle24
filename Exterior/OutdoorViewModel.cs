@@ -184,12 +184,13 @@ namespace GMEPTitle24.Exterior
             }
             
             result2 = await FillOutAllowances();
-            return result2;
-            /*result2 = await FillOutControls();
             if (result2 == false)
             {
                 return false;
-            }*/
+            }
+
+            result2 = await FillOutControls();
+            return result2;
         }
 
         public async Task<bool> FillOutScope()
@@ -703,6 +704,14 @@ namespace GMEPTitle24.Exterior
                                         arguments[0].dispatchEvent(new Event('change'));
                                         ", element, ExteriorControlsData.HardscapeAreas[row].Area);
                                 }
+                                if (attributeValue != null && attributeValue.Contains("perimeter length", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                                        arguments[0].value = arguments[1];
+                                        arguments[0].dispatchEvent(new Event('input'));
+                                        arguments[0].dispatchEvent(new Event('change'));
+                                        ", element, ExteriorControlsData.HardscapeAreas[row].PerimeterLength);
+                                }
                             }
                             row++;
                         }
@@ -753,6 +762,31 @@ namespace GMEPTitle24.Exterior
                                         arguments[0].dispatchEvent(new Event('change'));
                                         ", element, ExteriorControlsData.UseOrLoseAreas[row].Description);
                                 }
+                                if (attributeValue != null && attributeValue.Contains("linear feet of sales frontage", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                                        arguments[0].value = arguments[1];
+                                        arguments[0].dispatchEvent(new Event('input'));
+                                        arguments[0].dispatchEvent(new Event('change'));
+                                        ", element, ExteriorControlsData.UseOrLoseAreas[row].LinearFeet);
+                                }
+                                if (attributeValue != null && attributeValue.Contains("specific area's square footage", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                                        arguments[0].value = arguments[1];
+                                        arguments[0].dispatchEvent(new Event('input'));
+                                        arguments[0].dispatchEvent(new Event('change'));
+                                        ", element, ExteriorControlsData.UseOrLoseAreas[row].Area);
+                                }
+                                if (attributeValue != null && attributeValue.Contains("number of locations", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    ((IJavaScriptExecutor)driver).ExecuteScript(@"
+                                        arguments[0].value = arguments[1];
+                                        arguments[0].dispatchEvent(new Event('input'));
+                                        arguments[0].dispatchEvent(new Event('change'));
+                                        ", element, ExteriorControlsData.UseOrLoseAreas[row].LocationQty);
+                                }
+
                             }
                             var dropdownElements = area.FindElements(By.CssSelector("div[class='selectWrapper']"));
                             foreach (var element in dropdownElements)
@@ -763,7 +797,7 @@ namespace GMEPTitle24.Exterior
                                 {
                                     var choices = element.FindElements(By.CssSelector("li"));
 
-                                    IWebElement choice;
+                                    IWebElement choice = null;
                                     int applicationTypeId = ExteriorControlsData.UseOrLoseAreas[row].ApplicationTypeId;
 
                                     //Le Switcheroo (Sales Frontage & Dining)
@@ -782,10 +816,16 @@ namespace GMEPTitle24.Exterior
                                     }
                                     else
                                     {
-                                        choice = choices[applicationTypeId - 2];
+                                        if (applicationTypeId > 1)
+                                        {
+                                            choice = choices[applicationTypeId - 2];
+                                        }
 
                                     }
-                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                                    if (choice != null)
+                                    {
+                                        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                                    }
                                 }
                             }
                             row++;
@@ -830,7 +870,224 @@ namespace GMEPTitle24.Exterior
             });
             return result;
         }
+
+        public async Task<bool> FillOutControls()
+        {
+            MainView.StatusText = "Filling Out Controls Section";
+            bool result = await Task.Run(bool () =>
+            {
+                try
+                {
+                    IWebElement controls = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[text()='Controls']")));
+                    controls.Click();
+                    try
+                    {
+                        WebDriverWait continueWait = new WebDriverWait(driver, TimeSpan.FromSeconds(2));
+                        IWebElement continueAnyway = continueWait.Until(driver =>
+                        {
+                            try
+                            {
+                                return driver.FindElement(By.XPath("//div[text()='Continue Anyway']"));
+                            }
+                            catch (NoSuchElementException)
+                            {
+                                return null;
+                            }
+                        });
+
+                        if (continueAnyway != null)
+                        {
+                            continueAnyway.Click();
+                        }
+                    }
+                    catch (WebDriverTimeoutException)
+                    {
+                        // If the "continue anyway" div is not found within the timeout, proceed
+                        Debug.WriteLine("The 'continue anyway' div was not found. Proceeding...");
+                    }
+
+                    var systemDropdownElements = driver.FindElements(By.CssSelector("div[class='selectWrapper']"));
+                    foreach (var element in systemDropdownElements)
+                    {
+                        var textbox = element.FindElement(By.CssSelector("input"));
+                        string placeholderValue = textbox.GetAttribute("placeholder");
+                        if (placeholderValue != null && placeholderValue.Contains("handling your shut-off controls", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            IWebElement choice = choices[ExteriorControlsData.ShutOffControlHandlerId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("will lighting be controlled with a site level time-based lighting control", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            IWebElement choice = choices[ExteriorControlsData.TimeBasedLightingControlId - 1];
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                        if (placeholderValue != null && placeholderValue.Contains("does the project only include altered lighting systems", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var choices = element.FindElements(By.CssSelector("li"));
+                            IWebElement choice = choices[1];
+                            if (ExteriorControlsData.Luminaires20OrLess)
+                            {
+                                choice = choices[0];
+                            }
+                            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                        }
+                    }
+
+
+                    IWebElement areaContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[name='organism_OtwsEXWMAmrhfEhnDiERKDOTmBNUfKLQ']")));
+                    IWebElement areaChildContainer = areaContainer.FindElement(By.CssSelector(":scope > div.molecule_children"));
+                    IWebElement AddAreaButton = areaContainer.FindElement(By.XPath(".//div[text()='Add Task Area']"));
+                    var Areas = areaChildContainer.FindElements(By.CssSelector(":scope > div.mod_multiField"));
+
+                    //Removing all entries and adding new ones
+                    foreach (var area in Areas)
+                    {
+                        var delete = area.FindElement(By.CssSelector(":scope > div.mod_supportControl"));
+                        var deleteIcon = delete.FindElement(By.CssSelector("i"));
+                        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", deleteIcon);
+                    }
+
+                    foreach (var area in ExteriorControlsData.HardscapeAreas)
+                    {
+                        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AddAreaButton);
+
+                        // Wait for the DOM to reflect the addition of the new luminaire
+                        wait.Until(driver =>
+                        {
+                            var updatedAreas = areaChildContainer.FindElements(By.CssSelector(":scope > div.mod_multiField"));
+                            return updatedAreas.Count >= ExteriorControlsData.HardscapeAreas.IndexOf(area) + 1;
+                        });
+                    }
+                    foreach (var area in ExteriorControlsData.UseOrLoseAreas)
+                    {
+                        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AddAreaButton);
+
+                        // Wait for the DOM to reflect the addition of the new luminaire
+                        wait.Until(driver =>
+                        {
+                            var updatedAreas = areaChildContainer.FindElements(By.CssSelector(":scope > div.mod_multiField"));
+                            return updatedAreas.Count >= ExteriorControlsData.UseOrLoseAreas.IndexOf(area) + 1;
+                        });
+                    }
+
+                    Areas = areaChildContainer.FindElements(By.CssSelector(":scope > div.mod_multiField"));
+                    //Editing Boxes
+                    int row = 0;
+                    foreach (var area in Areas)
+                    {
+                        var dropdownElements = area.FindElements(By.CssSelector("div[class='selectWrapper']"));
+                        foreach (var element in dropdownElements)
+                        {
+                            var textbox = element.FindElement(By.CssSelector("input"));
+                            string placeholderValue = textbox.GetAttribute("placeholder");
+                            if (placeholderValue != null && placeholderValue.Contains("allowance section where this lighting task area was defined", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var choices = element.FindElements(By.CssSelector("li"));
+
+                                IWebElement choice;
+
+                                if (row < ExteriorControlsData.HardscapeAreas.Count)
+                                {
+                                    if (ExteriorScopeData.MultiFamily)
+                                    {
+                                        choice = choices[1];
+                                    }
+                                    else
+                                    {
+                                        choice  = choices[0];
+                                    }
+                                }
+                                else
+                                {
+                                    choice = choices[3];
+                                }
+
+                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                            }
+                        }
+                        row++;
+                    }
+
+                    row = 0;
+                    int hardscapeindex = 0;
+                    int useOrLoseIndex = 0;
+                    foreach (var area in Areas)
+                    {
+                        var dropdownElements = area.FindElements(By.CssSelector("div[class='selectWrapper']"));
+                        foreach (var element in dropdownElements)
+                        {
+                            var textbox = element.FindElement(By.CssSelector("input"));
+                            string placeholderValue = textbox.GetAttribute("placeholder");
+                            if (placeholderValue != null && placeholderValue.Contains("choose your area", StringComparison.OrdinalIgnoreCase))
+                            {
+                                IWebElement Parent = element.FindElement(By.XPath(".."));
+                                if (!Parent.GetAttribute("class").Contains("hideForDependency"))
+                                {
+                                    var choices = element.FindElements(By.CssSelector("li"));
+
+                                    IWebElement choice;
+                                    if (row < ExteriorControlsData.HardscapeAreas.Count)
+                                    {
+                                        choice = choices[hardscapeindex];
+                                        hardscapeindex++;
+                                    }
+                                    else
+                                    {
+                                        choice = choices[useOrLoseIndex];
+                                        useOrLoseIndex++;
+                                    }
+
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                                }
+                            }
+                        }
+                        row++;
+                    }
+
+
+
+                    IWebElement SaveButton = driver.FindElement(By.XPath("//div[text()='Save']"));
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", SaveButton);
+
+                    WebDriverWait wait2 = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+                    wait2.Until(driver =>
+                    {
+                        var formElement = driver.FindElement(By.Id("matForm"));
+                        return formElement.GetAttribute("class").Contains("mod_submitting");
+                    });
+
+                    // Wait for the "mod_submitting" class to be removed
+                    wait2.Until(driver =>
+                    {
+                        var formElement = driver.FindElement(By.Id("matForm"));
+                        return !formElement.GetAttribute("class").Contains("mod_submitting");
+                    });
+
+                }
+                catch (WebDriverTimeoutException ex)
+                {
+                    MainView.StatusText = "Navigation timed out. Please try again.";
+                    MainView.ProjectLoading = false;
+                    Debug.WriteLine($"Timeout Exception: {ex.Message}");
+                    return false;
+                }
+                catch (WebDriverException ex)
+                {
+
+                    MainView.StatusText = "An error occurred while navigation to luminaires.";
+                    MainView.ProjectLoading = false;
+                    Debug.WriteLine($"WebDriver Exception: {ex.Message}");
+                    return false;
+                }
+                return true;
+            });
+            return result;
+        }
     }
+
+
     public class IsFiveOrHigherConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -867,5 +1124,21 @@ namespace GMEPTitle24.Exterior
 
         public static readonly DependencyProperty DataProperty =
             DependencyProperty.Register("Data", typeof(object), typeof(BindingProxy), new PropertyMetadata(null));
+    }
+    public class BoolToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool b)
+                return b ? Visibility.Collapsed: Visibility.Visible;
+            return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is Visibility v)
+                return v == Visibility.Collapsed;
+            return false;
+        }
     }
 }

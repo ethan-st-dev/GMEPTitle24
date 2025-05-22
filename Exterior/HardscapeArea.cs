@@ -61,12 +61,26 @@ namespace GMEPTitle24.Exterior
                 }
             }
         }
-        public HardscapeArea(string id, string projectId, string description, float area)
+        public float perimeterLength = 0;
+        public float PerimeterLength
+        {
+            get { return perimeterLength; }
+            set
+            {
+                if (perimeterLength != value)
+                {
+                    perimeterLength = value;
+                    OnPropertyChanged(nameof(PerimeterLength));
+                }
+            }
+        }
+        public HardscapeArea(string id, string projectId, string description, float area, float perimeterLength)
         {
             this.description = description;
             this.area = area;
             this.id = id;
             this.projectId = projectId;
+            this.perimeterLength=perimeterLength;
         }
         public HardscapeArea()
         {

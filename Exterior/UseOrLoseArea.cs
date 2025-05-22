@@ -59,6 +59,7 @@ namespace GMEPTitle24.Exterior
                 {
                     applicationTypeId = value;
                     OnPropertyChanged(nameof(ApplicationTypeId));
+                    DetermineAreaTypeId();
                 }
             }
         }
@@ -75,13 +76,88 @@ namespace GMEPTitle24.Exterior
                 }
             }
         }
-        public UseOrLoseArea(string id, string projectId, string description, int applicationTypeId, float area)
+        public int locationQty = 0;
+        public int LocationQty
+        {
+            get { return locationQty; }
+            set
+            {
+                if (locationQty != value)
+                {
+                    locationQty = value;
+                    OnPropertyChanged(nameof(LocationQty));
+                }
+            }
+        }
+        public float linearFeet = 0;
+        public float LinearFeet
+        {
+            get { return linearFeet; }
+            set
+            {
+                if (linearFeet != value)
+                {
+                    linearFeet = value;
+                    OnPropertyChanged(nameof(LinearFeet));
+                }
+            }
+        }
+        public int areaTypeId = 0;
+        public int AreaTypeId
+        {
+            get { return areaTypeId; }
+            set
+            {
+                if (areaTypeId != value)
+                {
+                    areaTypeId = value;
+                    OnPropertyChanged(nameof(AreaTypeId));
+                }
+            }
+        }
+        public void DetermineAreaTypeId()
+        {
+            switch (ApplicationTypeId)
+            {
+                case 2:
+                case 3:
+                case 5:
+                case 12:
+                case 19:
+                    AreaTypeId = 1;
+                    break;
+                case 4:
+                case 6:
+                case 8:
+                case 9:
+                case 11:
+                case 13:
+                case 14:
+                case 15:
+                case 16:
+                case 17:
+                case 18:
+                    AreaTypeId = 2;
+                    break;
+                case 10:
+                    AreaTypeId = 3;
+                    break;
+                default:
+                    AreaTypeId = 0;
+                    break;
+            }
+
+        }
+        public UseOrLoseArea(string id, string projectId, string description, int applicationTypeId, float area, int locationQty, float linearFeet)
         {
             this.id = id;
             this.projectId = projectId;
             this.description=description;
             this.applicationTypeId=applicationTypeId;
             this.area=area;
+            this.locationQty=locationQty;
+            this.linearFeet=linearFeet;
+            DetermineAreaTypeId();
         }
         public UseOrLoseArea()
         {

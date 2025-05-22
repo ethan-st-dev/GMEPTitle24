@@ -11,7 +11,7 @@
     <Grid Background="SlateGray">
         <Border BorderBrush="DarkSlateGray" BorderThickness="2" Margin="10" Background="LightGray">
             <Grid>
-                <TabControl  TabStripPlacement="Left">
+                <TabControl x:Name="LightingTabs" TabStripPlacement="Left">
                     <TabItem x:Name="IndoorTab">
                         <TabItem.Header>
                             <TextBlock Text="LTI Indoor Lighting" FontSize="20" FontWeight="Bold" Margin="0 5 0 5">

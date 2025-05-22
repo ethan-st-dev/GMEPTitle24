@@ -9,6 +9,8 @@
     <UserControl.Resources>
         <local:IsFiveOrHigherConverter x:Key="IsFiveOrHigherConverter" />
         <local:BindingProxy x:Key="ExteriorControlsProxy" Data="{Binding ExteriorControlsData}"/>
+        <local:BindingProxy x:Key="ExteriorScopeProxy" Data="{Binding ExteriorScopeData}"/>
+        <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </UserControl.Resources>
     <Grid>
         <TabControl>
@@ -611,6 +613,7 @@
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Width="*" Header="Description" Binding="{Binding Description}"/>
                                         <DataGridTextColumn Width="*" Header="Area" Binding="{Binding Area}"/>
+                                        <DataGridTextColumn Width="*" Header="Perimeter Length" Binding="{Binding PerimeterLength}" Visibility="{Binding Data.MultiFamily, Source={StaticResource ExteriorScopeProxy}, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </GroupBox>
@@ -620,7 +623,72 @@
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Description}"/>
                                         <DataGridComboBoxColumn Width="*" Header="Application Type" ItemsSource="{Binding Data.CheckedApplicationTypes, Source={StaticResource ExteriorControlsProxy}}" DisplayMemberPath="Name" SelectedValueBinding="{Binding ApplicationTypeId, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Number"/>
-                                        <DataGridTextColumn Width="*" Header="Area" Binding="{Binding Area}"/>
+                                        <DataGridTextColumn Width="*" Header="Area" Binding="{Binding Area}">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding AreaTypeId}" Value="2">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                            <DataGridTextColumn.EditingElementStyle>
+                                                <Style TargetType="TextBox">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding AreaTypeId}" Value="2">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.EditingElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Width="*" Header="Location Qty" Binding="{Binding LocationQty}">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding AreaTypeId}" Value="1">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                            <DataGridTextColumn.EditingElementStyle>
+                                                <Style TargetType="TextBox">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding AreaTypeId}" Value="1">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.EditingElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Width="*" Header="Linear Feet" Binding="{Binding LinearFeet}">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding AreaTypeId}" Value="3">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                            <DataGridTextColumn.EditingElementStyle>
+                                                <Style TargetType="TextBox">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding AreaTypeId}" Value="3">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.EditingElementStyle>
+                                        </DataGridTextColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </GroupBox>

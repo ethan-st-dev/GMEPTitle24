@@ -121,15 +121,21 @@ namespace GMEPTitle24
                 bool result = await viewModel.ActivateSelenium();
                 if (result)
                 {
-                    /*result = await indoor.viewModel.IndoorLighting();
-                    if (result)
+                    if (LightingTabs.SelectedIndex == 0)
                     {
-                        await viewModel.LaunchWindow();
-                    }*/
-                    result = await outdoor.viewModel.OutdoorLighting();
-                    if (result)
+                        result = await indoor.viewModel.IndoorLighting();
+                        if (result)
+                        {
+                            await viewModel.LaunchWindow();
+                        }
+                    }
+                    else if (LightingTabs.SelectedIndex == 1)
                     {
-                        await viewModel.LaunchWindow();
+                        result = await outdoor.viewModel.OutdoorLighting();
+                        if (result)
+                        {
+                            await viewModel.LaunchWindow();
+                        }
                     }
                 }
                 viewModel.StatusText = String.Empty;
