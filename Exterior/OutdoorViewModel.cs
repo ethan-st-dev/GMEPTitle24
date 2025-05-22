@@ -966,6 +966,68 @@ namespace GMEPTitle24.Exterior
                         });
                     }
 
+                    Areas = areaChildContainer.FindElements(By.CssSelector(":scope > div.mod_multiField"));
+                    //Editing Boxes
+                    int row = 0;
+                    int hardscapeindex = 0;
+                    int useOrLoseIndex = 0;
+                    foreach (var area in Areas)
+                    {
+                        var dropdownElements = area.FindElements(By.CssSelector("div[class='selectWrapper']"));
+                        foreach (var element in dropdownElements)
+                        {
+                            var textbox = element.FindElement(By.CssSelector("input"));
+                            string placeholderValue = textbox.GetAttribute("placeholder");
+                            if (placeholderValue != null && placeholderValue.Contains("allowance section where this lighting task area was defined", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var choices = element.FindElements(By.CssSelector("li"));
+
+                                IWebElement choice;
+
+                                if (row < ExteriorControlsData.HardscapeAreas.Count)
+                                {
+                                    if (ExteriorScopeData.MultiFamily)
+                                    {
+                                        choice = choices[1];
+                                    }
+                                    else
+                                    {
+                                        choice  = choices[0];
+                                    }
+                                }
+                                else
+                                {
+                                    choice = choices[3];
+                                }
+
+                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                            }
+                            if (placeholderValue != null && placeholderValue.Contains("choose your area", StringComparison.OrdinalIgnoreCase))
+                            {
+                                IWebElement Parent = element.FindElement(By.XPath(".."));
+                                if (!Parent.GetAttribute("class").Contains("hideForDependency"))
+                                {
+                                    var choices = element.FindElements(By.CssSelector("li"));
+
+                                    IWebElement choice;
+                                    if (row < ExteriorControlsData.HardscapeAreas.Count)
+                                    {
+                                        choice = choices[hardscapeindex];
+                                        hardscapeindex++;
+                                    }
+                                    else
+                                    {
+                                        choice = choices[useOrLoseIndex];
+                                        useOrLoseIndex++;
+                                    }
+
+                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                                }
+                            }
+                        }
+                        row++;
+                    }
+
 
 
                     IWebElement SaveButton = driver.FindElement(By.XPath("//div[text()='Save']"));
