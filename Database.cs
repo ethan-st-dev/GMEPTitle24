@@ -450,6 +450,15 @@ namespace GMEPTitle24
                 deleteCommand.Parameters.AddWithValue("@ids", ids);
                 await deleteCommand.ExecuteNonQueryAsync();
             }
+            else
+            {
+                deleteQuery = @"
+                DELETE FROM electrical_lighting_lti_altered_systems
+                WHERE project_id = @projectId";
+                MySqlCommand deleteCommand = new MySqlCommand(deleteQuery, Connection);
+                deleteCommand.Parameters.AddWithValue("@projectId", projectId);
+                await deleteCommand.ExecuteNonQueryAsync();
+            }
   
             foreach (var system in scope.AlteredSystems)
             {
@@ -882,8 +891,17 @@ namespace GMEPTitle24
                 deleteHardscapeCommand.Parameters.AddWithValue("@projectId", projectId);
                 await deleteHardscapeCommand.ExecuteNonQueryAsync();
             }
+            else
+            {
+                string deleteHardscapeQuery = $@"
+                    DELETE FROM electrical_lighting_lto_hardscape_areas
+                    WHERE project_id = @projectId";
+                MySqlCommand deleteHardscapeCommand = new MySqlCommand(deleteHardscapeQuery, Connection);
+                deleteHardscapeCommand.Parameters.AddWithValue("@projectId", projectId);
+                await deleteHardscapeCommand.ExecuteNonQueryAsync();
+            }
 
-            // For UseOrLoseArea
+                // For UseOrLoseArea
             var useOrLoseIds = string.Join(",", controls.UseOrLoseAreas.Select(a => $"'{a.Id}'"));
             if (!string.IsNullOrEmpty(useOrLoseIds))
             {
@@ -895,18 +913,27 @@ namespace GMEPTitle24
                 deleteUseOrLoseCommand.Parameters.AddWithValue("@projectId", projectId);
                 await deleteUseOrLoseCommand.ExecuteNonQueryAsync();
             }
+            else
+            {
+                string deleteUseOrLoseQuery = $@"
+                    DELETE FROM electrical_lighting_lto_use_or_lose_areas
+                    WHERE project_id = @projectId";
+                MySqlCommand deleteUseOrLoseCommand = new MySqlCommand(deleteUseOrLoseQuery, Connection);
+                deleteUseOrLoseCommand.Parameters.AddWithValue("@projectId", projectId);
+                await deleteUseOrLoseCommand.ExecuteNonQueryAsync();
+            }
 
             foreach (var area in controls.HardscapeAreas)
             {
                 string query = @"
-                    INSERT INTO electrical_lighting_lto_hardscape_areas
-                    (id, project_id, description, area, perimeter_length)
-                    VALUES
-                    (@id, @projectId, @description, @area, @perimeterLength)
-                    ON DUPLICATE KEY UPDATE
-                    description = @description,
-                    area = @area,
-                    perimeter_length = @perimeterLength";
+                INSERT INTO electrical_lighting_lto_hardscape_areas
+                (id, project_id, description, area, perimeter_length)
+                VALUES
+                (@id, @projectId, @description, @area, @perimeterLength)
+                ON DUPLICATE KEY UPDATE
+                description = @description,
+                area = @area,
+                perimeter_length = @perimeterLength";
 
                 MySqlCommand command = new MySqlCommand(query, Connection);
                 command.Parameters.AddWithValue("@id", area.Id);
