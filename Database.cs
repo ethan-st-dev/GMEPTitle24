@@ -901,7 +901,7 @@ namespace GMEPTitle24
                 await deleteHardscapeCommand.ExecuteNonQueryAsync();
             }
 
-                // For UseOrLoseArea
+            // For UseOrLoseArea
             var useOrLoseIds = string.Join(",", controls.UseOrLoseAreas.Select(a => $"'{a.Id}'"));
             if (!string.IsNullOrEmpty(useOrLoseIds))
             {
