@@ -540,6 +540,22 @@ namespace GMEPTitle24.Exterior
                                 }
                                 ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
                             }
+                            if (placeholderValue != null && placeholderValue.Contains("is the initial lumens for this luminaire", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var choices = element.FindElements(By.CssSelector("li"));
+                                var choice = choices[1];
+                                if (ExteriorLightingList[row].MoreThan6200Lumens)
+                                {
+                                    choice = choices[0];
+                                }
+                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                            }
+                            if (placeholderValue != null && placeholderValue.Contains("shielding (BUG) requirements", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var choices = element.FindElements(By.CssSelector("li"));
+                                var choice = choices[ExteriorLightingList[row].LuminaireShieldingExceptionId];
+                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                            }
                         }
                         row++;
                     }
