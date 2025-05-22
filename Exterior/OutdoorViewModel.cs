@@ -928,7 +928,44 @@ namespace GMEPTitle24.Exterior
                             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
                         }
                     }
-                    
+
+
+                    IWebElement areaContainer = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[name='organism_OtwsEXWMAmrhfEhnDiERKDOTmBNUfKLQ']")));
+                    IWebElement areaChildContainer = areaContainer.FindElement(By.CssSelector(":scope > div.molecule_children"));
+                    IWebElement AddAreaButton = areaContainer.FindElement(By.XPath(".//div[text()='Add Task Area']"));
+                    var Areas = areaChildContainer.FindElements(By.CssSelector(":scope > div.mod_multiField"));
+
+                    //Removing all entries and adding new ones
+                    foreach (var area in Areas)
+                    {
+                        var delete = area.FindElement(By.CssSelector(":scope > div.mod_supportControl"));
+                        var deleteIcon = delete.FindElement(By.CssSelector("i"));
+                        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", deleteIcon);
+                    }
+
+                    foreach (var area in ExteriorControlsData.HardscapeAreas)
+                    {
+                        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AddAreaButton);
+
+                        // Wait for the DOM to reflect the addition of the new luminaire
+                        wait.Until(driver =>
+                        {
+                            var updatedAreas = areaChildContainer.FindElements(By.CssSelector(":scope > div.mod_multiField"));
+                            return updatedAreas.Count >= ExteriorControlsData.HardscapeAreas.IndexOf(area) + 1;
+                        });
+                    }
+                    foreach (var area in ExteriorControlsData.UseOrLoseAreas)
+                    {
+                        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", AddAreaButton);
+
+                        // Wait for the DOM to reflect the addition of the new luminaire
+                        wait.Until(driver =>
+                        {
+                            var updatedAreas = areaChildContainer.FindElements(By.CssSelector(":scope > div.mod_multiField"));
+                            return updatedAreas.Count >= ExteriorControlsData.UseOrLoseAreas.IndexOf(area) + 1;
+                        });
+                    }
+
 
 
                     IWebElement SaveButton = driver.FindElement(By.XPath("//div[text()='Save']"));
