@@ -103,7 +103,18 @@ namespace GMEPTitle24
                                 viewModel.ProjectLoaded = true;
                             });
                         }
+                        if (args.Length == 4)
+                        {
+                            if (int.TryParse(args[3], out int indexKey))
+                            {
+                                if (indexKey == 0 || indexKey == 1)
+                                {
+                                    LightingTabs.SelectedIndex = indexKey;
+                                }
+                            }
+                        }
                     }
+                   
                     viewModel.ProjectLoading = false;
                 }
                 );
