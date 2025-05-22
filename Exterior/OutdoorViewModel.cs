@@ -969,8 +969,6 @@ namespace GMEPTitle24.Exterior
                     Areas = areaChildContainer.FindElements(By.CssSelector(":scope > div.mod_multiField"));
                     //Editing Boxes
                     int row = 0;
-                    int hardscapeindex = 0;
-                    int useOrLoseIndex = 0;
                     foreach (var area in Areas)
                     {
                         var dropdownElements = area.FindElements(By.CssSelector("div[class='selectWrapper']"));
@@ -1002,6 +1000,20 @@ namespace GMEPTitle24.Exterior
 
                                 ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
                             }
+                        }
+                        row++;
+                    }
+
+                    row = 0;
+                    int hardscapeindex = 0;
+                    int useOrLoseIndex = 0;
+                    foreach (var area in Areas)
+                    {
+                        var dropdownElements = area.FindElements(By.CssSelector("div[class='selectWrapper']"));
+                        foreach (var element in dropdownElements)
+                        {
+                            var textbox = element.FindElement(By.CssSelector("input"));
+                            string placeholderValue = textbox.GetAttribute("placeholder");
                             if (placeholderValue != null && placeholderValue.Contains("choose your area", StringComparison.OrdinalIgnoreCase))
                             {
                                 IWebElement Parent = element.FindElement(By.XPath(".."));
