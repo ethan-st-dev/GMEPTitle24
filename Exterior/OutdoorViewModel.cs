@@ -797,7 +797,7 @@ namespace GMEPTitle24.Exterior
                                 {
                                     var choices = element.FindElements(By.CssSelector("li"));
 
-                                    IWebElement choice;
+                                    IWebElement choice = null;
                                     int applicationTypeId = ExteriorControlsData.UseOrLoseAreas[row].ApplicationTypeId;
 
                                     //Le Switcheroo (Sales Frontage & Dining)
@@ -816,10 +816,16 @@ namespace GMEPTitle24.Exterior
                                     }
                                     else
                                     {
-                                        choice = choices[applicationTypeId - 2];
+                                        if (applicationTypeId > 1)
+                                        {
+                                            choice = choices[applicationTypeId - 2];
+                                        }
 
                                     }
-                                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                                    if (choice != null)
+                                    {
+                                        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                                    }
                                 }
                             }
                             row++;
