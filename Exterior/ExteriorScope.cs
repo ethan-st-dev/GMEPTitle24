@@ -25,6 +25,7 @@ namespace GMEPTitle24.Exterior
         public int wattageCalculationMethodId = 1;
         public bool dwellingUnitControl = false;
         public bool multiFamily = false;
+        public bool controlsEnabled = false;
         public ObservableCollection<CheckboxItem> OccupancyTypes { get; set; } = new ObservableCollection<CheckboxItem>
         {
             new CheckboxItem { Name = "Auditorium Building", Number = 1, IsSelected = false },
@@ -95,6 +96,7 @@ namespace GMEPTitle24.Exterior
                 type.PropertyChanged += OccupancyType_PropertyChanged;
             }
             DetermineMultiFamily();
+            DetermineControlsEnabled();
         }
         public string Id
         {
@@ -132,6 +134,18 @@ namespace GMEPTitle24.Exterior
                 }
             }
         }
+        public bool ControlsEnabled
+        {
+            get { return controlsEnabled; }
+            set
+            {
+                if (controlsEnabled != value)
+                {
+                    controlsEnabled = value;
+                    OnPropertyChanged(nameof(ControlsEnabled));
+                }
+            }
+        }
         public bool MultiFamily
         {
             get { return multiFamily; }
@@ -153,6 +167,7 @@ namespace GMEPTitle24.Exterior
                 {
                     systemTypeId = value;
                     OnPropertyChanged(nameof(SystemTypeId));
+                    DetermineControlsEnabled();
                 }
             }
         }
@@ -190,6 +205,7 @@ namespace GMEPTitle24.Exterior
                 {
                     alterationIncreasedLoad = value;
                     OnPropertyChanged(nameof(AlterationIncreasedLoad));
+                    DetermineControlsEnabled();
                 }
             }
         }
@@ -277,6 +293,15 @@ namespace GMEPTitle24.Exterior
             {
                 MultiFamily = false;
             }
+        }
+        public void DetermineControlsEnabled()
+        {
+            bool result = true;
+            if (SystemTypeId == 1 && !AlterationIncreasedLoad)
+            {
+                result = false;
+            }
+            ControlsEnabled = result;
         }
         private void OccupancyType_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
