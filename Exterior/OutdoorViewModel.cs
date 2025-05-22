@@ -182,14 +182,16 @@ namespace GMEPTitle24.Exterior
             {
                 return false;
             }
-            
-            result2 = await FillOutAllowances();
-            if (result2 == false)
+            if (ExteriorScopeData.ControlsEnabled)
             {
-                return false;
-            }
+                result2 = await FillOutAllowances();
+                if (result2 == false)
+                {
+                    return false;
+                }
 
-            result2 = await FillOutControls();
+                result2 = await FillOutControls();
+            }
             return result2;
         }
 
