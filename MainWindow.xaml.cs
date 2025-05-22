@@ -109,7 +109,10 @@ namespace GMEPTitle24
                             {
                                 if (indexKey == 0 || indexKey == 1)
                                 {
-                                    LightingTabs.SelectedIndex = indexKey;
+                                    Dispatcher.Invoke(() =>
+                                       {
+                                           LightingTabs.SelectedIndex = indexKey;
+                                       });
                                 }
                             }
                         }
