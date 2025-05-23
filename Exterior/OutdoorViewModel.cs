@@ -248,13 +248,13 @@ namespace GMEPTitle24.Exterior
                             var choice = choices[ExteriorScopeData.OutdoorLightingZoneId - 1];
                             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
                         }
-                        if (placeholderValue != null && placeholderValue.Contains("what is the % of the existing luminaires being altered", StringComparison.OrdinalIgnoreCase))
+                        if (placeholderValue != null && placeholderValue.Contains("what is the % of existing luminaires being altered", StringComparison.OrdinalIgnoreCase))
                         {
                             var choices = element.FindElements(By.CssSelector("li"));
                             var choice = choices[ExteriorScopeData.AlteredLuminairesPercentageId - 1];
                             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
                         }
-                        if (placeholderValue != null && placeholderValue.Contains("what calculation method will you use to determine wattage allowance", StringComparison.OrdinalIgnoreCase))
+                        if (placeholderValue != null && placeholderValue.Contains("which calculation method will you use to determine wattage allowance", StringComparison.OrdinalIgnoreCase))
                         {
                             var choices = element.FindElements(By.CssSelector("li"));
                             var choice = choices[ExteriorScopeData.WattageCalculationMethodId - 1];
