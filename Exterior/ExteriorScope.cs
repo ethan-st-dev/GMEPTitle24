@@ -26,6 +26,7 @@ namespace GMEPTitle24.Exterior
         public bool dwellingUnitControl = false;
         public bool multiFamily = false;
         public bool controlsEnabled = false;
+        public bool isLZ0 = false;
         public ObservableCollection<CheckboxItem> OccupancyTypes { get; set; } = new ObservableCollection<CheckboxItem>
         {
             new CheckboxItem { Name = "Auditorium Building", Number = 1, IsSelected = false },
@@ -97,6 +98,7 @@ namespace GMEPTitle24.Exterior
             }
             DetermineMultiFamily();
             DetermineControlsEnabled();
+            DetermineIsLZ0();
         }
         public string Id
         {
@@ -131,6 +133,18 @@ namespace GMEPTitle24.Exterior
                 {
                     projectScopeId = value;
                     OnPropertyChanged(nameof(ProjectScopeId));
+                }
+            }
+        }
+        public bool IsLZ0
+        {
+            get { return isLZ0; }
+            set
+            {
+                if (isLZ0 != value)
+                {
+                    isLZ0 = value;
+                    OnPropertyChanged(nameof(IsLZ0));
                 }
             }
         }
@@ -254,6 +268,7 @@ namespace GMEPTitle24.Exterior
                 {
                     outdoorLightingZoneId = value;
                     OnPropertyChanged(nameof(OutdoorLightingZoneId));
+                    DetermineIsLZ0();
                 }
             }
         }
@@ -302,6 +317,10 @@ namespace GMEPTitle24.Exterior
                 result = false;
             }
             ControlsEnabled = result;
+        }
+        public void DetermineIsLZ0()
+        {
+            IsLZ0 = (OutdoorLightingZoneId == 1);
         }
         private void OccupancyType_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {

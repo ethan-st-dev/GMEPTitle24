@@ -291,12 +291,20 @@
                                                 <Setter Property="Visibility" Value="Collapsed"/>
                                                 <Setter Property="HorizontalAlignment" Value="Center"/>
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding TypeId}" Value="1">
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding TypeId}" Value="1"/>
+                                                            <Condition Binding="{Binding Data.IsLZ0, Source={StaticResource ExteriorScopeProxy}}" Value="False"/>
+                                                        </MultiDataTrigger.Conditions>
                                                         <Setter Property="Visibility" Value="Visible"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding TypeId}" Value="4">
+                                                    </MultiDataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding TypeId}" Value="4"/>
+                                                            <Condition Binding = "{Binding Data.IsLZ0, Source={StaticResource ExteriorScopeProxy}}" Value="False"/>
+                                                        </MultiDataTrigger.Conditions>
                                                         <Setter Property="Visibility" Value="Visible"/>
-                                                    </DataTrigger>
+                                                    </MultiDataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </DataGridCheckBoxColumn.ElementStyle>
@@ -305,12 +313,20 @@
                                                 <Setter Property="Visibility" Value="Collapsed"/>
                                                 <Setter Property="HorizontalAlignment" Value="Center"/>
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding TypeId}" Value="1">
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding TypeId}" Value="1"/>
+                                                            <Condition Binding = "{Binding Data.IsLZ0, Source={StaticResource ExteriorScopeProxy}}" Value="False"/>
+                                                        </MultiDataTrigger.Conditions>
                                                         <Setter Property="Visibility" Value="Visible"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding TypeId}" Value="4">
+                                                    </MultiDataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding TypeId}" Value="4"/>
+                                                            <Condition Binding = "{Binding Data.IsLZ0, Source={StaticResource ExteriorScopeProxy}}" Value="False"/>
+                                                        </MultiDataTrigger.Conditions>
                                                         <Setter Property="Visibility" Value="Visible"/>
-                                                    </DataTrigger>
+                                                    </MultiDataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </DataGridCheckBoxColumn.EditingElementStyle>
@@ -324,6 +340,7 @@
                                                         <MultiDataTrigger.Conditions>
                                                             <Condition Binding="{Binding TypeId}" Value="1"/>
                                                             <Condition Binding="{Binding MoreThan6200Lumens}" Value="True"/>
+                                                            <Condition Binding = "{Binding Data.IsLZ0, Source={StaticResource ExteriorScopeProxy}}" Value="False"/>
                                                         </MultiDataTrigger.Conditions>
                                                         <Setter Property="Visibility" Value="Visible"/>
                                                     </MultiDataTrigger>
@@ -331,6 +348,7 @@
                                                         <MultiDataTrigger.Conditions>
                                                             <Condition Binding="{Binding TypeId}" Value="4"/>
                                                             <Condition Binding="{Binding MoreThan6200Lumens}" Value="True"/>
+                                                            <Condition Binding = "{Binding Data.IsLZ0, Source={StaticResource ExteriorScopeProxy}}" Value="False"/>
                                                         </MultiDataTrigger.Conditions>
                                                         <Setter Property="Visibility" Value="Visible"/>
                                                     </MultiDataTrigger>
@@ -345,6 +363,7 @@
                                                         <MultiDataTrigger.Conditions>
                                                             <Condition Binding="{Binding TypeId}" Value="1"/>
                                                             <Condition Binding="{Binding MoreThan6200Lumens}" Value="True"/>
+                                                            <Condition Binding = "{Binding Data.IsLZ0, Source={StaticResource ExteriorScopeProxy}}" Value="False"/>
                                                         </MultiDataTrigger.Conditions>
                                                         <Setter Property="Visibility" Value="Visible"/>
                                                     </MultiDataTrigger>
@@ -352,6 +371,7 @@
                                                         <MultiDataTrigger.Conditions>
                                                             <Condition Binding="{Binding TypeId}" Value="4"/>
                                                             <Condition Binding="{Binding MoreThan6200Lumens}" Value="True"/>
+                                                            <Condition Binding = "{Binding Data.IsLZ0, Source={StaticResource ExteriorScopeProxy}}" Value="False"/>
                                                         </MultiDataTrigger.Conditions>
                                                         <Setter Property="Visibility" Value="Visible"/>
                                                     </MultiDataTrigger>
