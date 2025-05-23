@@ -145,13 +145,13 @@ namespace GMEPTitle24.Exterior
             {
                 try
                 {
-                    IWebElement indoorLighting = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//a[text()='NRCC-LTO-E Outdoor Lighting']")));
-                    indoorLighting.Click();
+                    IWebElement outdoorLighting = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//a[text()='NRCC-LTO-E Outdoor Lighting']")));
+                    outdoorLighting.Click();
                 }
                 catch (WebDriverTimeoutException ex)
                 {
 
-                    MainView.StatusText = "Outdoor Lighting Section not found. Please try again.";
+                    MainView.StatusText = "Outdoor Lighting Section not found for project " + MainView.ProjectNo.ToString() + ".";
                     MainView.ProjectLoading = false;
 
                     Debug.WriteLine($"Timeout Exception: {ex.Message}");
@@ -248,13 +248,13 @@ namespace GMEPTitle24.Exterior
                             var choice = choices[ExteriorScopeData.OutdoorLightingZoneId - 1];
                             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
                         }
-                        if (placeholderValue != null && placeholderValue.Contains("what is the % of the existing luminaires being altered", StringComparison.OrdinalIgnoreCase))
+                        if (placeholderValue != null && placeholderValue.Contains("what is the % of existing luminaires being altered", StringComparison.OrdinalIgnoreCase))
                         {
                             var choices = element.FindElements(By.CssSelector("li"));
                             var choice = choices[ExteriorScopeData.AlteredLuminairesPercentageId - 1];
                             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
                         }
-                        if (placeholderValue != null && placeholderValue.Contains("what calculation method will you use to determine wattage allowance", StringComparison.OrdinalIgnoreCase))
+                        if (placeholderValue != null && placeholderValue.Contains("which calculation method will you use to determine wattage allowance", StringComparison.OrdinalIgnoreCase))
                         {
                             var choices = element.FindElements(By.CssSelector("li"));
                             var choice = choices[ExteriorScopeData.WattageCalculationMethodId - 1];

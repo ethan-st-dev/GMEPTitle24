@@ -142,6 +142,11 @@ namespace GMEPTitle24
                         {
                             await viewModel.LaunchWindow();
                         }
+                        else
+                        {
+                            viewModel.ProjectLoading = false;
+
+                        }
                     }
                     else if (LightingTabs.SelectedIndex == 1)
                     {
@@ -150,10 +155,17 @@ namespace GMEPTitle24
                         {
                             await viewModel.LaunchWindow();
                         }
+                        else
+                        {
+                            viewModel.ProjectLoading = false;
+                        }
                     }
                 }
-                viewModel.StatusText = String.Empty;
-                viewModel.ProjectLoading = false;
+                else
+                {
+                    viewModel.ProjectLoading = false;
+                }
+                
             }
         }
         private async void Download_Click(object sender, RoutedEventArgs e)

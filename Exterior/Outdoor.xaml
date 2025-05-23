@@ -164,7 +164,7 @@
                                                 </Style.Triggers>
                                             </Style>
                                         </StackPanel.Style>
-                                        <Label Content="What calculation method will you use to determine wattage allowance for compliance" HorizontalAlignment="Center" FontWeight="Bold"/>
+                                        <Label Content="Which calculation method will you use to determine wattage allowance for compliance?" HorizontalAlignment="Center" FontWeight="Bold"/>
                                         <ComboBox SelectedValue="{Binding WattageCalculationMethodId}" SelectedValuePath="Tag">
                                             <ComboBoxItem Content="Calculated Allowance per §140.7 " Tag="1"/>
                                             <ComboBoxItem Content="40% Reduced Wattage Exception per §141.0(b)2L" Tag="2"/>
