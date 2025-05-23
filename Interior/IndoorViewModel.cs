@@ -282,7 +282,7 @@ namespace GMEPTitle24.Interior
                 catch (WebDriverTimeoutException ex)
                 {
 
-                    MainView.StatusText = "Indoor Lighting Section not found. Please try again.";
+                    MainView.StatusText = "Indoor Lighting Section not found for project " + MainView.ProjectNo.ToString() + ".";
                     MainView.ProjectLoading = false;
 
                     Debug.WriteLine($"Timeout Exception: {ex.Message}");

@@ -151,7 +151,7 @@ namespace GMEPTitle24.Exterior
                 catch (WebDriverTimeoutException ex)
                 {
 
-                    MainView.StatusText = "Outdoor Lighting Section not found. Please try again.";
+                    MainView.StatusText = "Outdoor Lighting Section not found for project " + MainView.ProjectNo.ToString() + ".";
                     MainView.ProjectLoading = false;
 
                     Debug.WriteLine($"Timeout Exception: {ex.Message}");
