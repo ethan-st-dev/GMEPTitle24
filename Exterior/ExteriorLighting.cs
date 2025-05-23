@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Printing;
+using System.Collections.ObjectModel;
+using GMEPTitle24.Interior;
 
 namespace GMEPTitle24.Exterior
 {
@@ -27,6 +29,22 @@ namespace GMEPTitle24.Exterior
         private bool moreThan6200Lumens = false;
         private int luminaireShieldingExceptionId = 1;
         private string otherComplianceMethodDescription = string.Empty;
+        private int backlightDistanceFromPropertyLineId = 1;
+        private int backlightRatingId = 1;
+        private bool areaLighting = false;
+        private int uplightRatingId = 1;
+        private int glareDistanceFromPropertyLineId = 1;
+        private int glareRatingId = 1;
+        public ObservableCollection<CheckboxItem> backlightRatings = new ObservableCollection<CheckboxItem>()
+        {
+            new CheckboxItem(){ Name="B0", Number=1, IsSelected=false},
+            new CheckboxItem(){ Name="B1", Number=2, IsSelected=false},
+            new CheckboxItem(){ Name="B2", Number=3, IsSelected=false},
+            new CheckboxItem(){ Name="B3", Number=4, IsSelected=false},
+            new CheckboxItem(){ Name="B4", Number=5, IsSelected=false},
+
+        };
+        public ObservableCollection<CheckboxItem> filteredBacklightRatings = new ObservableCollection<CheckboxItem>();
 
         public event PropertyChangedEventHandler PropertyChanged;
         public ExteriorLighting(
@@ -247,6 +265,135 @@ namespace GMEPTitle24.Exterior
                 }
             }
         }
+        public int BacklightDistanceFromPropertyLineId
+        {
+            get => backlightDistanceFromPropertyLineId;
+            set
+            {
+                if (backlightDistanceFromPropertyLineId != value)
+                {
+                    backlightDistanceFromPropertyLineId = value;
+                    OnPropertyChanged(nameof(BacklightDistanceFromPropertyLineId));
+                }
+            }
+        }
+        public int BacklightRatingId
+        {
+            get => backlightRatingId;
+            set
+            {
+                if (backlightRatingId != value)
+                {
+                    backlightRatingId = value;
+                    OnPropertyChanged(nameof(BacklightRatingId));
+                }
+            }
+        }
+        public bool AreaLighting
+        {
+            get => areaLighting;
+            set
+            {
+                if (areaLighting != value)
+                {
+                    areaLighting = value;
+                    OnPropertyChanged(nameof(AreaLighting));
+                }
+            }
+        }
+        public int UplightRatingId
+        {
+            get => uplightRatingId;
+            set
+            {
+                if (uplightRatingId != value)
+                {
+                    uplightRatingId = value;
+                    OnPropertyChanged(nameof(UplightRatingId));
+                }
+            }
+        }
+        public int GlareDistanceFromPropertyLineId
+        {
+            get => glareDistanceFromPropertyLineId;
+            set
+            {
+                if (glareDistanceFromPropertyLineId != value)
+                {
+                    glareDistanceFromPropertyLineId = value;
+                    OnPropertyChanged(nameof(GlareDistanceFromPropertyLineId));
+                }
+            }
+        }
+        public int GlareRatingId
+        {
+            get => glareRatingId;
+            set
+            {
+                if (glareRatingId != value)
+                {
+                    glareRatingId = value;
+                    OnPropertyChanged(nameof(GlareRatingId));
+                }
+            }
+        }
+        public ObservableCollection<CheckboxItem> BacklightRatings
+        {
+            get => backlightRatings;
+            set
+            {
+                if (backlightRatings != value)
+                {
+                    backlightRatings = value;
+                    OnPropertyChanged(nameof(BacklightRatings));
+                }
+            }
+        }
+        public ObservableCollection<CheckboxItem> FilteredBacklightRatings
+        {
+            get => filteredBacklightRatings;
+            set
+            {
+                if (filteredBacklightRatings != value)
+                {
+                    filteredBacklightRatings = value;
+                    OnPropertyChanged(nameof(FilteredBacklightRatings));
+                }
+            }
+        }
+        public void SetFilteredBacklightRatings()
+        {
+            if (BacklightDistanceFromPropertyLineId == 1)
+            {
+                foreach (var entry in BacklightRatings)
+                {
+                    if (!FilteredBacklightRatings.Contains(entry))
+                    {
+                        FilteredBacklightRatings.Add(entry);
+                    }
+                }
+            }
+            else {
+                foreach (var entry in BacklightRatings)
+                {
+                    if (5 - BacklightDistanceFromPropertyLineId <= entry.Number)
+                    {
+                        if (!FilteredBacklightRatings.Contains(entry))
+                        {
+                            FilteredBacklightRatings.Add(entry);
+                        }
+                    }
+                    else
+                    {
+                        if (FilteredBacklightRatings.Contains(entry))
+                        {
+                            FilteredBacklightRatings.Remove(entry);
+                        }
+                    }
+                }
+            }
+        }
+
 
 
         protected void OnPropertyChanged(string propertyName)
