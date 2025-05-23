@@ -145,8 +145,8 @@ namespace GMEPTitle24.Exterior
             {
                 try
                 {
-                    IWebElement indoorLighting = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//a[text()='NRCC-LTO-E Outdoor Lighting']")));
-                    indoorLighting.Click();
+                    IWebElement outdoorLighting = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//a[text()='NRCC-LTO-E Outdoor Lighting']")));
+                    outdoorLighting.Click();
                 }
                 catch (WebDriverTimeoutException ex)
                 {
