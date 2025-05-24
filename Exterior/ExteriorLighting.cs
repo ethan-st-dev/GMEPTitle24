@@ -80,6 +80,7 @@ namespace GMEPTitle24.Exterior
             this.moreThan6200Lumens = moreThan6200Lumens;
             this.luminaireShieldingExceptionId = luminaireShieldingExceptionId;
             this.otherComplianceMethodDescription = otherComplianceMethodDescription;
+            SetFilteredBacklightRatings();
         }
 
         public string Id
@@ -274,6 +275,7 @@ namespace GMEPTitle24.Exterior
                 {
                     backlightDistanceFromPropertyLineId = value;
                     OnPropertyChanged(nameof(BacklightDistanceFromPropertyLineId));
+                    SetFilteredBacklightRatings();
                 }
             }
         }

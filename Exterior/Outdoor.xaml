@@ -255,6 +255,7 @@
                                         </DataGridComboBoxColumn.ItemsSource>
                                     </DataGridComboBoxColumn>
                                     <DataGridCheckBoxColumn Header="Excluded From Wattage Calculation" Binding="{Binding Excluded}" Width="*"/>
+                                    
                                 </DataGrid.Columns>
                             </DataGrid>
                         </GroupBox>
@@ -481,6 +482,20 @@
                                             </Style>
                                         </DataGridTextColumn.EditingElementStyle>
                                     </DataGridTextColumn>
+                                    <DataGridComboBoxColumn Header="Compliance backlight distance" SelectedValueBinding="{Binding BacklightDistanceFromPropertyLineId}" SelectedValuePath="Tag" Width="*">
+                                        <DataGridComboBoxColumn.ItemsSource>
+                                            <CompositeCollection>
+                                                <ComboBoxItem Content="meow" Tag="1"/>
+                                                <ComboBoxItem Content="meow2" Tag="2"/>
+                                                <ComboBoxItem Content="meow3" Tag="2"/>
+                                                <ComboBoxItem Content="meow4" Tag="2"/>
+                                            </CompositeCollection>
+                                        </DataGridComboBoxColumn.ItemsSource>
+                                    </DataGridComboBoxColumn>
+                                    <DataGridComboBoxColumn Header="what is the backlight rating" Width="*">
+                                        
+                                    </DataGridComboBoxColumn>
+
                                 </DataGrid.Columns>
                             </DataGrid>
                         </GroupBox>
