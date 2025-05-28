@@ -522,8 +522,8 @@
                                             <CompositeCollection>
                                                 <ComboBoxItem Content="Luminaire > 2 mounting heights from property line" Tag="1"/>
                                                 <ComboBoxItem Content="Luminaire back hemisphere is 1-2 MH from property line" Tag="2"/>
-                                                <ComboBoxItem Content="Luminaire back hemisphere is 0.5 - 1 mounting heights from property line" Tag="2"/>
-                                                <ComboBoxItem Content="Luminaire back hemisphere &lt; 0.5 MH from property line" Tag="2"/>
+                                                <ComboBoxItem Content="Luminaire back hemisphere is 0.5 - 1 mounting heights from property line" Tag="3"/>
+                                                <ComboBoxItem Content="Luminaire back hemisphere &lt; 0.5 MH from property line" Tag="4"/>
                                             </CompositeCollection>
                                         </DataGridComboBoxColumn.ItemsSource>
                                     </DataGridComboBoxColumn>
@@ -550,6 +550,7 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellEditingTemplate>
                                     </DataGridTemplateColumn>
+                                    <DataGridCheckBoxColumn Binding="{Binding AreaLighting}" Width="*" Header="Area Lighting"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </GroupBox>
