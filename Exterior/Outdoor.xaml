@@ -494,9 +494,24 @@
                                     <Style TargetType="DataGridRow">
                                         <Setter Property="Visibility" Value="Collapsed" />
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding LuminaireShieldingExceptionId}" Value="0">
-                                                <Setter Property="Visibility" Value="Visible" />
-                                            </DataTrigger>
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding TypeId}" Value="1"/>
+                                                    <Condition Binding="{Binding LuminaireShieldingExceptionId}" Value="0"/>
+                                                    <Condition Binding="{Binding MoreThan6200Lumens}" Value="True"/>
+                                                    <Condition Binding = "{Binding Data.IsLZ0, Source={StaticResource ExteriorScopeProxy}}" Value="False"/>
+                                                </MultiDataTrigger.Conditions>
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </MultiDataTrigger>
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding TypeId}" Value="4"/>
+                                                    <Condition Binding="{Binding LuminaireShieldingExceptionId}" Value="0"/>
+                                                    <Condition Binding="{Binding MoreThan6200Lumens}" Value="True"/>
+                                                    <Condition Binding = "{Binding Data.IsLZ0, Source={StaticResource ExteriorScopeProxy}}" Value="False"/>
+                                                </MultiDataTrigger.Conditions>
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </MultiDataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </DataGrid.RowStyle>
