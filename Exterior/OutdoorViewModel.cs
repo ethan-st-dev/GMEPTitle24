@@ -520,6 +520,28 @@ namespace GMEPTitle24.Exterior
                                 var choice = choices[ExteriorLightingList[row].MountingTypeId - 1];
                                 ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
                             }
+                            if (placeholderValue != null && placeholderValue.Contains("backlight rating, tell us which", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var choices = element.FindElements(By.CssSelector("li"));
+                                var choice = choices[ExteriorLightingList[row].BacklightDistanceFromPropertyLineId - 1];
+                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                            }
+                            if (placeholderValue != null && placeholderValue.Contains("what is the backlight rating", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var choices = element.FindElements(By.CssSelector("li"));
+                                var choice = choices[ExteriorLightingList[row].BacklightRatingId - 1];
+                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                            }
+                            if (placeholderValue != null && placeholderValue.Contains("is this luminaire considered area lighting", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var choices = element.FindElements(By.CssSelector("li"));
+                                var choice = choices[1];
+                                if (ExteriorLightingList[row].AreaLighting)
+                                {
+                                    choice = choices[0];
+                                }
+                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", choice);
+                            }
                             if (placeholderValue != null && placeholderValue.Contains("luminaire type excluded", StringComparison.OrdinalIgnoreCase))
                             {
                                 var choices = element.FindElements(By.CssSelector("li"));
