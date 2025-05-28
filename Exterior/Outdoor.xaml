@@ -490,6 +490,16 @@
                         <GridSplitter HorizontalAlignment="Stretch" Grid.Row="3" Background="LightGray"/>
                         <GroupBox Grid.Row="4" Header='Shielding Options'>
                             <DataGrid ItemsSource="{Binding ExteriorLightingList}" AutoGenerateColumns="False">
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="DataGridRow">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding LuminaireShieldingExceptionId}" Value="0">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.RowStyle>
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" IsReadOnly="True" Width="*"/>
                                     <DataGridComboBoxColumn Header="Compliance backlight distance" SelectedValueBinding="{Binding BacklightDistanceFromPropertyLineId,UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Tag" Width="*">
