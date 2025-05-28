@@ -35,6 +35,7 @@ namespace GMEPTitle24.Exterior
         private int uplightRatingId = 1;
         private int glareDistanceFromPropertyLineId = 1;
         private int glareRatingId = 1;
+
         public ObservableCollection<CheckboxItem> backlightRatings = new ObservableCollection<CheckboxItem>()
         {
             new CheckboxItem(){ Name="B0", Number=1, IsSelected=false},
@@ -43,7 +44,17 @@ namespace GMEPTitle24.Exterior
             new CheckboxItem(){ Name="B3", Number=4, IsSelected=false},
             new CheckboxItem(){ Name="B4", Number=5, IsSelected=false},
         };
+        public ObservableCollection<CheckboxItem> uplightRatings = new ObservableCollection<CheckboxItem>()
+        {
+            new CheckboxItem(){ Name="U0", Number=1, IsSelected=false},
+            new CheckboxItem(){ Name="U1", Number=2, IsSelected=false},
+            new CheckboxItem(){ Name="U2", Number=3, IsSelected=false},
+            new CheckboxItem(){ Name="U3", Number=4, IsSelected=false},
+            new CheckboxItem(){ Name="U4", Number=5, IsSelected=false},
+        };
+
         public ObservableCollection<CheckboxItem> filteredBacklightRatings = new ObservableCollection<CheckboxItem>();
+        public ObservableCollection<CheckboxItem> filteredUplightRatings = new ObservableCollection<CheckboxItem>();
 
         public event PropertyChangedEventHandler PropertyChanged;
         public ExteriorLighting(
@@ -61,7 +72,10 @@ namespace GMEPTitle24.Exterior
             bool excluded,
             bool moreThan6200Lumens,
             int luminaireShieldingExceptionId,
-            string otherComplianceMethodDescription
+            string otherComplianceMethodDescription,
+            int backlightDistanceFromPropertyLineId,
+            int backlightRatingId,
+            bool areaLighting
         )
         {
             this.id = id;
@@ -79,6 +93,9 @@ namespace GMEPTitle24.Exterior
             this.moreThan6200Lumens = moreThan6200Lumens;
             this.luminaireShieldingExceptionId = luminaireShieldingExceptionId;
             this.otherComplianceMethodDescription = otherComplianceMethodDescription;
+            this.backlightRatingId = backlightRatingId;
+            this.backlightDistanceFromPropertyLineId = backlightDistanceFromPropertyLineId;
+            this.areaLighting = areaLighting; 
             SetFilteredBacklightRatings();
         }
 
@@ -377,7 +394,7 @@ namespace GMEPTitle24.Exterior
             else {
                 foreach (var entry in BacklightRatings)
                 {
-                    if (5 - BacklightDistanceFromPropertyLineId <= entry.Number)
+                    if (7 - BacklightDistanceFromPropertyLineId >= entry.Number)
                     {
                         if (!FilteredBacklightRatings.Contains(entry))
                         {

@@ -658,7 +658,10 @@ namespace GMEPTitle24
                             ellum.luminaire_shielding_exception_id,
                             ellum.description_option_id,
                             ellum.other_compliance_method_description,
-                            ellum.fixture_id
+                            ellum.fixture_id,
+                            ellum.backlight_distance_from_property_line_id,
+                            ellum.backlight_rating_id,
+                            ellum.area_lighting
                             FROM 
                                 electrical_lighting el
                             LEFT JOIN 
@@ -698,7 +701,11 @@ namespace GMEPTitle24
                         !reader.IsDBNull(reader.GetOrdinal("is_excluded")) && reader.GetBoolean("is_excluded"),
                         !reader.IsDBNull(reader.GetOrdinal("more_than_6200_lumens")) && reader.GetBoolean("more_than_6200_lumens"),
                         !reader.IsDBNull(reader.GetOrdinal("luminaire_shielding_exception_id")) ? reader.GetInt32("luminaire_shielding_exception_id") : 1,
-                        !reader.IsDBNull(reader.GetOrdinal("other_compliance_method_description")) ? reader.GetString("other_compliance_method_description") : ""
+                        !reader.IsDBNull(reader.GetOrdinal("other_compliance_method_description")) ? reader.GetString("other_compliance_method_description") : "",
+                        !reader.IsDBNull(reader.GetOrdinal("backlight_distance_from_property_line_id")) ? reader.GetInt32("backlight_distance_from_property_line_id") : 1,
+                        !reader.IsDBNull(reader.GetOrdinal("backlight_rating_id")) ? reader.GetInt32("backlight_rating_id") : 1,
+                        !reader.IsDBNull(reader.GetOrdinal("area_lighting")) && reader.GetBoolean("area_lighting")
+
                     )
                 );
                 if (reader.IsDBNull(reader.GetOrdinal("luminaire_id")))
@@ -710,9 +717,9 @@ namespace GMEPTitle24
 
             //Adding Luminaires for lighting that doesn't have one
             query = @"INSERT INTO electrical_lighting_lto_luminaires 
-                     (id, project_id, fixture_id, type_id, wattage_determined_option_id, description_option_id, total_linear_feet, luminaire_qty, mounting_type_id, is_excluded, more_than_6200_lumens, luminaire_shielding_exception_id, other_compliance_method_description) 
+                     (id, project_id, fixture_id, type_id, wattage_determined_option_id, description_option_id, total_linear_feet, luminaire_qty, mounting_type_id, is_excluded, more_than_6200_lumens, luminaire_shielding_exception_id, other_compliance_method_description, backlight_distance_from_property_line_id, backlight_rating_id, area_lighting) 
                      VALUES 
-                     (@id, @projectId, @fixtureId, @typeId, @wattageDeterminedOptionId, @descriptionOptionId, @totalLinearFeet, @luminaireQty, @mountingTypeId, @isExcluded, @moreThan6200Lumens, @luminaireShieldingExceptionId, @otherComplianceMethodDescription)";
+                     (@id, @projectId, @fixtureId, @typeId, @wattageDeterminedOptionId, @descriptionOptionId, @totalLinearFeet, @luminaireQty, @mountingTypeId, @isExcluded, @moreThan6200Lumens, @luminaireShieldingExceptionId, @otherComplianceMethodDescription, @backlightDistanceFromPropertyLineId, @backlightRatingId, @areaLighting)";
 
 
             foreach (var luminaireId in newLuminaireIds)
@@ -731,6 +738,9 @@ namespace GMEPTitle24
                 command.Parameters.AddWithValue("@moreThan6200Lumens", 1);
                 command.Parameters.AddWithValue("@luminaireShieldingExceptionId", 1);
                 command.Parameters.AddWithValue("@otherComplianceMethodDescription", "");
+                command.Parameters.AddWithValue("@backlightDistanceFromPropertyLineId", 1);
+                command.Parameters.AddWithValue("@backlightRatingId", 1);
+                command.Parameters.AddWithValue("@areaLighting", false);
                 await command.ExecuteNonQueryAsync();
             }
 
@@ -755,7 +765,7 @@ namespace GMEPTitle24
             await OpenConnectionAsync();
             foreach (var lighting in lightings)
             {
-                string query = "UPDATE electrical_lighting_lto_luminaires SET type_id = @typeId, wattage_determined_option_id = @wattageDeterminedOptionId, total_linear_feet = @totalLinearFeet, luminaire_qty = @luminaireQty, mounting_type_id = @mountingTypeId, is_excluded = @isExcluded, more_than_6200_lumens = @moreThan6200Lumens, luminaire_shielding_exception_id = @luminaireShieldingExceptionId, other_compliance_method_description = @otherComplianceMethodDescription, description_option_id = @descriptionOptionId WHERE fixture_id = @id";
+                string query = "UPDATE electrical_lighting_lto_luminaires SET type_id = @typeId, wattage_determined_option_id = @wattageDeterminedOptionId, total_linear_feet = @totalLinearFeet, luminaire_qty = @luminaireQty, mounting_type_id = @mountingTypeId, is_excluded = @isExcluded, more_than_6200_lumens = @moreThan6200Lumens, luminaire_shielding_exception_id = @luminaireShieldingExceptionId, other_compliance_method_description = @otherComplianceMethodDescription, description_option_id = @descriptionOptionId, backlight_distance_from_property_line_id = @backlightDistanceFromPropertyLineId, backlight_rating_id = @backlightRatingId, area_lighting = @areaLighting WHERE fixture_id = @id";
                 MySqlCommand command = new MySqlCommand(query, Connection);
                 command.Parameters.AddWithValue("@id", lighting.Id);
                 command.Parameters.AddWithValue("@typeId", lighting.TypeId);
@@ -768,6 +778,9 @@ namespace GMEPTitle24
                 command.Parameters.AddWithValue("@moreThan6200Lumens", lighting.MoreThan6200Lumens);
                 command.Parameters.AddWithValue("@luminaireShieldingExceptionId", lighting.LuminaireShieldingExceptionId);
                 command.Parameters.AddWithValue("@otherComplianceMethodDescription", lighting.OtherComplianceMethodDescription);
+                command.Parameters.AddWithValue("@backlightDistanceFromPropertyLineId", lighting.BacklightDistanceFromPropertyLineId);
+                command.Parameters.AddWithValue("@backlightRatingId", lighting.BacklightRatingId);
+                command.Parameters.AddWithValue("@areaLighting", lighting.AreaLighting);
                 await command.ExecuteNonQueryAsync();
             }
             await CloseConnectionAsync();

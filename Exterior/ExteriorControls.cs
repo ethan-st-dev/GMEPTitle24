@@ -122,7 +122,6 @@ namespace GMEPTitle24.Exterior
             ObservableCollection<HardscapeArea> hardscapeAreas,
             ObservableCollection<UseOrLoseArea> useOrLoseAreas,
             List<int> applicationTypeIds
-
         )
         {
             this.id = id;
