@@ -1165,7 +1165,7 @@ namespace GMEPTitle24.Exterior
         {
             foreach (var entry in UplightRatings)
             {
-                if (ExteriorScopeData.OutdoorLightingZoneId - 1 >= entry.Number)
+                if (ExteriorScopeData.OutdoorLightingZoneId >= entry.Number)
                 {
                     if (!FilteredUplightRatings.Contains(entry))
                     {
