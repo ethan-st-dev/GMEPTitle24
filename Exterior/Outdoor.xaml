@@ -516,7 +516,6 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellEditingTemplate>
                                     </DataGridTemplateColumn>
-
                                 </DataGrid.Columns>
                             </DataGrid>
                         </GroupBox>
