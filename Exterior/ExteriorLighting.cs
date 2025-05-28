@@ -42,7 +42,6 @@ namespace GMEPTitle24.Exterior
             new CheckboxItem(){ Name="B2", Number=3, IsSelected=false},
             new CheckboxItem(){ Name="B3", Number=4, IsSelected=false},
             new CheckboxItem(){ Name="B4", Number=5, IsSelected=false},
-
         };
         public ObservableCollection<CheckboxItem> filteredBacklightRatings = new ObservableCollection<CheckboxItem>();
 
