@@ -10,6 +10,7 @@
         <local:IsFiveOrHigherConverter x:Key="IsFiveOrHigherConverter" />
         <local:BindingProxy x:Key="ExteriorControlsProxy" Data="{Binding ExteriorControlsData}"/>
         <local:BindingProxy x:Key="ExteriorScopeProxy" Data="{Binding ExteriorScopeData}"/>
+        <local:BacklightRatingIdToNameConverter x:Key="BacklightRatingIdToNameConverter" />
         <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </UserControl.Resources>
     <Grid>
@@ -482,19 +483,39 @@
                                             </Style>
                                         </DataGridTextColumn.EditingElementStyle>
                                     </DataGridTextColumn>
-                                    <DataGridComboBoxColumn Header="Compliance backlight distance" SelectedValueBinding="{Binding BacklightDistanceFromPropertyLineId}" SelectedValuePath="Tag" Width="*">
+                                    <DataGridComboBoxColumn Header="Compliance backlight distance" SelectedValueBinding="{Binding BacklightDistanceFromPropertyLineId,UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Tag" Width="*">
                                         <DataGridComboBoxColumn.ItemsSource>
                                             <CompositeCollection>
-                                                <ComboBoxItem Content="meow" Tag="1"/>
-                                                <ComboBoxItem Content="meow2" Tag="2"/>
-                                                <ComboBoxItem Content="meow3" Tag="2"/>
-                                                <ComboBoxItem Content="meow4" Tag="2"/>
+                                                <ComboBoxItem Content="Luminaire > 2 mounting heights from property line" Tag="1"/>
+                                                <ComboBoxItem Content="Luminaire back hemisphere is 1-2 MH from property line" Tag="2"/>
+                                                <ComboBoxItem Content="Luminaire back hemisphere is 0.5 - 1 mounting heights from property line" Tag="2"/>
+                                                <ComboBoxItem Content="Luminaire back hemisphere &lt; 0.5 MH from property line" Tag="2"/>
                                             </CompositeCollection>
                                         </DataGridComboBoxColumn.ItemsSource>
                                     </DataGridComboBoxColumn>
-                                    <DataGridComboBoxColumn Header="what is the backlight rating" Width="*">
-                                        
-                                    </DataGridComboBoxColumn>
+                                    <DataGridTemplateColumn Header="what is the backlight rating" Width="*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock>
+                                                    <TextBlock.Text>
+                                                        <MultiBinding Converter="{StaticResource BacklightRatingIdToNameConverter}">
+                                                            <Binding Path="BacklightRatingId"/>
+                                                            <Binding Path="FilteredBacklightRatings"/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                        <DataGridTemplateColumn.CellEditingTemplate>
+                                            <DataTemplate>
+                                                <ComboBox
+                                                    ItemsSource="{Binding FilteredBacklightRatings}"
+                                                    DisplayMemberPath="Name"
+                                                    SelectedValuePath="Number"
+                                                    SelectedValue="{Binding BacklightRatingId, UpdateSourceTrigger=PropertyChanged}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellEditingTemplate>
+                                    </DataGridTemplateColumn>
 
                                 </DataGrid.Columns>
                             </DataGrid>

@@ -1159,4 +1159,28 @@ namespace GMEPTitle24.Exterior
             return false;
         }
     }
+    public class BacklightRatingIdToNameConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            // values[0]: BacklightRatingId (int)
+            // values[1]: FilteredBacklightRatings (ObservableCollection<CheckboxItem>)
+            int id = 0;
+            if (values.Length > 0 && values[0] is int intId)
+                id = intId;
+
+            var ratings = values.Length > 1 ? values[1] as ObservableCollection<CheckboxItem> : null;
+            if (ratings != null)
+            {
+                var item = ratings.FirstOrDefault(r => r.Number == id);
+                return item?.Name ?? id.ToString();
+            }
+            return id.ToString();
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
