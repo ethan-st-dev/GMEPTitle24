@@ -212,6 +212,8 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="5"/>
                             <RowDefinition Height="*"/>
+                            <RowDefinition Height="5"/>
+                            <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <GroupBox Grid.Row="0" Header="Options">
                             <DataGrid x:Name="OptionsGrid" ItemsSource="{Binding ExteriorLightingList}" AutoGenerateColumns="False">
@@ -256,7 +258,6 @@
                                         </DataGridComboBoxColumn.ItemsSource>
                                     </DataGridComboBoxColumn>
                                     <DataGridCheckBoxColumn Header="Excluded From Wattage Calculation" Binding="{Binding Excluded}" Width="*"/>
-                                    
                                 </DataGrid.Columns>
                             </DataGrid>
                         </GroupBox>
@@ -483,6 +484,14 @@
                                             </Style>
                                         </DataGridTextColumn.EditingElementStyle>
                                     </DataGridTextColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </GroupBox>
+                        <GridSplitter HorizontalAlignment="Stretch" Grid.Row="3" Background="LightGray"/>
+                        <GroupBox Grid.Row="4" Header='Shielding Options'>
+                            <DataGrid ItemsSource="{Binding ExteriorLightingList}" AutoGenerateColumns="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" IsReadOnly="True" Width="*"/>
                                     <DataGridComboBoxColumn Header="Compliance backlight distance" SelectedValueBinding="{Binding BacklightDistanceFromPropertyLineId,UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Tag" Width="*">
                                         <DataGridComboBoxColumn.ItemsSource>
                                             <CompositeCollection>
@@ -512,7 +521,7 @@
                                                     ItemsSource="{Binding FilteredBacklightRatings}"
                                                     DisplayMemberPath="Name"
                                                     SelectedValuePath="Number"
-                                                    SelectedValue="{Binding BacklightRatingId, UpdateSourceTrigger=PropertyChanged}" />
+                                                    SelectedValue="{Binding BacklightRatingId, UpdateSourceTrigger=PropertyChanged}"/>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellEditingTemplate>
                                     </DataGridTemplateColumn>
@@ -746,7 +755,9 @@
                                         </DataGridTextColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
+                                
                             </GroupBox>
+                            
                         </Grid>
                     </Grid>
                     <Grid Background="White">
