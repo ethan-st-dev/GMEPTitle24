@@ -44,17 +44,9 @@ namespace GMEPTitle24.Exterior
             new CheckboxItem(){ Name="B3", Number=4, IsSelected=false},
             new CheckboxItem(){ Name="B4", Number=5, IsSelected=false},
         };
-        public ObservableCollection<CheckboxItem> uplightRatings = new ObservableCollection<CheckboxItem>()
-        {
-            new CheckboxItem(){ Name="U0", Number=1, IsSelected=false},
-            new CheckboxItem(){ Name="U1", Number=2, IsSelected=false},
-            new CheckboxItem(){ Name="U2", Number=3, IsSelected=false},
-            new CheckboxItem(){ Name="U3", Number=4, IsSelected=false},
-            new CheckboxItem(){ Name="U4", Number=5, IsSelected=false},
-        };
+       
 
         public ObservableCollection<CheckboxItem> filteredBacklightRatings = new ObservableCollection<CheckboxItem>();
-        public ObservableCollection<CheckboxItem> filteredUplightRatings = new ObservableCollection<CheckboxItem>();
 
         public event PropertyChangedEventHandler PropertyChanged;
         public ExteriorLighting(

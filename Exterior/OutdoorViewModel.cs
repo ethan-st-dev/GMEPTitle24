@@ -24,6 +24,40 @@ namespace GMEPTitle24.Exterior
         public WebDriverWait wait;
         public MainViewModel MainView { get; set; }
 
+        public ObservableCollection<CheckboxItem> uplightRatings = new ObservableCollection<CheckboxItem>()
+        {
+            new CheckboxItem(){ Name="U0", Number=1, IsSelected=false},
+            new CheckboxItem(){ Name="U1", Number=2, IsSelected=false},
+            new CheckboxItem(){ Name="U2", Number=3, IsSelected=false},
+            new CheckboxItem(){ Name="U3", Number=4, IsSelected=false},
+            new CheckboxItem(){ Name="U4", Number=5, IsSelected=false},
+        };
+        public ObservableCollection<CheckboxItem> UplightRatings
+        {
+            get { return uplightRatings; }
+            set
+            {
+                if (uplightRatings != value)
+                {
+                    uplightRatings = value;
+                    OnPropertyChanged(nameof(UplightRatings));
+                }
+            }
+        }
+        public ObservableCollection<CheckboxItem> filteredUplightRatings = new ObservableCollection<CheckboxItem>();
+        public ObservableCollection<CheckboxItem> FilteredUplightRatings
+        {
+            get { return filteredUplightRatings; }
+            set
+            {
+                if (filteredUplightRatings != value)
+                {
+                    filteredUplightRatings = value;
+                    OnPropertyChanged(nameof(FilteredUplightRatings));
+                }
+            }
+        }
+
         public ObservableCollection<ExteriorLighting> exteriorLightingList = new ObservableCollection<ExteriorLighting>();
         public ObservableCollection<ExteriorLighting> ExteriorLightingList
         {
@@ -82,6 +116,7 @@ namespace GMEPTitle24.Exterior
             ExteriorScopeData.PropertyChanged += ExteriorScopeData_PropertyChanged;
             ExteriorControlsData.PropertyChanged += ExteriorControlsData_PropertyChanged;
             ExteriorControlsData.FilterApplicationTypes(ExteriorScopeData.OutdoorLightingZoneId);
+            SetFilteredUplightRatings();
         }
 
         private void ExteriorControlsData_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -125,6 +160,7 @@ namespace GMEPTitle24.Exterior
             if (e.PropertyName == nameof(ExteriorScope.OutdoorLightingZoneId))
             {
                 ExteriorControlsData.FilterApplicationTypes(ExteriorScopeData.OutdoorLightingZoneId);
+                SetFilteredUplightRatings();
             }
         }
         public event PropertyChangedEventHandler PropertyChanged;
@@ -1124,6 +1160,26 @@ namespace GMEPTitle24.Exterior
                 return true;
             });
             return result;
+        }
+        public void SetFilteredUplightRatings()
+        {
+            foreach (var entry in UplightRatings)
+            {
+                if (ExteriorScopeData.OutdoorLightingZoneId - 1 >= entry.Number)
+                {
+                    if (!FilteredUplightRatings.Contains(entry))
+                    {
+                        FilteredUplightRatings.Add(entry);
+                    }
+                }
+                else
+                {
+                    if (FilteredUplightRatings.Contains(entry))
+                    {
+                        FilteredUplightRatings.Remove(entry);
+                    }
+                }
+            }
         }
     }
 

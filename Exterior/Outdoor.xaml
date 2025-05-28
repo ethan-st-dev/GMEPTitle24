@@ -10,6 +10,7 @@
         <local:IsFiveOrHigherConverter x:Key="IsFiveOrHigherConverter" />
         <local:BindingProxy x:Key="ExteriorControlsProxy" Data="{Binding ExteriorControlsData}"/>
         <local:BindingProxy x:Key="ExteriorScopeProxy" Data="{Binding ExteriorScopeData}"/>
+        <local:BindingProxy x:Key="OutdoorViewProxy" Data="{Binding}"/>
         <local:BacklightRatingIdToNameConverter x:Key="BacklightRatingIdToNameConverter" />
         <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </UserControl.Resources>
@@ -551,6 +552,7 @@
                                         </DataGridTemplateColumn.CellEditingTemplate>
                                     </DataGridTemplateColumn>
                                     <DataGridCheckBoxColumn Binding="{Binding AreaLighting}" Width="*" Header="Area Lighting"/>
+                                    <DataGridComboBoxColumn ItemsSource="{Binding Data.FilteredUplightRatings, Source={StaticResource OutdoorViewProxy}}" DisplayMemberPath="Name" SelectedValuePath="Number" SelectedValueBinding="{Binding UplightRatingId}" Width="*" Header="Uplight Rating"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </GroupBox>
