@@ -43,6 +43,7 @@ namespace GMEPTitle24.Exterior
             new CheckboxItem(){ Name="B2", Number=3, IsSelected=false},
             new CheckboxItem(){ Name="B3", Number=4, IsSelected=false},
             new CheckboxItem(){ Name="B4", Number=5, IsSelected=false},
+            new CheckboxItem(){ Name="B5", Number=6, IsSelected=false}
         };
        
 
@@ -390,7 +391,7 @@ namespace GMEPTitle24.Exterior
             else {
                 foreach (var entry in BacklightRatings)
                 {
-                    if (7 - BacklightDistanceFromPropertyLineId >= entry.Number)
+                    if (5 - BacklightDistanceFromPropertyLineId >= entry.Number)
                     {
                         if (!FilteredBacklightRatings.Contains(entry))
                         {
