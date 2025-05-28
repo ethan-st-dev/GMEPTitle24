@@ -551,8 +551,19 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellEditingTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridCheckBoxColumn Binding="{Binding AreaLighting}" Width="*" Header="Area Lighting"/>
-                                    <DataGridComboBoxColumn ItemsSource="{Binding Data.FilteredUplightRatings, Source={StaticResource OutdoorViewProxy}}" DisplayMemberPath="Name" SelectedValuePath="Number" SelectedValueBinding="{Binding UplightRatingId}" Width="*" Header="Uplight Rating"/>
+                                    <DataGridCheckBoxColumn Binding="{Binding AreaLighting, UpdateSourceTrigger=PropertyChanged}" Width="*" Header="Area Lighting"/>
+                                    <DataGridComboBoxColumn ItemsSource="{Binding Data.FilteredUplightRatings, Source={StaticResource OutdoorViewProxy}}" DisplayMemberPath="Name" SelectedValuePath="Number" SelectedValueBinding="{Binding UplightRatingId, UpdateSourceTrigger=PropertyChanged}" Width="*" Header="Uplight Rating">
+                                        <DataGridComboBoxColumn.EditingElementStyle>
+                                            <Style TargetType="ComboBox">
+                                                <Setter Property="IsEnabled" Value="True"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding AreaLighting}" Value="True">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </DataGridComboBoxColumn.EditingElementStyle>
+                                    </DataGridComboBoxColumn>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </GroupBox>

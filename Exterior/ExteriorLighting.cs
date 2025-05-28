@@ -306,6 +306,10 @@ namespace GMEPTitle24.Exterior
             {
                 if (areaLighting != value)
                 {
+                    if (value == true)
+                    {
+                        UplightRatingId = 1;
+                    }
                     areaLighting = value;
                     OnPropertyChanged(nameof(AreaLighting));
                 }
